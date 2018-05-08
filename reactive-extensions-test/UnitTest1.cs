@@ -1,7 +1,8 @@
 ﻿using System;
 using NUnit.Framework;
+using akarnokd.reactive_extensions;
 
-namespace reactive_extensions_test
+namespace akarnokd.reactive_extensions_test
 {
     [TestFixture]
     public class UnitTest1
@@ -9,6 +10,9 @@ namespace reactive_extensions_test
         [Test]
         public void TestMethod1()
         {
+            IObservable<int> t = null;
+
+            t.ConcatMap(v => t);
         }
     }
 }
