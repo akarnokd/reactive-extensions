@@ -49,6 +49,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SpscLinkedArrayQueueTest.cs" />
+    <Compile Include="TestHelper.cs" />
+    <Compile Include="ObserveOnTest.cs" />
+    <Compile Include="ImmediateScheduler.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

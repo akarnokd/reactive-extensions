@@ -4,9 +4,9 @@
     <TargetFramework>netstandard1.3</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="impl\" />
-  </ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netstandard1.3\reactive-extensions.xml</DocumentationFile>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Reactive.Interfaces" Version="3.1.1" />
