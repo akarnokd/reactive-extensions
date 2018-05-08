@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Subjects;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -79,6 +80,26 @@ namespace akarnokd.reactive_extensions_test
             }
 
             // otherwise success
+        }
+
+        internal static void Emit<T>(this ISubject<T> subject, params T[] items)
+        {
+            foreach (var t in items)
+            {
+                subject.OnNext(t);
+            }
+        }
+
+        internal static void EmitAll<T>(this ISubject<T> subject, params T[] items)
+        {
+            Emit(subject, items);
+            subject.OnCompleted();
+        }
+
+        public static void EmitError<T>(this ISubject<T> subject, Exception error, params T[] items)
+        {
+            Emit(subject, items);
+            subject.OnError(error);
         }
     }
 }
