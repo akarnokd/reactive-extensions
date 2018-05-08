@@ -1,0 +1,8 @@
+language: csharp
+solution: reactive-extensions.sln
+install:
+  - nuget restore reactive-extensions.sln
+  - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
+script:
+  - xbuild /p:Configuration=Release reactive-extensions.sln
+  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./reactive-extensions-test/bin/Release/reactive-extensions-test.dll

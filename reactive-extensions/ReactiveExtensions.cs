@@ -2,7 +2,7 @@
 
 namespace reactive_extensions
 {
-    public class Class1
+    public static class ReactiveExtensions
     {
     }
 }
