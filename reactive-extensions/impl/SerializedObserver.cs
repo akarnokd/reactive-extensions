@@ -11,7 +11,7 @@ namespace akarnokd.reactive_extensions
     /// observer when the upstream may call those OnXXX methods concurrently.
     /// </summary>
     /// <typeparam name="T">The value type of the flow.</typeparam>
-    internal sealed class SerializedObserver<T> : BaseObserver<T, T>
+    internal class SerializedObserver<T> : BaseObserver<T, T>
     {
         int wip;
 

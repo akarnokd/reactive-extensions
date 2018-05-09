@@ -82,7 +82,7 @@ namespace akarnokd.reactive_extensions_test
             // otherwise success
         }
 
-        internal static void Emit<T>(this ISubject<T> subject, params T[] items)
+        internal static void Emit<T>(this IObserver<T> subject, params T[] items)
         {
             foreach (var t in items)
             {
@@ -90,16 +90,17 @@ namespace akarnokd.reactive_extensions_test
             }
         }
 
-        internal static void EmitAll<T>(this ISubject<T> subject, params T[] items)
+        internal static void EmitAll<T>(this IObserver<T> subject, params T[] items)
         {
             Emit(subject, items);
             subject.OnCompleted();
         }
 
-        public static void EmitError<T>(this ISubject<T> subject, Exception error, params T[] items)
+        public static void EmitError<T>(this IObserver<T> subject, Exception error, params T[] items)
         {
             Emit(subject, items);
             subject.OnError(error);
         }
+
     }
 }

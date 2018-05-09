@@ -91,5 +91,19 @@ namespace akarnokd.reactive_extensions
                 }
             }
         }
+
+        internal static bool SetOnce(ref IDisposable field, IDisposable only)
+        {
+            if (only == null)
+            {
+                throw new ArgumentNullException(nameof(only));
+            }
+            if (Interlocked.CompareExchange(ref field, only, null) != null)
+            {
+                only.Dispose();
+                return false;
+            }
+            return true;
+        }
     }
 }

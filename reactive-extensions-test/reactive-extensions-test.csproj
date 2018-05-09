@@ -62,6 +62,8 @@
     <Compile Include="DoOnDisposeTest.cs" />
     <Compile Include="DoAfterNextTest.cs" />
     <Compile Include="SerializedObserverTest.cs" />
+    <Compile Include="SerializedSubjectTest.cs" />
+    <Compile Include="ConcatMapEagerTest.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

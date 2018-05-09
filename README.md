@@ -10,6 +10,12 @@ Extensions to the dotnet/reactive library.
 These operators are available as extension methods on `IObservable` via the
 `akarnokd.reactive_extensions.ReactiveExtensions` static class.
 
+### ConcatMapEager
+
+Maps the upstream values into observables, runs some or all of them at once and emits items of
+one such observable until it completes, then switches to the next observable, and so on until no
+more observables are running.
+
 ### DoAfterNext
 
 Call a handler after the current item has been emitted to the downstream.
@@ -45,7 +51,7 @@ convenient assertions.
 
 ### ToSerialized
 
-Wraps an `IObserver` and serializes the calls to its `OnNext`, `OnError` and `OnCompleted`
+Wraps an `IObserver` or an `ISubject` and serializes the calls to its `OnNext`, `OnError` and `OnCompleted`
 methods by making sure they are called non-overlappingly and non-concurrently.
 
 ## Other classes

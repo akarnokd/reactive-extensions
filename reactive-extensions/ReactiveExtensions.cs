@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reactive;
 using System.Reactive.Concurrency;
+using System.Reactive.Subjects;
 
 namespace akarnokd.reactive_extensions
 {
@@ -180,6 +181,82 @@ namespace akarnokd.reactive_extensions
             }
 
             return new SerializedObserver<T>(observer);
+        }
+
+        /// <summary>
+        /// Wraps the given <paramref name="subject"/> so that concurrent
+        /// calls to the returned subject's OnXXX methods are serialized.
+        /// </summary>
+        /// <typeparam name="T">The upstream value type.</typeparam>
+        /// <typeparam name="R">The subject's output value type.</typeparam>
+        /// <param name="subject">The subject to wrap and serialize signals for.</param>
+        /// <returns>The serialized observer instance.</returns>
+        public static ISubject<T, R> ToSerialized<T, R>(this ISubject<T, R> subject)
+        {
+            if (subject == null)
+            {
+                throw new ArgumentNullException(nameof(subject));
+            }
+            if (subject is SerializedSubject<T, R> o)
+            {
+                return o;
+            }
+
+            return new SerializedSubject<T, R>(subject);
+        }
+
+        /// <summary>
+        /// Wraps the given <paramref name="subject"/> so that concurrent
+        /// calls to the returned subject's OnXXX methods are serialized.
+        /// </summary>
+        /// <typeparam name="T">The value type of the flow.</typeparam>
+        /// <param name="subject">The subject to wrap and serialize signals for.</param>
+        /// <returns>The serialized observer instance.</returns>
+        public static ISubject<T> ToSerialized<T>(this ISubject<T> subject)
+        {
+            if (subject == null)
+            {
+                throw new ArgumentNullException(nameof(subject));
+            }
+            if (subject is SerializedSubject<T> || subject is SerializedSubject<T, T>)
+            {
+                return subject;
+            }
+
+            return new SerializedSubject<T>(subject);
+        }
+
+        /// <summary>
+        /// Maps the upstream items into observables, runs some or all of them at once, emits items from one
+        /// of the observables until it completes, then switches to the next observable.
+        /// </summary>
+        /// <typeparam name="T">The value type of the upstream.</typeparam>
+        /// <typeparam name="R">The output value type.</typeparam>
+        /// <param name="source">The source observable to be mapper and concatenated eagerly.</param>
+        /// <param name="mapper">The function that returns an observable for an upstream item.</param>
+        /// <param name="maxConcurrency">The maximum number of observables to run at a time.</param>
+        /// <param name="capacityHint">The number of items expected from each observable.</param>
+        /// <returns>The new observable instance.</returns>
+        public static IObservable<R> ConcatMapEager<T, R>(this IObservable<T> source, Func<T, IObservable<R>> mapper, int maxConcurrency = int.MaxValue, int capacityHint = 128)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            if (mapper == null)
+            {
+                throw new ArgumentNullException(nameof(mapper));
+            }
+            if (maxConcurrency <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(maxConcurrency), maxConcurrency, nameof(maxConcurrency) + " must be positive");
+            }
+            if (capacityHint <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(capacityHint), capacityHint, nameof(capacityHint) + " must be positive");
+            }
+
+            return new ConcatMapEager<T, R>(source, mapper, maxConcurrency, capacityHint);
         }
     }
 }

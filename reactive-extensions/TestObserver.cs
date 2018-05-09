@@ -394,7 +394,7 @@ namespace akarnokd.reactive_extensions
         /// <returns>this</returns>
         public TestObserver<T> AssertEmpty()
         {
-            AssertValues();
+            AssertValueCount(0);
             AssertNoError();
             AssertNotCompleted();
             return this;
@@ -426,6 +426,20 @@ namespace akarnokd.reactive_extensions
             {
                 return Volatile.Read(ref itemCount);
             }
+        }
+
+        /// <summary>
+        /// Assert that the TestObserver is not terminated and contains only the
+        /// specified items.
+        /// </summary>
+        /// <param name="expected">The expected items.</param>
+        /// <returns>this</returns>
+        public TestObserver<T> AssertValuesOnly(params T[] expected)
+        {
+            AssertValues(expected);
+            AssertNoError();
+            AssertNotCompleted();
+            return this;
         }
     }
 }
