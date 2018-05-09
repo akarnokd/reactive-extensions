@@ -10,9 +10,7 @@ namespace akarnokd.reactive_extensions_test
         [Test]
         public void TestMethod1()
         {
-            IObservable<int> t = null;
-
-            t.ConcatMap(v => t);
+           
         }
     }
 }

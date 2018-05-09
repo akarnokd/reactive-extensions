@@ -53,12 +53,19 @@ namespace akarnokd.reactive_extensions
             }
         }
 
+        /// <summary>
+        /// Called when the upstream completes normally.
+        /// </summary>
         public virtual void OnCompleted()
         {
             Volatile.Write(ref completions, completions + 1);
             cdl.Signal();
         }
 
+        /// <summary>
+        /// Called when the upstream completes with an exception.
+        /// </summary>
+        /// <param name="error">The terminal exception.</param>
         public virtual void OnError(Exception error)
         {
             errors.Add(error ?? new NullReferenceException("The OnError(null)"));
@@ -66,6 +73,10 @@ namespace akarnokd.reactive_extensions
             cdl.Signal();
         }
 
+        /// <summary>
+        /// Called when a new item is available for consumption.
+        /// </summary>
+        /// <param name="value">The new item available.</param>
         public virtual void OnNext(T value)
         {
             items.Add(value);
@@ -82,16 +93,28 @@ namespace akarnokd.reactive_extensions
             DisposableHelper.Dispose(ref upstream);
         }
 
+        /// <summary>
+        /// Returns true if this TestObserver has been explicitly
+        /// disposed via <see cref="Dispose"/> method.
+        /// </summary>
+        /// <returns>True if this TestObserver has been explicitly disposed.</returns>
         public bool IsDisposed()
         {
             return DisposableHelper.IsDisposed(ref upstream);
         }
 
+        /// <summary>
+        /// Wait for the upstream to terminate within the specified timespan,
+        /// or else dispose the sequence and mark this TestObserver as timed-out.
+        /// </summary>
+        /// <param name="timeout">The amount of time to wait for the terminal signal.</param>
+        /// <returns>this</returns>
         public TestObserver<T> AwaitDone(TimeSpan timeout)
         {
             if (!cdl.Wait(timeout))
             {
                 this.timeout = true;
+                Dispose();
             }
             return this;
         }
@@ -145,7 +168,7 @@ namespace akarnokd.reactive_extensions
             return new Exception(msg);
         }
 
-        string toStr(object item)
+        string ToStr(object item)
         {
             string result = "";
             string typestr = item != null ? item.GetType().Name : typeof(T).Name;
@@ -180,7 +203,7 @@ namespace akarnokd.reactive_extensions
                 {
                     if (!object.Equals(exp.Current, act.Current))
                     {
-                        throw Fail("Item @ " + index + "/" + j + " differ. Expected: " + toStr(exp.Current) + ", Actual: " + toStr(act.Current));
+                        throw Fail("Item @ " + index + "/" + j + " differ. Expected: " + ToStr(exp.Current) + ", Actual: " + ToStr(act.Current));
                     }
                 }
                 else
@@ -224,18 +247,23 @@ namespace akarnokd.reactive_extensions
                     }
                     else
                     {
-                        throw Fail("Item @ " + i + " differ. Expected: " + toStr(expect) + ", Actual: " + toStr(actual));
+                        throw Fail("Item @ " + i + " differ. Expected: " + ToStr(expect) + ", Actual: " + ToStr(actual));
                     }
                 }
                 if (!EqualityComparer<T>.Default.Equals(actual, expect))
                 {
-                    throw Fail("Item @ " + i + " differ. Expected: " + toStr(expect) + ", Actual: " + toStr(actual));
+                    throw Fail("Item @ " + i + " differ. Expected: " + ToStr(expect) + ", Actual: " + ToStr(actual));
                 }
             }
 
             return this;
         }
 
+        /// <summary>
+        /// Assert that the upstream has completed: it called <see cref="OnCompleted"/>
+        /// exactly once and didn't call <see cref="OnError(Exception)"/> at all.
+        /// </summary>
+        /// <returns>this</returns>
         public TestObserver<T> AssertCompleted()
         {
             var c = Volatile.Read(ref completions);
@@ -250,6 +278,11 @@ namespace akarnokd.reactive_extensions
             return this;
         }
 
+        /// <summary>
+        /// Assert that the upstream has not yet completed normally
+        /// (but it could have failed, which is not asserted here).
+        /// </summary>
+        /// <returns>this</returns>
         public TestObserver<T> AssertNotCompleted()
         {
             var c = Volatile.Read(ref completions);
@@ -264,6 +297,11 @@ namespace akarnokd.reactive_extensions
             return this;
         }
 
+        /// <summary>
+        /// Assert that the upstream has not yet terminated with an exception
+        /// (but it could have completed normally, which is not asserted here).
+        /// </summary>
+        /// <returns>this</returns>
         public TestObserver<T> AssertNoError()
         {
             var c = Volatile.Read(ref errorCount);
@@ -278,6 +316,14 @@ namespace akarnokd.reactive_extensions
             return this;
         }
 
+        /// <summary>
+        /// Assert that the upstream terminated with a (subtype) of the
+        /// specified exception type and via exaclty one <see cref="OnError(Exception)"/>
+        /// call.
+        /// </summary>
+        /// <param name="expectedType">The expected exception type, 
+        /// such as <code>typeof(InvalidOperationException)</code> for example.</param>
+        /// <returns>this</returns>
         public TestObserver<T> AssertError(Type expectedType)
         {
             var c = Volatile.Read(ref errorCount);

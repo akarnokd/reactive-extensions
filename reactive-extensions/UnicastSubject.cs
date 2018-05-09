@@ -39,6 +39,10 @@ namespace akarnokd.reactive_extensions
             Volatile.Write(ref this.onTerminate, onTerminate);
         }
 
+        /// <summary>
+        /// Called when the upstream completes normally.
+        /// Calling this method multiple times has no effect.
+        /// </summary>
         public void OnCompleted()
         {
             if (Volatile.Read(ref done) || IsDisposed())
@@ -50,6 +54,12 @@ namespace akarnokd.reactive_extensions
             Drain();
         }
 
+        /// <summary>
+        /// Called when the upstream completes with an exception.
+        /// Calling this method multiple times has no effect and
+        /// subsequent calls will drop the Exception provided.
+        /// </summary>
+        /// <param name="error">The terminal exception.</param>
         public void OnError(Exception error)
         {
             if (error == null)
@@ -68,6 +78,12 @@ namespace akarnokd.reactive_extensions
             }
         }
 
+        /// <summary>
+        /// Called when a new item is available for consumption.
+        /// Calling this method after the subject has been terminated
+        /// or the observer disposed has no effect and the item is dropped.
+        /// </summary>
+        /// <param name="value">The new item available.</param>
         public void OnNext(T value)
         {
             if (Volatile.Read(ref done) || IsDisposed())
@@ -79,6 +95,15 @@ namespace akarnokd.reactive_extensions
             Drain();
         }
 
+        /// <summary>
+        /// Subscribes an observer to this UnicastSubject when there
+        /// were no observers before and starts emitting buffered events
+        /// to it.
+        /// If multiple observers try to subscribe, the other observers
+        /// will receive an <see cref="InvalidOperationException"/>.
+        /// </summary>
+        /// <param name="observer">The incoming observer.</param>
+        /// <returns>The IDisposable that can be called to stop the event delivery.</returns>
         public IDisposable Subscribe(IObserver<T> observer)
         {
             if (observer == null)
@@ -91,7 +116,7 @@ namespace akarnokd.reactive_extensions
                 Drain();
                 return new DisposeObserver(this);
             }
-            observer.OnError(new Exception("The UnicastSubject allows at most one IObserver to subscribe during its existence"));
+            observer.OnError(new InvalidOperationException("The UnicastSubject allows at most one IObserver to subscribe during its existence"));
             return DisposableHelper.EMPTY;
         }
 

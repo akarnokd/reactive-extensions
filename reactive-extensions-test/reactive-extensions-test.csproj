@@ -54,9 +54,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="SpscLinkedArrayQueueTest.cs" />
-    <Compile Include="TestHelper.cs" />
+    <Compile Include="tools\TestHelper.cs" />
     <Compile Include="ObserveOnTest.cs" />
-    <Compile Include="ImmediateScheduler.cs" />
+    <Compile Include="tools\ImmediateScheduler.cs" />
+    <Compile Include="DoFinallyTest.cs" />
+    <Compile Include="DoOnSubscribeTest.cs" />
+    <Compile Include="DoOnDisposeTest.cs" />
+    <Compile Include="DoAfterNextTest.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
