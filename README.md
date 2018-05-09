@@ -43,6 +43,11 @@ delay any error after all upstream items have been delivered.
 Subscribe a `TestObserver` to the observable sequence to perform various
 convenient assertions.
 
+### ToSerialized
+
+Wraps an `IObserver` and serializes the calls to its `OnNext`, `OnError` and `OnCompleted`
+methods by making sure they are called non-overlappingly and non-concurrently.
+
 ## Other classes
 
 ### TestObserver

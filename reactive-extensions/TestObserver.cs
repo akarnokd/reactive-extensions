@@ -399,5 +399,33 @@ namespace akarnokd.reactive_extensions
             AssertNotCompleted();
             return this;
         }
+
+        /// <summary>
+        /// Assert that the TestObserver received the specified number of items.
+        /// </summary>
+        /// <param name="expected">The expected number of items</param>
+        /// <returns>this</returns>
+        public TestObserver<T> AssertValueCount(int expected)
+        {
+            var c = Volatile.Read(ref itemCount);
+
+            if (c != expected)
+            {
+                throw Fail("Number of items differ. Expected: " + expected + ", Actual: " + c);
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// Returns the number of items received by the TestObserver.
+        /// </summary>
+        public int ItemCount
+        {
+            get
+            {
+                return Volatile.Read(ref itemCount);
+            }
+        }
     }
 }

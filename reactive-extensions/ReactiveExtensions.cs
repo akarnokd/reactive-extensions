@@ -160,5 +160,26 @@ namespace akarnokd.reactive_extensions
 
             return new DoFinally<T>(source, handler);
         }
+
+        /// <summary>
+        /// Wraps the given <paramref name="observer"/> so that concurrent
+        /// calls to the returned observer's OnXXX methods are serialized.
+        /// </summary>
+        /// <typeparam name="T">The element type of the flow</typeparam>
+        /// <param name="observer">The observer to wrap and serialize signals for.</param>
+        /// <returns>The serialized observer instance.</returns>
+        public static IObserver<T> ToSerialized<T>(this IObserver<T> observer)
+        {
+            if (observer == null)
+            {
+                throw new ArgumentNullException(nameof(observer));
+            }
+            if (observer is SerializedObserver<T> o)
+            {
+                return o;
+            }
+
+            return new SerializedObserver<T>(observer);
+        }
     }
 }
