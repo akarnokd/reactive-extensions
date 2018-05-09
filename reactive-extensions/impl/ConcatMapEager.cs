@@ -49,6 +49,11 @@ namespace akarnokd.reactive_extensions
             {
                 // deliberately no-op
             }
+
+            protected override void Cleanup()
+            {
+                // nothing extra to clean up
+            }
         }
 
         internal sealed class ConcatMapEagerLimitedObserver : ConcatMapEagerObserver
@@ -79,6 +84,11 @@ namespace akarnokd.reactive_extensions
                 DrainBackpressure();
             }
 
+            protected override void Cleanup()
+            {
+                DrainBackpressure();
+            }
+
             void DrainBackpressure()
             {
                 if (Interlocked.Increment(ref backpressure) == 1)
@@ -93,13 +103,28 @@ namespace akarnokd.reactive_extensions
 
                         while (e != r)
                         {
-                            if (Volatile.Read(ref disposed) || !q.TryPoll(out var v))
+                            if (Volatile.Read(ref disposed))
+                            {
+                                q.Clear();
+                                break;
+                            }
+
+                            if (!q.TryPoll(out var v))
                             {
                                 break;
                             }
 
                             e++;
                             UpstreamNext(v);
+                        }
+
+                        if (e == r)
+                        {
+                            if (Volatile.Read(ref disposed))
+                            {
+                                q.Clear();
+                                break;
+                            }
                         }
 
                         emitted = e;
@@ -252,6 +277,8 @@ namespace akarnokd.reactive_extensions
                 }
             }
 
+            protected abstract void Cleanup();
+
             void DrainLoop()
             {
                 int missed = 1;
@@ -271,6 +298,7 @@ namespace akarnokd.reactive_extensions
                         {
                             inner.Dispose();
                         }
+                        Cleanup();
                     } else
                     {
                         var curr = current;
