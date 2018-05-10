@@ -7,6 +7,7 @@ namespace akarnokd.reactive_extensions_test
     [TestFixture]
     public class ObserveOnTest
     {
+        
         [Test]
         public void Basic_NoDelayError()
         {

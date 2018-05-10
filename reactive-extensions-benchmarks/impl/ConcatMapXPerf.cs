@@ -10,10 +10,11 @@ using akarnokd.reactive_extensions;
 
 namespace akarnokd.reactive_extensions_benchmarks
 {
-    [ClrJob]
+
+    [Config(typeof(FastAndDirtyConfig))]
     public class ConcatMapXPerf
     {
-        [Params(1, 10, 100, 1000, 10000, 100000, 1000000)]
+        [Params(1, 10, 100, 1000, 10000, 100000)]
         public int N;
 
         IObservable<int> concat;
@@ -23,7 +24,7 @@ namespace akarnokd.reactive_extensions_benchmarks
         [GlobalSetup]
         public void Setup()
         {
-            var outer = new int[1000000 / N];
+            var outer = new int[100000 / N];
             var inner = new int[N];
 
             concat = outer.ToObservable().Select(v => inner.ToObservable()).Concat();
@@ -32,15 +33,15 @@ namespace akarnokd.reactive_extensions_benchmarks
         }
 
         [Benchmark]
-        public object Concat()
+        public int Concat()
         {
-            return concat.Subscribe();
+            return concat.Wait();
         }
 
         [Benchmark]
-        public object ConcatMap()
+        public int ConcatMap()
         {
-            return concatMap.Subscribe();
+            return concatMap.Wait();
         }
     }
 }

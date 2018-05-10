@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Reactive.Concurrency;
 using System.Threading;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
-namespace akarnokd.reactive_extensions_test
+[assembly: InternalsVisibleTo("reactive-extensions-test")]
+[assembly: InternalsVisibleTo("reactive-extensions-benchmarks")]
+
+namespace akarnokd.reactive_extensions
 {
     /// <summary>
     /// Test helper scheduler that executes actions on the current thread

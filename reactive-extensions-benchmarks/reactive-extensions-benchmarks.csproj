@@ -136,6 +136,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="impl\ConcatMapXPerf.cs" />
+    <Compile Include="impl\FastAndDirtyConfig.cs" />
+    <Compile Include="impl\ObserveOnPerf.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
