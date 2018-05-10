@@ -2,10 +2,25 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
+    <Version>0.0.1-alpha</Version>
+    <Description>Extension methods for the dotnet/reactive library</Description>
+    <Authors>David Karnok</Authors>
+    <PackageId>akarnokd.reactive_extensions</PackageId>
+    <PackageLicenseUrl>https://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/akarnokd/reactive-extensions</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/akarnokd/reactive-extensions</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <Copyright>Copyright 2018, David Karnok</Copyright>
+    <PackageReleaseNotes>First public release</PackageReleaseNotes>
+    <PackageTags>reactive, extensions</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>bin\Debug\netstandard1.3\reactive-extensions.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netstandard1.3\reactive-extensions.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
