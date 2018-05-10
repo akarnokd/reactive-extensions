@@ -26,12 +26,18 @@ These operators are available as extension methods on `IObservable` via the
 - Combinators
   - [ConcatMap](#concatmap)
   - [ConcatMapEager](#concatmapeager)
+  - [ConcatMany](#concatmany)
+  - [MergeMany](#concatmany)
 - Test support
   - [Test](#test)
 
 ### ConcatMap
 
 Maps the upstream values into enumerables and emits their items in-order.
+
+### ConcatMany
+
+Concatenates (flattens) a sequence of observables.
 
 ### ConcatMapEager
 
@@ -59,6 +65,11 @@ Call a handler when the downstream disposes the sequence.
 
 Call a handler after the upstream terminates normally, with an error or the
 downstream disposes the sequence.
+
+### MergeMany
+
+Merges some or all inner observables provided via an observable sequence and emits their
+items in a sequential manner.
 
 ### ObserveOn
 
