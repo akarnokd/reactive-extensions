@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
-    <Version>0.0.1-alpha</Version>
+    <Version>0.0.2-alpha</Version>
     <Description>Extension methods for the dotnet/reactive library</Description>
     <Authors>David Karnok</Authors>
     <PackageId>akarnokd.reactive_extensions</PackageId>
@@ -11,7 +11,7 @@
     <RepositoryUrl>https://github.com/akarnokd/reactive-extensions</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <Copyright>Copyright 2018, David Karnok</Copyright>
-    <PackageReleaseNotes>First public release</PackageReleaseNotes>
+    <PackageReleaseNotes>+ConcatMap, + ConcatMany, + MergeMany</PackageReleaseNotes>
     <PackageTags>reactive, extensions</PackageTags>
   </PropertyGroup>
 
