@@ -282,5 +282,24 @@ namespace akarnokd.reactive_extensions
 
             return new ConcatMany<T>(sources);
         }
+
+        /// <summary>
+        /// Merge some or all observables provided by the outer observable.
+        /// </summary>
+        /// <typeparam name="T">The result and inner observable element type.</typeparam>
+        /// <param name="sources">The sequence of inner observable sequences</param>
+        /// <param name="delayErrors">If true, all errors are delayed until all sources terminate.</param>
+        /// <param name="maxConcurrency">The maximum number of sources to run at once.</param>
+        /// <param name="capacityHint">The expected number of items from the inner sources that will have to wait in a buffer.</param>
+        /// <returns>The new observable instance</returns>
+        /// <remarks>Since 0.0.2</remarks>
+        public static IObservable<T> MergeMany<T>(this IObservable<IObservable<T>> sources, bool delayErrors = false, int maxConcurrency = int.MaxValue, int capacityHint = 128)
+        {
+            RequireNonNull(sources, nameof(sources));
+            RequirePositive(maxConcurrency, nameof(maxConcurrency));
+            RequirePositive(capacityHint, nameof(capacityHint));
+
+            return new MergeMany<T>(sources, delayErrors, maxConcurrency, capacityHint);
+        }
     }
 }

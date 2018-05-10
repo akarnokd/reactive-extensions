@@ -160,6 +160,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="impl\ConcatMapEagerXPerf.cs" />
+    <Compile Include="impl\MergeMapXPerf.cs" />
     <Compile Include="impl\XMapYPerf.cs" />
     <Compile Include="impl\FlatMapXPerf.cs" />
     <Compile Include="impl\ConcatMapXPerf.cs" />
