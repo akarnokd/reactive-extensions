@@ -24,9 +24,14 @@ These operators are available as extension methods on `IObservable` via the
   - [ObserveOn](#observeon)
   - [ToSerialized](#toserialized)
 - Combinators
+  - [ConcatMap](#concatmap)
   - [ConcatMapEager](#concatmapeager)
 - Test support
   - [Test](#test)
+
+### ConcatMap
+
+Maps the upstream values into enumerables and emits their items in-order.
 
 ### ConcatMapEager
 

@@ -30,6 +30,8 @@ namespace akarnokd.reactive_extensions
 
         bool timeout;
 
+        int once;
+
         /// <summary>
         /// Constructs an empty TestObserver.
         /// </summary>
@@ -59,7 +61,10 @@ namespace akarnokd.reactive_extensions
         public virtual void OnCompleted()
         {
             Volatile.Write(ref completions, completions + 1);
-            cdl.Signal();
+            if (Interlocked.CompareExchange(ref once, 0, 1) == 1)
+            {
+                cdl.Signal();
+            }
         }
 
         /// <summary>
@@ -70,7 +75,10 @@ namespace akarnokd.reactive_extensions
         {
             errors.Add(error ?? new NullReferenceException("The OnError(null)"));
             Volatile.Write(ref errorCount, errors.Count);
-            cdl.Signal();
+            if (Interlocked.CompareExchange(ref once, 0, 1) == 1)
+            {
+                cdl.Signal();
+            }
         }
 
         /// <summary>

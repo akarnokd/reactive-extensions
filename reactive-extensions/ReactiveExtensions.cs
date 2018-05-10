@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reactive.Concurrency;
 using System.Reactive.Subjects;
 
@@ -11,6 +12,51 @@ namespace akarnokd.reactive_extensions
     {
 
         /// <summary>
+        /// Perform a null-check on an argument and throw an ArgumentNullException.
+        /// </summary>
+        /// <typeparam name="X">Nullable classes only.</typeparam>
+        /// <param name="reference">The target reference to check.</param>
+        /// <param name="paramName">The name of the parameter in the original method</param>
+        /// <exception cref="ArgumentNullException">If <paramref name="reference"/> is null.</exception>
+        /// <remarks>Since 0.0.2</remarks>
+        internal static void RequireNonNull<X>(X reference, string paramName) where X : class
+        {
+            if (reference == null)
+            {
+                throw new ArgumentNullException(paramName);
+            }
+        }
+
+        /// <summary>
+        /// Verify the <paramref name="value"/> is positive.
+        /// </summary>
+        /// <param name="value">The value to check.</param>
+        /// <param name="paramName">The name of the parameter in the original method</param>
+        /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> is non-positive.</exception>
+        /// <remarks>Since 0.0.2</remarks>
+        internal static void RequirePositive(int value, string paramName)
+        {
+            if (value <= 0)
+            {
+                throw new ArgumentOutOfRangeException(paramName, value, "Positive value required: " + value);
+            }
+        }
+
+        /// <summary>
+        /// Verify the <paramref name="value"/> is positive.
+        /// </summary>
+        /// <param name="value">The value to check.</param>
+        /// <param name="paramName">The name of the parameter in the original method</param>
+        /// <exception cref="ArgumentOutOfRangeException">If <paramref name="value"/> is non-positive.</exception>
+        internal static void RequirePositive(long value, string paramName)
+        {
+            if (value <= 0L)
+            {
+                throw new ArgumentOutOfRangeException(paramName, value, "Positive value required: " + value);
+            }
+        }
+
+        /// <summary>
         /// Test an observable by creating a TestObserver and subscribing 
         /// it to the <paramref name="source"/> observable.
         /// </summary>
@@ -19,6 +65,7 @@ namespace akarnokd.reactive_extensions
         /// <returns>The new TestObserver instance.</returns>
         public static TestObserver<T> Test<T>(this IObservable<T> source)
         {
+            RequireNonNull(source, nameof(source));
             var to = new TestObserver<T>();
             to.OnSubscribe(source.Subscribe(to));
             return to;
@@ -38,14 +85,8 @@ namespace akarnokd.reactive_extensions
             IScheduler scheduler, 
             bool delayError)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-            if (scheduler == null)
-            {
-                throw new ArgumentNullException(nameof(scheduler));
-            }
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(scheduler, nameof(scheduler));
 
             return new ObserveOn<T>(source, scheduler, delayError);
         }
@@ -60,14 +101,8 @@ namespace akarnokd.reactive_extensions
         /// <returns>The new observable instance.</returns>
         public static IObservable<T> DoOnSubscribe<T>(this IObservable<T> source, Action handler)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-            if (handler == null)
-            {
-                throw new ArgumentNullException(nameof(handler));
-            }
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
 
             return new DoOnSubscribe<T>(source, handler);
         }
@@ -82,14 +117,8 @@ namespace akarnokd.reactive_extensions
         /// <returns>The new observable instance.</returns>
         public static IObservable<T> DoOnDispose<T>(this IObservable<T> source, Action handler)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-            if (handler == null)
-            {
-                throw new ArgumentNullException(nameof(handler));
-            }
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
 
             return new DoOnDispose<T>(source, handler);
         }
@@ -105,14 +134,8 @@ namespace akarnokd.reactive_extensions
         /// <returns>The new observable instance.</returns>
         public static IObservable<T> DoAfterNext<T>(this IObservable<T> source, Action<T> handler)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-            if (handler == null)
-            {
-                throw new ArgumentNullException(nameof(handler));
-            }
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
 
             return new DoAfterNext<T>(source, handler);
         }
@@ -127,14 +150,8 @@ namespace akarnokd.reactive_extensions
         /// <returns>The new observable instance.</returns>
         public static IObservable<T> DoAfterTerminate<T>(this IObservable<T> source, Action handler)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-            if (handler == null)
-            {
-                throw new ArgumentNullException(nameof(handler));
-            }
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
 
             return new DoAfterTerminate<T>(source, handler);
         }
@@ -149,14 +166,8 @@ namespace akarnokd.reactive_extensions
         /// <returns>The new observable instance.</returns>
         public static IObservable<T> DoFinally<T>(this IObservable<T> source, Action handler)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-            if (handler == null)
-            {
-                throw new ArgumentNullException(nameof(handler));
-            }
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
 
             return new DoFinally<T>(source, handler);
         }
@@ -170,10 +181,8 @@ namespace akarnokd.reactive_extensions
         /// <returns>The serialized observer instance.</returns>
         public static IObserver<T> ToSerialized<T>(this IObserver<T> observer)
         {
-            if (observer == null)
-            {
-                throw new ArgumentNullException(nameof(observer));
-            }
+            RequireNonNull(observer, nameof(observer));
+
             if (observer is SerializedObserver<T> o)
             {
                 return o;
@@ -192,10 +201,8 @@ namespace akarnokd.reactive_extensions
         /// <returns>The serialized observer instance.</returns>
         public static ISubject<T, R> ToSerialized<T, R>(this ISubject<T, R> subject)
         {
-            if (subject == null)
-            {
-                throw new ArgumentNullException(nameof(subject));
-            }
+            RequireNonNull(subject, nameof(subject));
+
             if (subject is SerializedSubject<T, R> o)
             {
                 return o;
@@ -213,10 +220,8 @@ namespace akarnokd.reactive_extensions
         /// <returns>The serialized observer instance.</returns>
         public static ISubject<T> ToSerialized<T>(this ISubject<T> subject)
         {
-            if (subject == null)
-            {
-                throw new ArgumentNullException(nameof(subject));
-            }
+            RequireNonNull(subject, nameof(subject));
+
             if (subject is SerializedSubject<T> || subject is SerializedSubject<T, T>)
             {
                 return subject;
@@ -238,24 +243,29 @@ namespace akarnokd.reactive_extensions
         /// <returns>The new observable instance.</returns>
         public static IObservable<R> ConcatMapEager<T, R>(this IObservable<T> source, Func<T, IObservable<R>> mapper, int maxConcurrency = int.MaxValue, int capacityHint = 128)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-            if (mapper == null)
-            {
-                throw new ArgumentNullException(nameof(mapper));
-            }
-            if (maxConcurrency <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(maxConcurrency), maxConcurrency, nameof(maxConcurrency) + " must be positive");
-            }
-            if (capacityHint <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(capacityHint), capacityHint, nameof(capacityHint) + " must be positive");
-            }
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(mapper, nameof(mapper));
+            RequirePositive(maxConcurrency, nameof(maxConcurrency));
+            RequirePositive(capacityHint, nameof(capacityHint));
 
             return new ConcatMapEager<T, R>(source, mapper, maxConcurrency, capacityHint);
+        }
+
+        /// <summary>
+        /// Maps the upstream items to enumerables and emits their items in order.
+        /// </summary>
+        /// <typeparam name="T">The upstream value type.</typeparam>
+        /// <typeparam name="R">The result value type</typeparam>
+        /// <param name="source">The source observable.</param>
+        /// <param name="mapper">The function that turns an upstream item into an enumerable sequence.</param>
+        /// <returns>The new observable instance</returns>
+        /// <remarks>Since 0.0.2</remarks>
+        public static IObservable<R> ConcatMap<T, R>(this IObservable<T> source, Func<T, IEnumerable<R>> mapper)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(mapper, nameof(mapper));
+
+            return new ConcatMapEnumerable<T, R>(source, mapper);
         }
     }
 }
