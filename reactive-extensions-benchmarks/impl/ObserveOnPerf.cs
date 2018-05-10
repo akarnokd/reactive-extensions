@@ -1,10 +1,7 @@
 ﻿using BenchmarkDotNet.Attributes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using akarnokd.reactive_extensions;
+using System.Threading;
 
 namespace akarnokd.reactive_extensions_benchmarks
 {
@@ -19,6 +16,16 @@ namespace akarnokd.reactive_extensions_benchmarks
         {
             BlockingSubscribe(FastRange(1, N));
         }
+
+        /*
+        [Benchmark]
+        public void ObserveOn()
+        {
+            Observable.Range(1, N)
+                    .ObserveOn(Scheduler.CurrentThread)
+                    .Wait();
+        }
+        */
 
         [Benchmark]
         public void ObserveOn_Ext()
@@ -38,12 +45,70 @@ namespace akarnokd.reactive_extensions_benchmarks
 
         IObservable<int> FastRange(int start, int count)
         {
-            return null;
+            return new FastRangeObservable(start, count);
+        }
+
+        sealed class FastRangeObservable : IObservable<int>
+        {
+            readonly int start;
+
+            readonly int end;
+
+            public FastRangeObservable(int start, int count)
+            {
+                this.start = start;
+                this.end = start + count;
+            }
+
+            public IDisposable Subscribe(IObserver<int> observer)
+            {
+                for (int i = start; i < end; i++)
+                {
+                    observer.OnNext(i);
+                }
+                observer.OnCompleted();
+                return DisposableHelper.EMPTY;
+            }
         }
 
         void BlockingSubscribe<T>(IObservable<T> source)
         {
+            var b = new BlockingObserver<T>();
+            source.Subscribe(b);
+            b.Block();
+        }
 
+        sealed class BlockingObserver<T> : IObserver<T>
+        {
+            readonly CountdownEvent cde;
+
+            internal BlockingObserver()
+            {
+                this.cde = new CountdownEvent(1);
+            }
+
+            public void OnCompleted()
+            {
+                cde.Signal();
+            }
+
+            public void OnError(Exception error)
+            {
+                cde.Signal();
+            }
+
+            public void OnNext(T value)
+            {
+                // ignored
+            }
+
+            public void Block()
+            {
+                if (cde.CurrentCount != 0)
+                {
+                    cde.Wait();
+                }
+            }
         }
 
     }

@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Threading;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("reactive-extensions-test")]
+[assembly: InternalsVisibleTo("reactive-extensions-benchmarks")]
 
 namespace akarnokd.reactive_extensions
 {

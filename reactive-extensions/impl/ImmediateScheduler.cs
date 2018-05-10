@@ -2,7 +2,6 @@
 using System.Reactive.Concurrency;
 using System.Threading;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 [assembly: InternalsVisibleTo("reactive-extensions-test")]
 [assembly: InternalsVisibleTo("reactive-extensions-benchmarks")]
