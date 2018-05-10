@@ -5,10 +5,28 @@
 
 Extensions to the [dotnet/reactive](https://github.com/dotnet/reactive) library.
 
+### Setup
+
+```
+Install-Package akarnokd.reactive_extensions -Version 0.0.1-alpha
+```
+
 ## Operators
 
 These operators are available as extension methods on `IObservable` via the
 `akarnokd.reactive_extensions.ReactiveExtensions` static class.
+
+- Side-effecting sequences
+  - [DoAfterNext](#doafternext), [DoAfterTerminate](#doafterterminate)
+  - [DoOnSubscribe](#doonsubscribe), [DoOnDispose](#doondispose)
+  - [DoFinally](#dofinally)
+- Custom asynchronous boundaries
+  - [ObserveOn](#observeon)
+  - [ToSerialized](#toserialized)
+- Combinators
+  - [ConcatMapEager](#concatmapeager)
+- Test support
+  - [Test](#test)
 
 ### ConcatMapEager
 
