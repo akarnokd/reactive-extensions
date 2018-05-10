@@ -27,7 +27,7 @@ These operators are available as extension methods on `IObservable` via the
   - [ConcatMap](#concatmap)
   - [ConcatMapEager](#concatmapeager)
   - [ConcatMany](#concatmany)
-  - [MergeMany](#concatmany)
+  - [MergeMany](#mergemany)
 - Test support
   - [Test](#test)
 
