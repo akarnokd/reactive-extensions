@@ -267,5 +267,20 @@ namespace akarnokd.reactive_extensions
 
             return new ConcatMapEnumerable<T, R>(source, mapper);
         }
+
+        /// <summary>
+        /// Concatenates the sequence of inner observables into one observable sequence
+        /// while preserving their order.
+        /// </summary>
+        /// <typeparam name="T">The result and inner observable element type.</typeparam>
+        /// <param name="sources">The sequence of inner observable sequences</param>
+        /// <returns>The new observable instance</returns>
+        /// <remarks>Since 0.0.2</remarks>
+        public static IObservable<T> ConcatMany<T>(this IObservable<IObservable<T>> sources)
+        {
+            RequireNonNull(sources, nameof(sources));
+
+            return new ConcatMany<T>(sources);
+        }
     }
 }

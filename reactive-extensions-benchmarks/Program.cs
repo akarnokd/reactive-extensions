@@ -13,7 +13,11 @@ namespace akarnokd.reactive_extensions_benchmarks
         {
             // Yes, these have to be manually enabled and disabled!
             //BenchmarkRunner.Run<ConcatMapXPerf>();
-            BenchmarkRunner.Run<ObserveOnPerf>();
+            //BenchmarkRunner.Run<ObserveOnPerf>();
+            //BenchmarkRunner.Run<QueuePerf>();
+            //BenchmarkRunner.Run<FlatMapXPerf>();
+            //BenchmarkRunner.Run<ConcatMapEagerXPerf>();
+            BenchmarkRunner.Run<XMapYPerf>();
 
             // --------------------------------------------------
             Console.ReadLine();

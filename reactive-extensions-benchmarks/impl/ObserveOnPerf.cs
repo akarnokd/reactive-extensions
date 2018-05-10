@@ -31,7 +31,7 @@ namespace akarnokd.reactive_extensions_benchmarks
         public void ObserveOn_Ext()
         {
             BlockingSubscribe(FastRange(1, N)
-                    .ObserveOn(ImmediateScheduler.INSTANCE, false)
+                    .ObserveOn(akarnokd.reactive_extensions.ImmediateScheduler.INSTANCE, false)
                 );
         }
 
@@ -39,7 +39,7 @@ namespace akarnokd.reactive_extensions_benchmarks
         public void ObserveOn_Ext_DelayError()
         {
             BlockingSubscribe(FastRange(1, N)
-                    .ObserveOn(ImmediateScheduler.INSTANCE, true)
+                    .ObserveOn(akarnokd.reactive_extensions.ImmediateScheduler.INSTANCE, true)
                 );
         }
 

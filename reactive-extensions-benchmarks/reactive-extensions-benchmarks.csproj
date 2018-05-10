@@ -109,9 +109,6 @@
     <Reference Include="System.Reactive.Runtime.Remoting, Version=3.0.1000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reactive.Runtime.Remoting.4.0.0-preview00001\lib\net45\System.Reactive.Runtime.Remoting.dll</HintPath>
     </Reference>
-    <Reference Include="System.Reactive.Windows.Forms, Version=3.0.3000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Reactive.Windows.Forms.4.0.0-preview00001\lib\net46\System.Reactive.Windows.Forms.dll</HintPath>
-    </Reference>
     <Reference Include="System.Reactive.Windows.Threading, Version=3.0.1000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reactive.Windows.Threading.4.0.0-preview00001\lib\net45\System.Reactive.Windows.Threading.dll</HintPath>
     </Reference>
@@ -162,8 +159,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="impl\ConcatMapEagerXPerf.cs" />
+    <Compile Include="impl\XMapYPerf.cs" />
+    <Compile Include="impl\FlatMapXPerf.cs" />
     <Compile Include="impl\ConcatMapXPerf.cs" />
     <Compile Include="impl\FastAndDirtyConfig.cs" />
+    <Compile Include="impl\QueuePerf.cs" />
     <Compile Include="impl\ObserveOnPerf.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
