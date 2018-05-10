@@ -1,6 +1,4 @@
-﻿using System;
-using NUnit.Framework;
-using akarnokd.reactive_extensions;
+﻿using NUnit.Framework;
 
 namespace akarnokd.reactive_extensions_test
 {

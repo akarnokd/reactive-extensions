@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Reflection;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Threading;
 
 namespace akarnokd.reactive_extensions
 {
@@ -201,7 +201,7 @@ namespace akarnokd.reactive_extensions
                 else
                 if (expNext && actNext)
                 {
-                    if (!object.Equals(exp.Current, act.Current))
+                    if (!Equals(exp.Current, act.Current))
                     {
                         throw Fail("Item @ " + index + "/" + j + " differ. Expected: " + ToStr(exp.Current) + ", Actual: " + ToStr(act.Current));
                     }

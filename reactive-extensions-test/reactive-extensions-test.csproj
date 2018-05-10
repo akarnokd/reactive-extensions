@@ -53,6 +53,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DoAfterTerminateTest.cs" />
     <Compile Include="SpscLinkedArrayQueueTest.cs" />
     <Compile Include="tools\TestHelper.cs" />
     <Compile Include="ObserveOnTest.cs" />
