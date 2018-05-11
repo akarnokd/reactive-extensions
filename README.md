@@ -8,7 +8,7 @@ Extensions to the [dotnet/reactive](https://github.com/dotnet/reactive) library.
 ### Setup
 
 ```
-Install-Package akarnokd.reactive_extensions -Version 0.0.1-alpha
+Install-Package akarnokd.reactive_extensions -Version 0.0.2-alpha
 ```
 
 ## Operators
@@ -28,8 +28,45 @@ These operators are available as extension methods on `IObservable` via the
   - [ConcatMapEager](#concatmapeager)
   - [ConcatMany](#concatmany)
   - [MergeMany](#mergemany)
+- Aggregators
+  - [Collect](#collect)
+- Composition
+  - [Compose](#compose)
+- Termination handling
+  - [Repeat](#repeat)
+  - [RepeatWhen](#repeatwhen)
+  - [Retry](#retry)
+  - [RetryWhen](#retrywhen)
 - Test support
   - [Test](#test)
+
+### Collect
+
+Collects upstream items into a per-observer collection object created
+via a function and added via a collector action and emits this collection
+when the upstream completes.
+
+```cs
+Observable.Range(1, 5)
+.Collect(() => new List<int>(), (a, b) => a.Add(b))
+.Test()
+.AssertResult(new List<int>() { 1, 2, 3, 4, 5 });
+```
+
+### Compose
+
+Applies a function to the source at assembly-time and returns the
+observable returned by this function.
+This allows creating reusable set of operators to be applied on observables.
+
+```cs
+Func<IObservable<int>, IObservable<int>> applySchedulers =
+    o => o.SubscribeOn(Scheduler.NewThread).ObserveOn(Scheduler.UI);
+
+var o1 = Observable.Range(1, 5).Compose(applySchedulers);
+var o2 = Observable.Range(10, 5).Compose(applySchedulers);
+var o3 = Observable.Range(10, 5).Compose(applySchedulers);
+```
 
 ### ConcatMap
 
@@ -77,6 +114,25 @@ Observe the signals of the upstream on a specified scheduler and optionally
 delay any error after all upstream items have been delivered.
 
 (The standard `ObserveOn` by default allows errors to cut ahead.)
+
+### Repeat
+
+Repeatedly re-subscribes to the source observable if the predicate
+function returns true upon the completion of the previous
+subscription.
+
+### RepeatWhen
+
+
+### Retry
+
+Repeatedly re-subscribes to the source observable if the predicate
+function returns true upon the failure of the previous
+subscription.
+
+### RetryWhen
+
+
 
 ### Test
 

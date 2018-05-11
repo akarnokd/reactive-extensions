@@ -81,8 +81,8 @@ namespace akarnokd.reactive_extensions
         /// <param name="delayError">If true, an upstream error is emitted last. If false, an error may cut ahead of other values.</param>
         /// <returns>The new IObservable instance.</returns>
         public static IObservable<T> ObserveOn<T>(
-            this IObservable<T> source, 
-            IScheduler scheduler, 
+            this IObservable<T> source,
+            IScheduler scheduler,
             bool delayError)
         {
             RequireNonNull(source, nameof(source));
@@ -300,6 +300,80 @@ namespace akarnokd.reactive_extensions
             RequirePositive(capacityHint, nameof(capacityHint));
 
             return new MergeMany<T>(sources, delayErrors, maxConcurrency, capacityHint);
+        }
+
+        /// <summary>
+        /// Collects upstream items into a per-observer collection object created
+        /// via a function and added via a collector action and emits this collection
+        /// when the upstream completes.
+        /// </summary>
+        /// <typeparam name="T">The element type of the source sequence.</typeparam>
+        /// <typeparam name="C">The type of the collection.</typeparam>
+        /// <param name="source">The source sequence to collect up.</param>
+        /// <param name="collectionSupplier">The function creating the collection per-observer.</param>
+        /// <param name="collector">The action that receives the collection and the current upstream item.</param>
+        /// <returns>The new observable instance.</returns>
+        /// <remarks>Since 0.0.3</remarks>
+        public static IObservable<C> Collect<T, C>(this IObservable<T> source, Func<C> collectionSupplier, Action<C, T> collector)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(collectionSupplier, nameof(collectionSupplier));
+            RequireNonNull(collector, nameof(collector));
+
+            return new Collect<T, C>(source, collectionSupplier, collector);
+        }
+
+        /// <summary>
+        /// Applies a function to the source at assembly-time and returns the
+        /// observable returned by this function.
+        /// This allows creating reusable set of operators to be applied on observables.
+        /// </summary>
+        /// <typeparam name="T">The upstream value type.</typeparam>
+        /// <typeparam name="R">The downstream value type</typeparam>
+        /// <param name="source">The upstream sequence.</param>
+        /// <param name="composer">The function called immediately on <paramref name="source"/>
+        /// and should return another observable.</param>
+        /// <returns>The observable returned by the <paramref name="composer"/> function.</returns>
+        public static IObservable<R> Compose<T, R>(this IObservable<T> source, Func<IObservable<T>, IObservable<R>> composer)
+        {
+            return composer(source);
+        }
+
+        /// <summary>
+        /// Repeatedly re-subscribes to the source observable if the predicate
+        /// function returns true upon the completion of the previous
+        /// subscription.
+        /// </summary>
+        /// <typeparam name="T">The value type of the sequence.</typeparam>
+        /// <param name="source">The upstream observable to repeat.</param>
+        /// <param name="predicate">Function to determine whether to repeat the <paramref name="source"/> or not.</param>
+        /// <returns>The new observable instance.</returns>
+        /// <remarks>Since 0.0.3</remarks>
+        public static IObservable<T> Repeat<T>(this IObservable<T> source, Func<bool> predicate)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(predicate, nameof(predicate));
+
+            return new RepeatPredicate<T>(source, predicate);
+        }
+
+        /// <summary>
+        /// Repeatedly re-subscribes to the source observable if the predicate
+        /// function returns true upon the failure of the previous
+        /// subscription.
+        /// </summary>
+        /// <typeparam name="T">The value type of the sequence.</typeparam>
+        /// <param name="source">The upstream observable to repeat.</param>
+        /// <param name="predicate">Function to determine whether to retry the <paramref name="source"/> or not,
+        /// given the last Exception and the run count so far.</param>
+        /// <returns>The new observable instance.</returns>
+        /// <remarks>Since 0.0.3</remarks>
+        public static IObservable<T> Retry<T>(this IObservable<T> source, Func<Exception, int, bool> predicate)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(predicate, nameof(predicate));
+
+            return new RetryPredicate<T>(source, predicate);
         }
     }
 }

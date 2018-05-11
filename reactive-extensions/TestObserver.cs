@@ -258,9 +258,12 @@ namespace akarnokd.reactive_extensions
                         throw Fail("Item @ " + i + " differ. Expected: " + ToStr(expect) + ", Actual: " + ToStr(actual));
                     }
                 }
-                if (!EqualityComparer<T>.Default.Equals(actual, expect))
+                else
                 {
-                    throw Fail("Item @ " + i + " differ. Expected: " + ToStr(expect) + ", Actual: " + ToStr(actual));
+                    if (!EqualityComparer<T>.Default.Equals(actual, expect))
+                    {
+                        throw Fail("Item @ " + i + " differ. Expected: " + ToStr(expect) + ", Actual: " + ToStr(actual));
+                    }
                 }
             }
 

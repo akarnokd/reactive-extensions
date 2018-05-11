@@ -66,6 +66,9 @@
     <Compile Include="ConcatMapEagerTest.cs" />
     <Compile Include="ConcatMapEnumerableTest.cs" />
     <Compile Include="MergeManyTest.cs" />
+    <Compile Include="CollectTest.cs" />
+    <Compile Include="RepeatPredicateTest.cs" />
+    <Compile Include="RetryPredicateTest.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
