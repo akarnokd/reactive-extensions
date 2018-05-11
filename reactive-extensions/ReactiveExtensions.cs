@@ -375,5 +375,41 @@ namespace akarnokd.reactive_extensions
 
             return new RetryPredicate<T>(source, predicate);
         }
+
+        /// <summary>
+        /// Checks a predicate after an item has been emitted and completes
+        /// the sequence if it returns true.
+        /// </summary>
+        /// <param name="source">The upstream observable limit conditionally.</param>
+        /// <param name="stopPredicate">The function called with the current item after it
+        /// has been emitted to the downstream and should return true to stop and dispose
+        /// the upstream and complete the downstream.</param>
+        /// <typeparam name="T">The element type of the sequence</typeparam>
+        /// <remarks>Since 0.0.3</remarks>
+        public static IObservable<T> TakeUntil<T>(this IObservable<T> source, Func<T, bool> stopPredicate)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(stopPredicate, nameof(stopPredicate));
+
+            return new TakeUntilPredicate<T>(source, stopPredicate);
+        }
+
+        /// <summary>
+        /// Switches to the fallback observables if the main source
+        /// or a previous fallback is empty.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The main source sequence.</param>
+        /// <param name="fallbacks">The fallback sequences if the <paramref name="source"/>
+        /// turns out to be empty. Should have at least one observable.</param>
+        /// <remarks>Since 0.0.3</remarks>
+        public static IObservable<T> SwitchIfEmpty<T>(this IObservable<T> source, params IObservable<T>[] fallbacks)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(fallbacks, nameof(fallbacks));
+            RequirePositive(fallbacks.Length, nameof(fallbacks) + ".Length");
+
+            return new SwitchIfEmpty<T>(source, fallbacks);
+        }
     }
 }

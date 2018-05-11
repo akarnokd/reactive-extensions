@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Reflection;
+using System.Reactive.Linq;
 
 namespace akarnokd.reactive_extensions_test
 {
@@ -106,6 +107,11 @@ namespace akarnokd.reactive_extensions_test
         public static bool IsAssignableFrom<T>(this Type type, T item)
         {
             return type.GetTypeInfo().IsAssignableFrom(item.GetType().GetTypeInfo());
+        }
+
+        public static IObservable<T> ConcatError<T>(this IObservable<T> source, Exception ex)
+        {
+            return source.Concat(Observable.Throw<T>(ex));
         }
     }
 }

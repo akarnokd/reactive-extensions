@@ -69,6 +69,8 @@
     <Compile Include="CollectTest.cs" />
     <Compile Include="RepeatPredicateTest.cs" />
     <Compile Include="RetryPredicateTest.cs" />
+    <Compile Include="TakeUntilPredicateTest.cs" />
+    <Compile Include="SwitchIfEmptyTest.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

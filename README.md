@@ -37,6 +37,8 @@ These operators are available as extension methods on `IObservable` via the
   - [RepeatWhen](#repeatwhen)
   - [Retry](#retry)
   - [RetryWhen](#retrywhen)
+  - [SwitchIfEmpty](#switchifempty)
+  - [TakeUntil](#takeuntil)
 - Test support
   - [Test](#test)
 
@@ -124,6 +126,7 @@ subscription.
 ### RepeatWhen
 
 
+
 ### Retry
 
 Repeatedly re-subscribes to the source observable if the predicate
@@ -133,6 +136,32 @@ subscription.
 ### RetryWhen
 
 
+### SwitchIfEmpty
+
+Switches to the (next) fallback observable if the main source
+or a previous fallback is empty.
+
+```cs
+var source = new Subject<int>();
+
+var to = source.SwitchIfEmpty(Observable.Range(1, 5)).Test();
+
+source.OnCompleted();
+
+to.AssertResult(1, 2, 3, 4, 5);
+```
+
+### TakeUntil
+
+Checks a predicate after an item has been emitted and completes
+the sequence if it returns false.
+
+```cs
+Observable.Range(1, 5)
+.TakeUntil(v => v == 3)
+.Test()
+.AssertResult(1, 2, 3);
+```
 
 ### Test
 
