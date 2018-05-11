@@ -121,7 +121,7 @@ Maps the upstream values into observables, runs some or all of them at once and 
 one such observable until it completes, then switches to the next observable, and so on until no
 more observables are running.
 
-*Since: 0.0.3*<br/>
+*Since: 0.0.2*<br/>
 See also: [ConcatEager](#concateager)
 
 ### DoAfterNext
