@@ -8,22 +8,34 @@ Extensions to the [dotnet/reactive](https://github.com/dotnet/reactive) library.
 ### Setup
 
 ```
-Install-Package akarnokd.reactive_extensions -Version 0.0.2-alpha
+Install-Package akarnokd.reactive_extensions -Version 0.0.3-alpha
 ```
+
+### Dependencies
+
+Due to some versioning shenanigans, this library requires at least the
+`System.Reactive.Interfaces` 4.0.0-preview Rx.NET interface library.
 
 ## Operators
 
 These operators are available as extension methods on `IObservable` via the
 `akarnokd.reactive_extensions.ReactiveExtensions` static class.
 
+```cs
+using akarnokd.reactive_extensions;
+```
+
 - Side-effecting sequences
-  - [DoAfterNext](#doafternext), [DoAfterTerminate](#doafterterminate)
-  - [DoOnSubscribe](#doonsubscribe), [DoOnDispose](#doondispose)
+  - [DoAfterNext](#doafternext)
+  - [DoAfterTerminate](#doafterterminate)
   - [DoFinally](#dofinally)
+  - [DoOnDispose](#doondispose)
+  - [DoOnSubscribe](#doonsubscribe)
 - Custom asynchronous boundaries
   - [ObserveOn](#observeon)
   - [ToSerialized](#toserialized)
 - Combinators
+  - [ConcatEager](#concateager)
   - [ConcatMap](#concatmap)
   - [ConcatMapEager](#concatmapeager)
   - [ConcatMany](#concatmany)
@@ -55,6 +67,8 @@ Observable.Range(1, 5)
 .AssertResult(new List<int>() { 1, 2, 3, 4, 5 });
 ```
 
+*Since: 0.0.3*
+
 ### Compose
 
 Applies a function to the source at assembly-time and returns the
@@ -67,8 +81,31 @@ Func<IObservable<int>, IObservable<int>> applySchedulers =
 
 var o1 = Observable.Range(1, 5).Compose(applySchedulers);
 var o2 = Observable.Range(10, 5).Compose(applySchedulers);
-var o3 = Observable.Range(10, 5).Compose(applySchedulers);
+var o3 = Observable.Range(20, 5).Compose(applySchedulers);
 ```
+*Since: 0.0.3*
+
+### ConcatEager
+
+Concatenates a sequence of observables eagerly by running some
+or all of them at once and emitting their items in order.
+It is equivalent to `sources.ConcatMapEager(v => v)`.
+
+```cs
+new[] 
+{
+    Observable.Range(1, 5),
+    Observable.Range(6, 5),
+    Observable.Range(11, 5)
+}
+.ToObservable()
+.ConcatEager()
+.Test()
+.AssertResult(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15);
+```
+
+*Since: 0.0.3*<br/>
+See also: [ConcatMapEager](#concatmapeager)
 
 ### ConcatMap
 
@@ -83,6 +120,9 @@ Concatenates (flattens) a sequence of observables.
 Maps the upstream values into observables, runs some or all of them at once and emits items of
 one such observable until it completes, then switches to the next observable, and so on until no
 more observables are running.
+
+*Since: 0.0.3*<br/>
+See also: [ConcatEager](#concateager)
 
 ### DoAfterNext
 
@@ -123,6 +163,8 @@ Repeatedly re-subscribes to the source observable if the predicate
 function returns true upon the completion of the previous
 subscription.
 
+*Since: 0.0.3*
+
 ### RepeatWhen
 
 
@@ -132,6 +174,8 @@ subscription.
 Repeatedly re-subscribes to the source observable if the predicate
 function returns true upon the failure of the previous
 subscription.
+
+*Since: 0.0.3*
 
 ### RetryWhen
 
@@ -151,6 +195,8 @@ source.OnCompleted();
 to.AssertResult(1, 2, 3, 4, 5);
 ```
 
+*Since: 0.0.3*
+
 ### TakeUntil
 
 Checks a predicate after an item has been emitted and completes
@@ -162,6 +208,8 @@ Observable.Range(1, 5)
 .Test()
 .AssertResult(1, 2, 3);
 ```
+
+*Since: 0.0.3*
 
 ### Test
 

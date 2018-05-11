@@ -24,6 +24,21 @@ namespace akarnokd.reactive_extensions_test
         }
 
         [Test]
+        public void ConcatEager_Basic()
+        {
+            new[]
+            {
+                Observable.Range(1, 5),
+                Observable.Range(6, 5),
+                Observable.Range(11, 5)
+            }
+            .ToObservable()
+            .ConcatEager()
+            .Test()
+            .AssertResult(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15);
+        }
+
+        [Test]
         public void Basic_Max_Concurrent()
         {
             Observable.Range(1, 5)

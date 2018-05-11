@@ -252,6 +252,20 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
+        /// Concatenates a sequence of observables eagerly by running some
+        /// or all of them at once and emitting their items in order.
+        /// </summary>
+        /// <typeparam name="T">The value type of the inner observables.</typeparam>
+        /// <param name="sources">The sequence of observables to concatenate eagerly.</param>
+        /// <param name="maxConcurrency">The maximum number of observables to run at a time.</param>
+        /// <param name="capacityHint">The number of items expected from each observable.</param>
+        /// <returns>The new observable instance.</returns>
+        public static IObservable<T> ConcatEager<T>(this IObservable<IObservable<T>> sources, int maxConcurrency = int.MaxValue, int capacityHint = 128)
+        {
+            return sources.ConcatMapEager(v => v, maxConcurrency, capacityHint);
+        }
+
+        /// <summary>
         /// Maps the upstream items to enumerables and emits their items in order.
         /// </summary>
         /// <typeparam name="T">The upstream value type.</typeparam>
