@@ -5,6 +5,7 @@ using System.Reactive.Subjects;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Reflection;
 
 namespace akarnokd.reactive_extensions_test
 {
@@ -102,5 +103,9 @@ namespace akarnokd.reactive_extensions_test
             subject.OnError(error);
         }
 
+        public static bool IsAssignableFrom<T>(this Type type, T item)
+        {
+            return type.GetTypeInfo().IsAssignableFrom(item.GetType().GetTypeInfo());
+        }
     }
 }

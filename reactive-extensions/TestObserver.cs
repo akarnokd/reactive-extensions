@@ -334,8 +334,10 @@ namespace akarnokd.reactive_extensions
         /// </summary>
         /// <param name="expectedType">The expected exception type, 
         /// such as <code>typeof(InvalidOperationException)</code> for example.</param>
+        /// <param name="message">The expected message (or part of it if <paramref name="messageContains"/> is true).</param>
+        /// <param name="messageContains">If true and <paramref name="message"/> is not null, the error messages are compared as well.</param>
         /// <returns>this</returns>
-        public TestObserver<T> AssertError(Type expectedType)
+        public TestObserver<T> AssertError(Type expectedType, string message = null, bool messageContains = false)
         {
             var c = Volatile.Read(ref errorCount);
             if (c == 0)
@@ -344,11 +346,31 @@ namespace akarnokd.reactive_extensions
             }
             var members = expectedType.GetTypeInfo();
             var found = 0;
+            var foundRaw = 0;
             for (int i = 0; i < c; i++)
             {
                 if (members.IsAssignableFrom(errors[i].GetType().GetTypeInfo()))
                 {
-                    found++;
+                    if (message != null)
+                    {
+                        if (messageContains)
+                        {
+                            if (errors[i].Message.Contains(message))
+                            {
+                                found++;
+                            }
+                        }
+                        else
+                        {
+                            if (errors[i].Message.Equals(message))
+                            {
+                                found++;
+                            }
+                        }
+                    } else {
+                        found++;
+                    }
+                    foundRaw++;
                 }
             }
 
@@ -364,6 +386,10 @@ namespace akarnokd.reactive_extensions
 
             if (found == 0)
             {
+                if (foundRaw != 0)
+                {
+                    throw Fail("Exception type present but not with the specified message" + (messageContains ? " part:" : ":") + message);
+                }
                 throw Fail("Exception not present");
             }
 
@@ -431,13 +457,13 @@ namespace akarnokd.reactive_extensions
         /// <summary>
         /// Returns the number of items received by the TestObserver.
         /// </summary>
-        public int ItemCount
-        {
-            get
-            {
-                return Volatile.Read(ref itemCount);
-            }
-        }
+        public int ItemCount { get { return Volatile.Read(ref itemCount); } }
+
+        /// <summary>
+        /// Returns the number of errors received by the TestObserver.
+        /// </summary>
+        /// <remarks>Since 0.0.3</remarks>
+        public int ErrorCount { get { return Volatile.Read(ref errorCount); } }
 
         /// <summary>
         /// Assert that the TestObserver is not terminated and contains only the
@@ -450,6 +476,65 @@ namespace akarnokd.reactive_extensions
             AssertValues(expected);
             AssertNoError();
             AssertNotCompleted();
+            return this;
+        }
+
+        /// <summary>
+        /// The list of received items so far. Use
+        /// <see cref="ItemCount"/> for the number of
+        /// items to be read safely.
+        /// </summary>
+        /// <remarks>Since 0.0.3</remarks>
+        public List<T> Items { get { return items; } }
+
+        /// <summary>
+        /// The list of received errors so far. Use
+        /// <see cref="ErrorCount"/> for the number of
+        /// items to be read safely.
+        /// </summary>
+        /// <remarks>Since 0.0.3</remarks>
+        public List<Exception> Errors { get { return errors; } }
+
+        /// <summary>
+        /// Assert that there is exactly one <see cref="AggregateException"/>
+        /// and its <paramref name="index"/>th error is assignable to the
+        /// <paramref name="errorType"/>.
+        /// </summary>
+        /// <param name="index">The index of the error inside the composite.</param>
+        /// <param name="errorType">The expected error type</param>
+        /// <param name="message">The expected message (or part of it if <paramref name="messageContains"/> is true).</param>
+        /// <param name="messageContains">If true and <paramref name="message"/> is not null, the error messages are compared as well.</param>
+        /// <returns>this</returns>
+        /// <remarks>Since 0.0.3</remarks>
+        public TestObserver<T> AssertCompositeError(int index, Type errorType, string message = null, bool messageContains = false)
+        {
+            AssertError(typeof(AggregateException));
+            var exs = (errors[0] as AggregateException).InnerExceptions;
+            if (exs.Count <= index)
+            {
+                throw Fail("The AggregateException index out of bounds. Expected: " + index + ", Actual: " + exs.Count);
+            }
+            if (!errorType.GetTypeInfo().IsAssignableFrom(exs[index].GetType().GetTypeInfo()))
+            {
+                if (message != null)
+                {
+                    if (messageContains)
+                    {
+                        if (!exs[index].Message.Contains(message))
+                        {
+                            throw Fail("Error found with a different message part. Expected: " + message + ", Actual: " + exs[index].Message);
+                        }
+                    }
+                    else
+                    {
+                        if (!exs[index].Message.Equals(message))
+                        {
+                            throw Fail("Error found with a different message. Expected: " + message + ", Actual: " + exs[index].Message);
+                        }
+                    }
+                }
+                throw Fail("Wrong error type @ " + index + ". Expected: " + errorType + ", Actual: " + exs[index].GetType());
+            }
             return this;
         }
     }
