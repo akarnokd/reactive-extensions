@@ -22,7 +22,7 @@ namespace akarnokd.reactive_extensions
         public IDisposable Subscribe(IObserver<T> observer)
         {
             var parent = new ConcatManyOuterObserver(observer);
-            var d = sources.SubscribeSafe(parent);
+            var d = sources.Subscribe(parent);
             parent.OnSubscribe(d);
             return parent;
         }
@@ -160,7 +160,7 @@ namespace akarnokd.reactive_extensions
                                 if (innerObserver.SetDisposable(sad))
                                 {
                                     Interlocked.Exchange(ref active, 1);
-                                    sad.Disposable = source.SubscribeSafe(innerObserver);
+                                    sad.Disposable = source.Subscribe(innerObserver);
                                 }
                             }
                             else

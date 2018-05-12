@@ -34,7 +34,7 @@ Enhancements:
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Reactive.Interfaces" Version="4.0.0-preview00001" />
+    <PackageReference Include="System.Reactive.Interfaces" Version="4.0.0-preview.2.build.379" />
   </ItemGroup>
 
 </Project>
