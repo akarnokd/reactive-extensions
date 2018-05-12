@@ -607,5 +607,27 @@ namespace akarnokd.reactive_extensions
             return new RepeatWhen<T, U>(source, handler);
         }
 
-    }
+        /// <summary>
+        /// Automatically connect the upstream IConnectableObservable at most once when the
+        /// specified number of IObservers have subscribed to this IObservable.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Connectable observable sequence.</param>
+        /// <param name="minObservers">The number of observers required to subscribe before the connection to source happens, non-positive value will trigger an immediate subscription.</param>
+        /// <param name="onConnect">If not null, the connection's IDisposable is provided to it.</param>
+        /// <returns>An observable sequence that connects to the source at most once when the given number of observers have subscribed to it.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
+        public static IObservable<T> AutoConnect<T>(this IConnectableObservable<T> source, int minObservers = 1, Action<IDisposable> onConnect = null)
+        {
+            RequireNonNull(source, nameof(source));
+            if (minObservers <= 0)
+            {
+                var d = source.Connect();
+                onConnect?.Invoke(d);
+                return source;
+            }
+            return new AutoConnect<T>(source, minObservers, onConnect);
+        }
+
+}
 }
