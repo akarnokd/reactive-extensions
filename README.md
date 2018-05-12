@@ -130,7 +130,8 @@ source.BlockingSubscribe(v => {
 }, Console.WriteLine, () => Console.WriteLine("Done"));
 ```
 
-*Since 0.0.4*
+*Since 0.0.4*<br/>
+See also: [BlockingSubscribe](#blockingsubscribe)
 
 ### Cache
 

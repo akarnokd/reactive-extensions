@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
-    <Version>0.0.3-alpha</Version>
-    <Description>Extension methods for the dotnet/reactive library</Description>
+    <Version>0.0.4-alpha</Version>
+    <Description>Extension methods for the dotnet/reactive library.</Description>
     <Authors>David Karnok</Authors>
     <PackageId>akarnokd.reactive_extensions</PackageId>
     <PackageLicenseUrl>https://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
@@ -11,17 +11,24 @@
     <RepositoryUrl>https://github.com/akarnokd/reactive-extensions</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <Copyright>Copyright 2018, David Karnok</Copyright>
-    <PackageReleaseNotes>New operators:
-+ Collect
-+ Compose
-+ ConcatEager
-+ Repeat
-+ Retry
-+ SwitchIfEmpty
-+ TakeUntil
+    <PackageReleaseNotes>Upgrade dependencies to System.Reactive 4.0.0-preview.2
 
-Enhancements:
-- TestObserver more assert methods, fixes</PackageReleaseNotes>
+New operators:
++ AutoConnect
++ BlockingEnumerable
++ BlockingSubscribe
++ BlockingSubscribeWhile
++ Cache
++ RepeatWhen
++ RetryWhen
++ SwitchMany
++ SwitchMap
++ UnsubscribeOn
++ WithLatestFrom
+
+Fixes:
+- TestObserver fixes
+- SerializedObserver fixes</PackageReleaseNotes>
     <PackageTags>reactive, extensions</PackageTags>
   </PropertyGroup>
 
