@@ -75,6 +75,7 @@
     <Compile Include="SwitchIfEmptyTest.cs" />
     <Compile Include="CacheTest.cs" />
     <Compile Include="SwitchMapTest.cs" />
+    <Compile Include="WithLatestFromTest.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

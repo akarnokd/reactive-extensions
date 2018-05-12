@@ -483,14 +483,82 @@ namespace akarnokd.reactive_extensions
             return SwitchMap(sources, v => v, delayErrors, capacityHint);
         }
 
-        public static IObservable<R> WithLatestFrom<T, U, R>(this IObservable<T> source, Func<T, U[], R> mapper, params IObservable<R>[] others)
+        /// <summary>
+        /// Combines the latest values of multiple alternate observables with 
+        /// the value of the main observable sequence through a function.
+        /// </summary>
+        /// <typeparam name="T">The element type of the main source.</typeparam>
+        /// <typeparam name="U">The common type of the alternate observables.</typeparam>
+        /// <typeparam name="R">The result type of the flow.</typeparam>
+        /// <param name="source">The main source observable of items.</param>
+        /// <param name="mapper">The function that takes the upstream item and the
+        /// latest values from each <paramref name="others"/> observable if any.
+        /// if not all other observable has a latest value, the mapper is not invoked.</param>
+        /// <param name="others">The params array of alternate observables to use the latest values of.</param>
+        /// <returns>The new observable instance.</returns>
+        /// <remarks>Since 0.0.4</remarks>
+        public static IObservable<R> WithLatestFrom<T, U, R>(
+            this IObservable<T> source,
+            Func<T, U[], R> mapper,
+            params IObservable<U>[] others)
+        {
+            return WithLatestFrom(source, mapper, false, false, others);
+        }
+
+        /// <summary>
+        /// Combines the latest values of multiple alternate observables with 
+        /// the value of the main observable sequence through a function.
+        /// </summary>
+        /// <typeparam name="T">The element type of the main source.</typeparam>
+        /// <typeparam name="U">The common type of the alternate observables.</typeparam>
+        /// <typeparam name="R">The result type of the flow.</typeparam>
+        /// <param name="source">The main source observable of items.</param>
+        /// <param name="mapper">The function that takes the upstream item and the
+        /// latest values from each <paramref name="others"/> observable if any.
+        /// if not all other observable has a latest value, the mapper is not invoked.</param>
+        /// <param name="delayErrors">If true, errors from the <paramref name="others"/> will be delayed until the main sequence terminates.</param>
+        /// <param name="others">The params array of alternate observables to use the latest values of.</param>
+        /// <returns>The new observable instance.</returns>
+        /// <remarks>Since 0.0.4</remarks>
+        public static IObservable<R> WithLatestFrom<T, U, R>(
+            this IObservable<T> source,
+            Func<T, U[], R> mapper,
+            bool delayErrors,
+            params IObservable<U>[] others)
+        {
+            return WithLatestFrom(source, mapper, delayErrors, false, others);
+        }
+
+        /// <summary>
+        /// Combines the latest values of multiple alternate observables with 
+        /// the value of the main observable sequence through a function.
+        /// </summary>
+        /// <typeparam name="T">The element type of the main source.</typeparam>
+        /// <typeparam name="U">The common type of the alternate observables.</typeparam>
+        /// <typeparam name="R">The result type of the flow.</typeparam>
+        /// <param name="source">The main source observable of items.</param>
+        /// <param name="mapper">The function that takes the upstream item and the
+        /// latest values from each <paramref name="others"/> observable if any.
+        /// if not all other observable has a latest value, the mapper is not invoked.</param>
+        /// <param name="delayErrors">If true, errors from the <paramref name="others"/> will be delayed until the main sequence terminates.</param>
+        /// <param name="sourceFirst">If true, the <paramref name="source"/> is subscribed first,
+        /// if false, the <paramref name="others"/> are subscribed to first.</param>
+        /// <param name="others">The params array of alternate observables to use the latest values of.</param>
+        /// <returns>The new observable instance.</returns>
+        /// <remarks>Since 0.0.4</remarks>
+        public static IObservable<R> WithLatestFrom<T, U, R>(
+            this IObservable<T> source, 
+            Func<T, U[], R> mapper, 
+            bool delayErrors, 
+            bool sourceFirst,
+            params IObservable<U>[] others)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(mapper, nameof(mapper));
             RequireNonNull(others, nameof(others));
             RequirePositive(others.Length, nameof(others) + ".Length");
 
-            throw new NotImplementedException();
+            return new WithLatestFrom<T, U, R>(source, others, mapper, delayErrors, sourceFirst);
         }
     }
 }

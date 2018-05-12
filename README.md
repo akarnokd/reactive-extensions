@@ -277,6 +277,11 @@ methods by making sure they are called non-overlappingly and non-concurrently.
 
 ### WithLatestFrom
 
+Combines the latest values of multiple alternate observables with the value of the
+main observable sequence through a function. Unlike `CombineLatest`, new items
+from the alternate observables do not trigger an emission. The operator can
+optionally delay errors from the alternate sources until the main source terminates.
+
 *Since: 0.0.4*
 
 ## Other classes

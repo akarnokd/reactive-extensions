@@ -10,7 +10,7 @@ namespace akarnokd.reactive_extensions_test
         [Test]
         public void TestMethod1()
         {
-           
+            
         }
     }
 }
