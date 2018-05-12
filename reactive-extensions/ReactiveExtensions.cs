@@ -629,5 +629,93 @@ namespace akarnokd.reactive_extensions
             return new AutoConnect<T>(source, minObservers, onConnect);
         }
 
-}
+        /// <summary>
+        /// Makes sure the Dispose() call towards the upstream happens on the specified
+        /// scheduler.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The upstream observable sequence.</param>
+        /// <param name="scheduler">The scheduler where the Dispose() should be executed.</param>
+        /// <returns>The new observable instance.</returns>
+        /// <remarks>Since 0.0.4</remarks>
+        public static IObservable<T> UnsubscribeOn<T>(this IObservable<T> source, IScheduler scheduler)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(scheduler, nameof(scheduler));
+
+            return new UnsubscribeOn<T>(source, scheduler);
+        }
+
+        /// <summary>
+        /// Consumes the <paramref name="source"/> in a blocking fashion
+        /// through an IEnumerable.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source observable to consume.</param>
+        /// <returns>The new enumerable instance.</returns>
+        /// <remarks>Since 0.0.4</remarks>
+        public static IEnumerable<T> BlockingEnumerable<T>(this IObservable<T> source)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return new BlockingEnumerable<T>(source);
+        }
+
+        /// <summary>
+        /// Consumes the source observable in a blocking fashion on
+        /// the current thread and relays events to the given observer.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source observable to consume.</param>
+        /// <param name="observer">The observer to call the OnXXX methods</param>
+        /// <param name="dispose">The callback with the IDisposable to allow external cancellation.</param>
+        /// <remarks>Since 0.0.4</remarks>
+        public static void BlockingSubscribe<T>(this IObservable<T> source, IObserver<T> observer, Action<IDisposable> dispose = null)
+        {
+            var consumer = new BlockingSubscribeObserver<T>(observer);
+            dispose?.Invoke(consumer);
+            consumer.OnSubscribe(source.Subscribe(consumer));
+            consumer.Run();
+        }
+
+        /// <summary>
+        /// Consumes the source observable in a blocking fashion on
+        /// the current thread and relays events to the given callback actions.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source observable to consume.</param>
+        /// <param name="onNext">The action called with the next item.</param>
+        /// <param name="onError">The action called with the error.</param>
+        /// <param name="onComplete">The action called when the sequence completes.</param>
+        /// <param name="dispose">The callback with the IDisposable to allow external cancellation.</param>
+        /// <remarks>Since 0.0.4</remarks>
+        public static void BlockingSubscribe<T>(this IObservable<T> source, Action<T> onNext, Action<Exception> onError = null, Action onComplete = null, Action<IDisposable> dispose = null)
+        {
+            var consumer = new BlockingSubscribeAction<T>(onNext, onError, onComplete);
+            dispose?.Invoke(consumer);
+            consumer.OnSubscribe(source.Subscribe(consumer));
+            consumer.Run();
+        }
+
+        /// <summary>
+        /// Consumes the source observable in a blocking fashion on
+        /// the current thread and relays events to the given callback actions
+        /// while the <paramref name="onNext"/> predicate returns true.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source observable to consume.</param>
+        /// <param name="onNext">The action called with the next item and should return true to keep
+        /// the source running.</param>
+        /// <param name="onError">The action called with the error.</param>
+        /// <param name="onComplete">The action called when the sequence completes.</param>
+        /// <param name="dispose">The callback with the IDisposable to allow external cancellation.</param>
+        /// <remarks>Since 0.0.4</remarks>
+        public static void BlockingSubscribeWhile<T>(this IObservable<T> source, Func<T, bool> onNext, Action<Exception> onError = null, Action onComplete = null, Action<IDisposable> dispose = null)
+        {
+            var consumer = new BlockingSubscribePredicate<T>(onNext, onError, onComplete);
+            dispose?.Invoke(consumer);
+            consumer.OnSubscribe(source.Subscribe(consumer));
+            consumer.Run();
+        }
+    }
 }

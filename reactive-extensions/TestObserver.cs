@@ -89,6 +89,10 @@ namespace akarnokd.reactive_extensions
         {
             items.Add(value);
             Volatile.Write(ref itemCount, items.Count);
+            if (Volatile.Read(ref once) != 0)
+            {
+                OnError(new InvalidOperationException("OnNext called after termination"));
+            }
         }
 
         /// <summary>

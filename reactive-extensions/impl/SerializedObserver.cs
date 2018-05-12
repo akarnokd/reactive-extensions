@@ -45,7 +45,11 @@ namespace akarnokd.reactive_extensions
                 var q = Volatile.Read(ref queue);
                 if (q == null)
                 {
-                    downstream.OnCompleted();
+                    if (!terminated)
+                    {
+                        terminated = true;
+                        downstream.OnCompleted();
+                    }
                     if (Interlocked.Decrement(ref wip) == 0)
                     {
                         return;
@@ -76,7 +80,11 @@ namespace akarnokd.reactive_extensions
                 var q = Volatile.Read(ref queue);
                 if (q == null)
                 {
-                    downstream.OnError(error);
+                    if (!terminated)
+                    {
+                        terminated = true;
+                        downstream.OnError(error);
+                    }
                     if (Interlocked.Decrement(ref wip) == 0)
                     {
                         return;
@@ -104,8 +112,10 @@ namespace akarnokd.reactive_extensions
         {
             if (Interlocked.CompareExchange(ref wip, 1, 0) == 0)
             {
-                downstream.OnNext(value);
-
+                if (!terminated)
+                {
+                    downstream.OnNext(value);
+                }
                 if (Interlocked.Decrement(ref wip) == 0)
                 {
                     return;

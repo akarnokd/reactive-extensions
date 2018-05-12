@@ -8,7 +8,7 @@ Extensions to the [dotnet/reactive](https://github.com/dotnet/reactive) library.
 ### Setup
 
 ```
-Install-Package akarnokd.reactive_extensions -Version 0.0.3-alpha
+Install-Package akarnokd.reactive_extensions -Version 0.0.4-alpha
 ```
 
 ### Dependencies
@@ -55,8 +55,82 @@ using akarnokd.reactive_extensions;
   - [RetryWhen](#retrywhen)
   - [SwitchIfEmpty](#switchifempty)
   - [TakeUntil](#takeuntil)
+  - [UnsubscribeOn](#unsubscribeon)
+- Hot <-> Cold conversion
+  - [AutoConnect](#autoconnect)
+- Blocking
+  - [BlockingEnumerable](#blockingenumerable)
+  - [BlockingSubscribe](#blockingsubscribe)
+  - [BlockingSubscribeWhile](#blockingsubscribewhile)
 - Test support
   - [Test](#test)
+
+### AutoConnect
+
+Automatically connect the upstream `IConnectableObservable` at most once when the
+specified number of `IObserver`s have subscribed to this `IObservable`.
+
+*Since 0.0.4*
+
+### BlockingEnumerable
+
+Consumes the source observable in a blocking fashion
+through an IEnumerable.
+
+```cs
+var source = Observable.Range(1, 5).SubscribeOn(NewThreadScheduler.Default);
+
+foreach (var v in source.BlockingEnumerable()) {
+	Console.WriteLine(v);
+}
+Console.WriteLine("Done");
+```
+
+*Since 0.0.4*
+
+### BlockingSubscribe
+
+Consumes the source observable in a blocking fashion
+via callbacks or an observer on the caller thread.
+
+Consuming via an `IObservable`:
+
+```cs
+var source = Observable.Range(1, 5).SubscribeOn(NewThreadScheduler.Default);
+
+var to = new TestObserver<int>();
+source.BlockingSubscribe(to);
+
+to.AssertResult(1, 2, 3, 4, 5);
+```
+
+Consuming via `Action` delegates:
+
+```cs
+source.BlockingSubscribe(
+    Console.WriteLine, 
+	Console.WriteLine, 
+	() => Console.WriteLine("Done")
+);
+```
+
+*Since 0.0.4*<br/>
+See also: [BlockingSubscribeWhile](#blockingsubscribewhile)
+
+### BlockingSubscribeWhile
+
+Consumes the source observable in a blocking fashion on
+the current thread and relays events to the given callback actions
+while the `onNext` predicate returns true.
+
+```cs
+source.BlockingSubscribe(v => {
+    Console.WriteLine(v);
+    return v == 3;
+}, Console.WriteLine, () => Console.WriteLine("Done"));
+```
+
+*Since 0.0.4*
 
 ### Cache
 
@@ -281,6 +355,13 @@ convenient assertions.
 
 Wraps an `IObserver` or an `ISubject` and serializes the calls to its `OnNext`, `OnError` and `OnCompleted`
 methods by making sure they are called non-overlappingly and non-concurrently.
+
+### UnsubscribeOn
+
+Makes sure the `Dispose()` call towards the upstream happens on the specified
+scheduler.
+
+*Since: 0.0.4*
 
 ### WithLatestFrom
 
