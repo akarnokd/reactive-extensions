@@ -73,6 +73,7 @@
     <Compile Include="RetryPredicateTest.cs" />
     <Compile Include="TakeUntilPredicateTest.cs" />
     <Compile Include="SwitchIfEmptyTest.cs" />
+    <Compile Include="CacheTest.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

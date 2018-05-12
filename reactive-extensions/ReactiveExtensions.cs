@@ -425,5 +425,25 @@ namespace akarnokd.reactive_extensions
 
             return new SwitchIfEmpty<T>(source, fallbacks);
         }
+
+        /// <summary>
+        /// Caches all upstream events and relays/replays it to current or
+        /// late observers.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source"></param>
+        /// <param name="capacityHint">The items are stored internally in a linked-array structure for 
+        /// which this is the capacity hint for sizing those arrays: a tradeoff between memory usage and
+        /// locality of memory.</param>
+        /// <param name="cancel">Called with the disposable when the source is subscribed on the first observer.</param>
+        /// <returns>The new observable sequence.</returns>
+        /// <remarks>Since 0.0.4</remarks>
+        public static IObservable<T> Cache<T>(this IObservable<T> source, int capacityHint = 16, Action<IDisposable> cancel = null)
+        {
+            RequireNonNull(source, nameof(source));
+            RequirePositive(capacityHint, nameof(capacityHint));
+
+            return new Cache<T>(source, cancel, capacityHint);
+        }
     }
 }

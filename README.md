@@ -41,6 +41,7 @@ using akarnokd.reactive_extensions;
   - [ConcatMany](#concatmany)
   - [MergeMany](#mergemany)
 - Aggregators
+  - [Cache](#cache)
   - [Collect](#collect)
 - Composition
   - [Compose](#compose)
@@ -53,6 +54,35 @@ using akarnokd.reactive_extensions;
   - [TakeUntil](#takeuntil)
 - Test support
   - [Test](#test)
+
+### Cache
+
+Subscribes once to the upstream when the first observer subscribes to the operator, buffers
+all upstream events and relays/replays them to current or late observers.
+
+```cs
+var count = 0;
+
+var cached = Observable.Range(1, 5)
+.DoOnSubscribe(() => count++)
+.Cache();
+
+// not yet subscribed to Range()
+Assert.AreEqual(0, count);
+
+// relays events live
+cached.Test().AssertResult(1, 2, 3, 4, 5);
+
+Assert.AreEqual(1, count);
+
+// replays the buffered events
+cached.Test().AssertResult(1, 2, 3, 4, 5);
+
+// no further subscriptions
+Assert.AreEqual(1, count);
+```
+
+*Since 0.0.4*
 
 ### Collect
 
