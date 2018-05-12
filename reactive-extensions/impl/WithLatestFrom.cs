@@ -12,6 +12,7 @@ namespace akarnokd.reactive_extensions
     /// <typeparam name="T">The element type of the main source.</typeparam>
     /// <typeparam name="U">The common type of the alternate observables.</typeparam>
     /// <typeparam name="R">The result type of the flow.</typeparam>
+    /// <remarks>Since 0.0.4</remarks>
     internal sealed class WithLatestFrom<T, U, R> : IObservable<R>
     {
         readonly IObservable<T> source;

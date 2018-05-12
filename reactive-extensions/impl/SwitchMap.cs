@@ -11,6 +11,7 @@ namespace akarnokd.reactive_extensions
     /// </summary>
     /// <typeparam name="T">The value type of the upstream sequence.</typeparam>
     /// <typeparam name="R">The result type of the sequence</typeparam>
+    /// <remarks>Since 0.0.4</remarks>
     internal sealed class SwitchMap<T, R> : BaseObservable<T, R>
     {
         readonly Func<T, IObservable<R>> mapper;

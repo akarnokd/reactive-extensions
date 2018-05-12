@@ -56,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DoAfterTerminateTest.cs" />
+    <Compile Include="RepeatWhenTest.cs" />
     <Compile Include="SpscLinkedArrayQueueTest.cs" />
     <Compile Include="tools\TestHelper.cs" />
     <Compile Include="ObserveOnTest.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="SwitchIfEmptyTest.cs" />
     <Compile Include="CacheTest.cs" />
     <Compile Include="SwitchMapTest.cs" />
+    <Compile Include="RetryWhenTest.cs" />
     <Compile Include="WithLatestFromTest.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

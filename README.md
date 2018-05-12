@@ -200,7 +200,10 @@ subscription.
 
 ### RepeatWhen
 
+Repeats (resubscribes to) the source observable after a normal completion and when the observable
+returned by a handler produces an arbitrary item.
 
+*Since: 0.0.4*
 
 ### Retry
 
@@ -212,6 +215,10 @@ subscription.
 
 ### RetryWhen
 
+Retries (resubscribes to) the source observable after a failure and when the observable
+returned by a handler produces an arbitrary item.
+
+*Since: 0.0.4*
 
 ### SwitchIfEmpty
 

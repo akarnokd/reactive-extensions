@@ -560,5 +560,52 @@ namespace akarnokd.reactive_extensions
 
             return new WithLatestFrom<T, U, R>(source, others, mapper, delayErrors, sourceFirst);
         }
+
+        /// <summary>
+        /// Retries (resubscribes to) the source observable after a failure and when the observable
+        /// returned by a handler produces an arbitrary item.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in the source sequence.</typeparam>
+        /// <typeparam name="U">The arbitrary element type signaled by the handler observable.</typeparam>
+        /// <param name="source">Observable sequence to repeat until it successfully terminates.</param>
+        /// <param name="handler">The function that is called for each observer and takes an observable sequence of
+        /// errors. It should return an observable of arbitrary items that should signal that arbitrary item in
+        /// response to receiving the failure Exception from the source observable. If this observable signals
+        /// a terminal event, the sequence is terminated with that signal instead.</param>
+        /// <returns>An observable sequence producing the elements of the given sequence repeatedly until it terminates successfully.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="handler"/> is null.</exception>
+        /// <remarks>Since 0.0.4</remarks>
+        public static IObservable<T> RetryWhen<T, U>(this IObservable<T> source, Func<IObservable<Exception>, IObservable<U>> handler)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
+
+            return new RetryWhen<T, U>(source, handler);
+        }
+
+        /// <summary>
+        /// Repeats (resubscribes to) the source observable after a completion and when the observable
+        /// returned by a handler produces an arbitrary item.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in the source sequence.</typeparam>
+        /// <typeparam name="U">The arbitrary element type signaled by the handler observable.</typeparam>
+        /// <param name="source">Observable sequence to repeat while it successfully terminates.</param>
+        /// <param name="handler">The function that is called for each observer and takes an observable sequence of
+        /// errors. It should return an observable of arbitrary items that should signal that arbitrary item in
+        /// response to receiving the completion signal from the source observable. If this observable signals
+        /// a terminal event, the sequence is terminated with that signal instead.</param>
+        /// <returns>An observable sequence producing the elements of the given sequence repeatedly while it terminates successfully.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="handler"/> is null.</exception>
+        /// <remarks>Since 0.0.4</remarks>
+        public static IObservable<T> RepeatWhen<T, U>(this IObservable<T> source, Func<IObservable<object>, IObservable<U>> handler)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
+
+            return new RepeatWhen<T, U>(source, handler);
+        }
+
     }
 }
