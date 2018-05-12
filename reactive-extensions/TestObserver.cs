@@ -61,7 +61,7 @@ namespace akarnokd.reactive_extensions
         public virtual void OnCompleted()
         {
             Volatile.Write(ref completions, completions + 1);
-            if (Interlocked.CompareExchange(ref once, 0, 1) == 1)
+            if (Interlocked.CompareExchange(ref once, 1, 0) == 0)
             {
                 cdl.Signal();
             }
@@ -73,9 +73,9 @@ namespace akarnokd.reactive_extensions
         /// <param name="error">The terminal exception.</param>
         public virtual void OnError(Exception error)
         {
-            errors.Add(error ?? new NullReferenceException("The OnError(null)"));
+            errors.Add(error ?? new NullReferenceException("OnError(null)"));
             Volatile.Write(ref errorCount, errors.Count);
-            if (Interlocked.CompareExchange(ref once, 0, 1) == 1)
+            if (Interlocked.CompareExchange(ref once, 1, 0) == 0)
             {
                 cdl.Signal();
             }

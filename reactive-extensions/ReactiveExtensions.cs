@@ -445,5 +445,52 @@ namespace akarnokd.reactive_extensions
 
             return new Cache<T>(source, cancel, capacityHint);
         }
+
+        /// <summary>
+        /// Switches to a new observable mapped via a function in response to
+        /// an new upstream item, disposing the previous active observable.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="R"></typeparam>
+        /// <param name="source">The source sequence to turn into the inner observables.</param>
+        /// <param name="mapper">The function that given an upstream item returns the inner observable to continue
+        /// relaying events from.</param>
+        /// <param name="delayErrors">If true, all errors are delayed until all observables have terminated or got disposed.</param>
+        /// <param name="capacityHint">The expected number of items to buffer per inner observable</param>
+        /// <returns>The new observable instance.</returns>
+        /// <remarks>Since 0.0.4</remarks>
+        public static IObservable<R> SwitchMap<T, R>(this IObservable<T> source, Func<T, IObservable<R>> mapper, bool delayErrors = false, int capacityHint = 128)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(mapper, nameof(mapper));
+            RequirePositive(capacityHint, nameof(capacityHint));
+
+            return new SwitchMap<T, R>(source, mapper, delayErrors, capacityHint);
+        }
+
+        /// <summary>
+        /// Switches to a new inner observable when the upstream emits it,
+        /// disposing the previous active observable.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sources">The sequence of observables to switch between.</param>
+        /// <param name="delayErrors">If true, all errors are delayed until all observables have terminated or got disposed.</param>
+        /// <param name="capacityHint">The expected number of items to buffer per inner observable</param>
+        /// <returns>The new observable instance.</returns>
+        /// <remarks>Since 0.0.4</remarks>
+        public static IObservable<T> SwitchMany<T>(this IObservable<IObservable<T>> sources, bool delayErrors = false, int capacityHint = 128)
+        {
+            return SwitchMap(sources, v => v, delayErrors, capacityHint);
+        }
+
+        public static IObservable<R> WithLatestFrom<T, U, R>(this IObservable<T> source, Func<T, U[], R> mapper, params IObservable<R>[] others)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(mapper, nameof(mapper));
+            RequireNonNull(others, nameof(others));
+            RequirePositive(others.Length, nameof(others) + ".Length");
+
+            throw new NotImplementedException();
+        }
     }
 }

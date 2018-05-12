@@ -84,6 +84,7 @@ namespace akarnokd.reactive_extensions_test
         }
 
         [Test]
+        [Timeout(10000)]
         public void Race()
         {
             for (int i = 0; i < TestHelper.RACE_LOOPS; i++)
@@ -122,7 +123,9 @@ namespace akarnokd.reactive_extensions_test
                     Assert.AreEqual(j, list[j]);
                 }
 
-                to2.AssertValueCount(1000)
+                to2
+                .AwaitDone(TimeSpan.FromSeconds(5))
+                .AssertValueCount(1000)
                 .AssertNoError()
                 .AssertCompleted();
 

@@ -40,6 +40,9 @@ using akarnokd.reactive_extensions;
   - [ConcatMapEager](#concatmapeager)
   - [ConcatMany](#concatmany)
   - [MergeMany](#mergemany)
+  - [SwitchMany](#switchmany)
+  - [SwitchMap](#switchmap)
+  - [WithLatestFrom](#withlatestfrom)
 - Aggregators
   - [Cache](#cache)
   - [Collect](#collect)
@@ -227,6 +230,27 @@ to.AssertResult(1, 2, 3, 4, 5);
 
 *Since: 0.0.3*
 
+### SwitchMany
+
+Switches to a new inner observable when the outer observable produces one,
+disposing the previous active observable.
+The operator can be configured to delay all errors until all sources have
+terminated.
+
+*Since: 0.0.4*<br/>
+See also: [SwitchMap](#switchmap)
+
+### SwitchMap
+
+Switches to a new observable mapped via a function in response to
+an new upstream item, disposing the previous active observable.
+The operator can be configured to delay all errors until all sources have
+terminated.
+
+
+*Since: 0.0.4*<br/>
+See also: [SwitchMany](#switchmany)
+
 ### TakeUntil
 
 Checks a predicate after an item has been emitted and completes
@@ -250,6 +274,10 @@ convenient assertions.
 
 Wraps an `IObserver` or an `ISubject` and serializes the calls to its `OnNext`, `OnError` and `OnCompleted`
 methods by making sure they are called non-overlappingly and non-concurrently.
+
+### WithLatestFrom
+
+*Since: 0.0.4*
 
 ## Other classes
 

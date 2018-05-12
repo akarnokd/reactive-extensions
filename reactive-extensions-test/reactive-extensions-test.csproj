@@ -74,6 +74,7 @@
     <Compile Include="TakeUntilPredicateTest.cs" />
     <Compile Include="SwitchIfEmptyTest.cs" />
     <Compile Include="CacheTest.cs" />
+    <Compile Include="SwitchMapTest.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
