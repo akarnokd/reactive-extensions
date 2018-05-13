@@ -100,6 +100,16 @@ namespace akarnokd.reactive_extensions
             return task.ToCompletable();
         }
 
+        public static ICompletableSource AmbAll(this ICompletableSource[] sources)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static ICompletableSource Amb(params ICompletableSource[] sources)
+        {
+            throw new NotImplementedException();
+        }
+
         public static ICompletableSource ConcatAll(this ICompletableSource[] sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
         {
             throw new NotImplementedException();
@@ -191,6 +201,11 @@ namespace akarnokd.reactive_extensions
         }
 
         public static ICompletableSource Merge(this IObservable<ICompletableSource> sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static ICompletableSource Timer(TimeSpan time, IScheduler scheduler)
         {
             throw new NotImplementedException();
         }
@@ -373,6 +388,41 @@ namespace akarnokd.reactive_extensions
         }
 
         public static ICompletableSource Cache(this ICompletableSource source, Action<IDisposable> cancel = null)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
+        public static ICompletableSource Delay(this ICompletableSource source, TimeSpan time, IScheduler scheduler)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
+        public static ICompletableSource DelaySubscription(this ICompletableSource source, TimeSpan time, IScheduler scheduler)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
+        public static ICompletableSource DelaySubscription(this ICompletableSource source, ICompletableSource other)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
+        public static ICompletableSource TakeUntil(this ICompletableSource source, ICompletableSource other)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
+        public static ICompletableSource TakeUntil<U>(this ICompletableSource source, IObservable<U> other)
         {
             RequireNonNull(source, nameof(source));
 

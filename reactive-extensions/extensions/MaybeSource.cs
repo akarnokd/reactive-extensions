@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reactive.Concurrency;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using static akarnokd.reactive_extensions.ValidationHelper;
 
 namespace akarnokd.reactive_extensions
@@ -86,9 +88,381 @@ namespace akarnokd.reactive_extensions
             return MaybeNever<T>.INSTANCE;
         }
 
+        public static IMaybeSource<T> FromAction<T>(Action action)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> FromFunc<T>(Func<T> action)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> FromTask<T>(Task task)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> FromTask<T>(Task<T> task)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> AmbAll<T>(this IMaybeSource<T>[] sources)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> Amb<T>(params IMaybeSource<T>[] sources)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IObservable<T> ConcatAll<T>(this IMaybeSource<T>[] sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IObservable<T> Concat<T>(params IMaybeSource<T>[] sources)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IObservable<T> Concat<T>(IEnumerable<IMaybeSource<T>> sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IObservable<T> Concat<T>(int maxConcurrency, params IMaybeSource<T>[] sources)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IObservable<T> Concat<T>(int maxConcurrency, bool delayErrors, params IMaybeSource<T>[] sources)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IObservable<T> Concat<T>(this IObservable<IMaybeSource<T>> sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IObservable<T> ConcatEagerAll<T>(this IMaybeSource<T>[] sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IObservable<T> ConcatEager<T>(params IMaybeSource<T>[] sources)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IObservable<T> ConcatEager<T>(IEnumerable<IMaybeSource<T>> sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IObservable<T> ConcatEager<T>(int maxConcurrency, params IMaybeSource<T>[] sources)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IObservable<T> ConcatEager<T>(int maxConcurrency, bool delayErrors, params IMaybeSource<T>[] sources)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IObservable<T> ConcatEager<T>(this IObservable<IMaybeSource<T>> sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> Defer<T>(Func<IMaybeSource<T>> supplier)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IObservable<T> MergeAll<T>(this IMaybeSource<T>[] sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IObservable<T> Merge<T>(params IMaybeSource<T>[] sources)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IObservable<T> Merge<T>(IEnumerable<IMaybeSource<T>> sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IObservable<T> Merge<T>(int maxConcurrency, params IMaybeSource<T>[] sources)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IObservable<T> Merge<T>(int maxConcurrency, bool delayErrors, params IMaybeSource<T>[] sources)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IObservable<T> Merge<T>(this IObservable<IMaybeSource<T>> sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<long> Timer(TimeSpan time, IScheduler scheduler)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> Using<T, S>(Func<S> stateFactory, Func<S, IMaybeSource<T>> sourceSelector, Action<S> stateCleanup = null, bool eagerCleanup = false)
+        {
+            throw new NotImplementedException();
+        }
+
         //-------------------------------------------------
         // Instance methods
         //-------------------------------------------------
+
+            /// <summary>
+        /// Applies a function to the source at assembly-time and returns the
+        /// maybe source returned by this function.
+        /// This allows creating reusable set of operators to be applied to maybe sources.
+        /// </summary>
+        /// <typeparam name="T">The upstream element type.</typeparam>
+        /// <typeparam name="R">The element type of the returned maybe source.</typeparam>
+        /// <param name="source">The upstream maybe source.</param>
+        /// <param name="composer">The function called immediately on <paramref name="source"/>
+        /// and should return a maybe source.</param>
+        /// <returns>The maybe source returned by the <paramref name="composer"/> function.</returns>
+        public static IMaybeSource<R> Compose<T, R>(this IMaybeSource<T> source, Func<IMaybeSource<T>, IMaybeSource<R>> composer)
+        {
+            return composer(source);
+        }
+
+        public static IMaybeSource<T> DoOnSubscribe<T>(this IMaybeSource<T> source, Action<IDisposable> handler)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
+
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> DoOnDispose<T>(this IMaybeSource<T> source, Action handler)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
+
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> DoOnCompleted<T>(this IMaybeSource<T> source, Action handler)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
+
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> DoOnSuccess<T>(this IMaybeSource<T> source, Action<T> handler)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
+
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> DoOnError<T>(this IMaybeSource<T> source, Action<Exception> handler)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
+
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> DoOnTerminate<T>(this IMaybeSource<T> source, Action handler)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
+
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> DoAfterTerminate<T>(this IMaybeSource<T> source, Action handler)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
+
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> DoFinally<T>(this IMaybeSource<T> source, Action handler)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
+
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> Timeout<T>(this IMaybeSource<T> source, TimeSpan time, IScheduler scheduler, IMaybeSource<T> fallback = null)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> OnErrorComplete<T>(this IMaybeSource<T> source)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> OnErrorResumeNext<T>(this IMaybeSource<T> source, IMaybeSource<T> fallback)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> OnErrorResumeNext<T>(this IMaybeSource<T> source, Func<Exception, IMaybeSource<T>> handler)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
+        public static IObservable<T> Repeat<T>(this IMaybeSource<T> source, long times = long.MaxValue)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
+        public static IObservable<T> Repeat<T>(this IMaybeSource<T> source, Func<bool> handler)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
+        public static IObservable<T> RepeatWhen<T, U>(this IMaybeSource<T> source, Func<IObservable<object>, IObservable<U>> handler)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> Retry<T>(this IMaybeSource<T> source, long times = long.MaxValue)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> Retry<T>(this IMaybeSource<T> source, Func<Exception, long, bool> handler)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> RetryWhen<T, U>(this IMaybeSource<T> source, Func<IObservable<Exception>, IObservable<U>> handler)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> SubscribeOn<T>(this IMaybeSource<T> source, IScheduler scheduler)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> ObserveOn<T>(this IMaybeSource<T> source, IScheduler scheduler)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> UnsubscribeOn<T>(this IMaybeSource<T> source, IScheduler scheduler)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> OnTerminateDetach<T>(this IMaybeSource<T> source)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> Cache<T>(this IMaybeSource<T> source, Action<IDisposable> cancel = null)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> Delay<T>(this IMaybeSource<T> source, TimeSpan time, IScheduler scheduler)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> DelaySubscription<T>(this IMaybeSource<T> source, TimeSpan time, IScheduler scheduler)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> DelaySubscription<T>(this IMaybeSource<T> source, ICompletableSource other)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> TakeUntil<T>(this IMaybeSource<T> source, ICompletableSource other)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> TakeUntil<T, U>(this IMaybeSource<T> source, IObservable<U> other)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<R> Map<T, R>(this IMaybeSource<T> source, Func<T, R> mapper)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(mapper, nameof(mapper));
+
+            throw new NotImplementedException();
+        }
+
+
+        public static IMaybeSource<R> FlatMap<T, R>(this IMaybeSource<T> source, Func<T, IMaybeSource<R>> mapper)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(mapper, nameof(mapper));
+
+            throw new NotImplementedException();
+        }
 
         // ------------------------------------------------
         // Leaving the reactive world
@@ -133,5 +507,43 @@ namespace akarnokd.reactive_extensions
         // Interoperation with other reactive types
         //-------------------------------------------------
 
+        public static Task<T> ToTask<T>(this IMaybeSource<T> source, CancellationTokenSource cts = null)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
+        public static IObservable<R> ConcatMap<T, R>(this IObservable<T> source, Func<T, IMaybeSource<T>> mapper, bool delayErrors = false)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(mapper, nameof(mapper));
+
+            throw new NotImplementedException();
+        }
+
+        public static IObservable<R> FlatMap<T, R>(this IObservable<T> source, Func<T, IMaybeSource<R>> mapper, bool delayErrors = false, int maxConcurrency = int.MaxValue)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(mapper, nameof(mapper));
+
+            throw new NotImplementedException();
+        }
+
+        public static IObservable<R> FlatMap<T, R>(this ISingleSource<T> source, Func<T, IMaybeSource<T>> mapper)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(mapper, nameof(mapper));
+
+            throw new NotImplementedException();
+        }
+
+        public static IObservable<R> SwitchMap<T, R>(this IObservable<T> source, Func<T, IMaybeSource<T>> mapper, bool delayErrors = false)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(mapper, nameof(mapper));
+
+            throw new NotImplementedException();
+        }
     }
 }
