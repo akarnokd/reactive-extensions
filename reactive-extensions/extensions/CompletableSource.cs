@@ -21,11 +21,16 @@ namespace akarnokd.reactive_extensions
         /// it to the <paramref name="source"/> completable.
         /// </summary>
         /// <param name="source">The source completable to test.</param>
+        /// <param name="dispose">Dispose the TestObserver before the subscription happens</param>
         /// <returns>The new TestObserver instance.</returns>
-        public static TestObserver<object> Test(this ICompletableSource source)
+        public static TestObserver<object> Test(this ICompletableSource source, bool dispose = false)
         {
             RequireNonNull(source, nameof(source));
             var to = new TestObserver<object>();
+            if (dispose)
+            {
+                to.Dispose();
+            }
             source.Subscribe(to);
             return to;
         }
@@ -367,6 +372,13 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
+        public static ICompletableSource Cache(this ICompletableSource source, Action<IDisposable> cancel = null)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
         // ------------------------------------------------
         // Leaving the reactive world
         // ------------------------------------------------
@@ -429,10 +441,6 @@ namespace akarnokd.reactive_extensions
         {
             throw new NotImplementedException();
         }
-
-        //-------------------------------------------------
-        // Conversions from other reactive types
-        //-------------------------------------------------
 
         public static ICompletableSource IgnoreAllElements<T>(this IObservable<T> source)
         {

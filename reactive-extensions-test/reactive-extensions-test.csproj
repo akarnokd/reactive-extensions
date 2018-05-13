@@ -60,6 +60,7 @@
     <Compile Include="completable\CompletableCreateTest.cs" />
     <Compile Include="completable\CompletableNeverTest.cs" />
     <Compile Include="completable\UnitTest1.cs" />
+    <Compile Include="maybe\MaybeCreateTest.cs" />
     <Compile Include="maybe\MaybeEmptyTest.cs" />
     <Compile Include="maybe\MaybeErrorTest.cs" />
     <Compile Include="maybe\MaybeNeverTest.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="observable\RepeatWhenTest.cs" />
     <Compile Include="observable\SpscLinkedArrayQueueTest.cs" />
     <Compile Include="observable\UnitTest1.cs" />
+    <Compile Include="single\SingleCreateTest.cs" />
     <Compile Include="single\SingleNeverTest.cs" />
     <Compile Include="single\SingleErrorTest.cs" />
     <Compile Include="tools\TestHelper.cs" />

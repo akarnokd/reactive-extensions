@@ -480,6 +480,7 @@ Extension methods host: `SingleSource`
 
 ### Factory methods
 
+- `Create`
 - `Error`
 - `Never`
 
@@ -500,6 +501,7 @@ Extension methods host: `MaybeSource`
 
 ### Factory methods
 
+- `Create`
 - `Empty`
 - `Error`
 - `Never`
