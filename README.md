@@ -16,6 +16,16 @@ Install-Package akarnokd.reactive_extensions -Version 0.0.5-alpha
 Due to some versioning shenanigans, this library requires at least the
 `System.Reactive.Interfaces` 4.0.0-preview Rx.NET interface library.
 
+### Table of contents
+
+- `IObservable` support
+  - [Operators](#operators)
+  - [Other classes](#otherclasses) 
+- New reactive types
+  - [ICompletableSource](#icompletablesource)
+  - [ISingleSource](#isinglesource)
+  - [IMaybeSource](#imaybesource)
+
 ## Operators
 
 These operators are available as extension methods on `IObservable` via the
@@ -436,3 +446,40 @@ Observable.Range(1, 5)
 
 A special `ISubject` that supports exactly one `IObserver` during the subject's lifetime
 and buffers signals until such observer subscribes to it.
+
+## ICompletableSource
+
+A reactive type which signals an `OnCompleted()` or an `OnError()`, no items.
+
+Consumer type: `ICompletableObserver`
+
+Extension methods host: `CompletableSource`
+
+*Since: 0.0.5*
+
+### Factory methods
+
+- `Create`
+- `Empty`
+- `Error`
+
+### Instance methods
+
+- `Test`
+
+## ISingleSource
+
+A reactive type wich signals an `OnSuccess()` or an `OnError()`.
+
+Consumer type: `ISingleObserver<T>`
+
+Extension methods host: `SingleSource`
+
+## IMaybeSource
+
+A reactive type wich signals an `OnSuccess()`, an `OnError()` or an `OnCompleted()
+in a mutually exclusive fashion.
+
+Consumer type: `IMaybeObserver<T>`
+
+Extension methods host: `MaybeSource`

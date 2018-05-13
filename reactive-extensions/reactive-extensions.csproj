@@ -44,4 +44,9 @@ Fixes:
     <PackageReference Include="System.Reactive.Interfaces" Version="4.0.0-preview.2.build.379" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="maybe\" />
+    <Folder Include="single\" />
+  </ItemGroup>
+
 </Project>

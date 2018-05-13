@@ -13,6 +13,7 @@ namespace akarnokd.reactive_extensions
     /// </summary>
     /// <typeparam name="T">The value consumed.</typeparam>
     public class TestObserver<T> : IObserver<T>, IDisposable
+        , IMaybeObserver<T>, ISingleObserver<T>, ICompletableObserver
     {
         readonly CountdownEvent cdl;
 
@@ -96,6 +97,21 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
+        /// Called when the upstream succeeded.
+        /// </summary>
+        /// <param name="value">The new item available.</param>
+        public virtual void OnSuccess(T value)
+        {
+            items.Add(value);
+            Volatile.Write(ref itemCount, items.Count);
+            if (Volatile.Read(ref once) != 0)
+            {
+                OnError(new InvalidOperationException("OnSuccess called after termination"));
+            }
+            OnCompleted();
+        }
+
+        /// <summary>
         /// Disposes the connection to the upstream if any or
         /// makes sure the upstream is immediately disposed upon
         /// subscription.
@@ -103,6 +119,18 @@ namespace akarnokd.reactive_extensions
         public void Dispose()
         {
             DisposableHelper.Dispose(ref upstream);
+        }
+
+        /// <summary>
+        /// Disposes the connection to the upstream if any or
+        /// makes sure the upstream is immediately disposed upon
+        /// subscription.
+        /// </summary>
+        /// <returns>this</returns>
+        public TestObserver<T> Cancel()
+        {
+            Dispose();
+            return this;
         }
 
         /// <summary>

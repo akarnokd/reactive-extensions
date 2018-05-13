@@ -55,35 +55,40 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DoAfterTerminateTest.cs" />
-    <Compile Include="RepeatWhenTest.cs" />
-    <Compile Include="SpscLinkedArrayQueueTest.cs" />
+    <Compile Include="completable\CompletableEmptyTest.cs" />
+    <Compile Include="completable\CompletableErrorTest.cs" />
+    <Compile Include="completable\CompletableCreateTest.cs" />
+    <Compile Include="completable\UnitTest1.cs" />
+    <Compile Include="observable\DoAfterTerminateTest.cs" />
+    <Compile Include="observable\RepeatWhenTest.cs" />
+    <Compile Include="observable\SpscLinkedArrayQueueTest.cs" />
+    <Compile Include="observable\UnitTest1.cs" />
     <Compile Include="tools\TestHelper.cs" />
-    <Compile Include="ObserveOnTest.cs" />
-    <Compile Include="DoFinallyTest.cs" />
-    <Compile Include="DoOnSubscribeTest.cs" />
-    <Compile Include="DoOnDisposeTest.cs" />
-    <Compile Include="DoAfterNextTest.cs" />
-    <Compile Include="SerializedObserverTest.cs" />
-    <Compile Include="SerializedSubjectTest.cs" />
-    <Compile Include="ConcatMapEagerTest.cs" />
-    <Compile Include="ConcatMapEnumerableTest.cs" />
-    <Compile Include="MergeManyTest.cs" />
-    <Compile Include="CollectTest.cs" />
-    <Compile Include="RepeatPredicateTest.cs" />
-    <Compile Include="RetryPredicateTest.cs" />
-    <Compile Include="TakeUntilPredicateTest.cs" />
-    <Compile Include="SwitchIfEmptyTest.cs" />
-    <Compile Include="CacheTest.cs" />
-    <Compile Include="SwitchMapTest.cs" />
-    <Compile Include="RetryWhenTest.cs" />
-    <Compile Include="AutoConnectTest.cs" />
-    <Compile Include="BlockingEnumerableTest.cs" />
-    <Compile Include="BlockingSubscribeTest.cs" />
-    <Compile Include="CombineLatestTest.cs" />
-    <Compile Include="ZipTest.cs" />
-    <Compile Include="UnsubscribeOnTest.cs" />
-    <Compile Include="WithLatestFromTest.cs" />
+    <Compile Include="observable\ObserveOnTest.cs" />
+    <Compile Include="observable\DoFinallyTest.cs" />
+    <Compile Include="observable\DoOnSubscribeTest.cs" />
+    <Compile Include="observable\DoOnDisposeTest.cs" />
+    <Compile Include="observable\DoAfterNextTest.cs" />
+    <Compile Include="observable\SerializedObserverTest.cs" />
+    <Compile Include="observable\SerializedSubjectTest.cs" />
+    <Compile Include="observable\ConcatMapEagerTest.cs" />
+    <Compile Include="observable\ConcatMapEnumerableTest.cs" />
+    <Compile Include="observable\MergeManyTest.cs" />
+    <Compile Include="observable\CollectTest.cs" />
+    <Compile Include="observable\RepeatPredicateTest.cs" />
+    <Compile Include="observable\RetryPredicateTest.cs" />
+    <Compile Include="observable\TakeUntilPredicateTest.cs" />
+    <Compile Include="observable\SwitchIfEmptyTest.cs" />
+    <Compile Include="observable\CacheTest.cs" />
+    <Compile Include="observable\SwitchMapTest.cs" />
+    <Compile Include="observable\RetryWhenTest.cs" />
+    <Compile Include="observable\AutoConnectTest.cs" />
+    <Compile Include="observable\BlockingEnumerableTest.cs" />
+    <Compile Include="observable\BlockingSubscribeTest.cs" />
+    <Compile Include="observable\CombineLatestTest.cs" />
+    <Compile Include="observable\ZipTest.cs" />
+    <Compile Include="observable\UnsubscribeOnTest.cs" />
+    <Compile Include="observable\WithLatestFromTest.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -99,6 +104,7 @@
       <Name>reactive-extensions</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
