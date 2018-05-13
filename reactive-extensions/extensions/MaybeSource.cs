@@ -223,11 +223,26 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
+        public static IMaybeSource<R> Zip<T, R>(Func<T[], R> mapper, params IMaybeSource<T>[] sources)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<R> Zip<T, R>(Func<T[], R> mapper, bool delayErrors, params IMaybeSource<T>[] sources)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<R> Zip<T, R>(this IMaybeSource<T>[] sources, Func<T[], R> mapper, bool delayErrors = false)
+        {
+            throw new NotImplementedException();
+        }
+
         //-------------------------------------------------
         // Instance methods
         //-------------------------------------------------
 
-            /// <summary>
+        /// <summary>
         /// Applies a function to the source at assembly-time and returns the
         /// maybe source returned by this function.
         /// This allows creating reusable set of operators to be applied to maybe sources.
@@ -464,6 +479,59 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
+        public static IObservable<R> FlatMap<T, R>(this IMaybeSource<T> source, Func<T, IEnumerable<R>> mapper)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(mapper, nameof(mapper));
+
+            throw new NotImplementedException();
+        }
+
+        public static IObservable<R> FlatMap<T, R>(this IMaybeSource<T> source, Func<T, IObservable<R>> mapper)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(mapper, nameof(mapper));
+
+            throw new NotImplementedException();
+        }
+
+        public static ISingleSource<R> FlatMap<T, R>(this IMaybeSource<T> source, Func<T, ISingleSource<R>> mapper)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(mapper, nameof(mapper));
+
+            throw new NotImplementedException();
+        }
+
+        public static ICompletableSource FlatMap<T>(this IMaybeSource<T> source, Func<T, ICompletableSource> mapper)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(mapper, nameof(mapper));
+
+            throw new NotImplementedException();
+        }
+
+        public static ISingleSource<T> DefaultIfEmpty<T>(this IMaybeSource<T> source, T defaultItem)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> SwitchIfEmpty<T>(this IMaybeSource<T> source, params IMaybeSource<T>[] fallbacks)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> SwitchIfEmpty<T>(this IMaybeSource<T> source, ISingleSource<T> fallback)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
         // ------------------------------------------------
         // Leaving the reactive world
         // ------------------------------------------------
@@ -503,9 +571,12 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
-        //-------------------------------------------------
-        // Interoperation with other reactive types
-        //-------------------------------------------------
+        public static bool Wait<T>(this IMaybeSource<T> source, out T result, long timeoutMillis = long.MinValue, CancellationTokenSource cts = null)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
 
         public static Task<T> ToTask<T>(this IMaybeSource<T> source, CancellationTokenSource cts = null)
         {
@@ -513,6 +584,10 @@ namespace akarnokd.reactive_extensions
 
             throw new NotImplementedException();
         }
+
+        //-------------------------------------------------
+        // Interoperation with other reactive types
+        //-------------------------------------------------
 
         public static IObservable<R> ConcatMap<T, R>(this IObservable<T> source, Func<T, IMaybeSource<T>> mapper, bool delayErrors = false)
         {
@@ -530,7 +605,7 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
-        public static IObservable<R> FlatMap<T, R>(this ISingleSource<T> source, Func<T, IMaybeSource<T>> mapper)
+        public static IMaybeSource<R> FlatMap<T, R>(this ISingleSource<T> source, Func<T, IMaybeSource<T>> mapper)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(mapper, nameof(mapper));
@@ -542,6 +617,34 @@ namespace akarnokd.reactive_extensions
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(mapper, nameof(mapper));
+
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> FirstElement<T>(this IObservable<T> source)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> SingleElement<T>(this IObservable<T> source)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> LastElement<T>(this IObservable<T> source)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
+        public static IMaybeSource<T> ElementAtIndex<T>(this IObservable<T> source, long index)
+        {
+            RequireNonNull(source, nameof(source));
 
             throw new NotImplementedException();
         }
