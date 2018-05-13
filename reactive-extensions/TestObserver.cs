@@ -171,6 +171,7 @@ namespace akarnokd.reactive_extensions
             var err = Volatile.Read(ref errorCount);
             var compl = Volatile.Read(ref completions);
             var timeout = this.timeout;
+            var subs = Volatile.Read(ref upstream) != null;
             var disposed = DisposableHelper.IsDisposed(ref upstream);
 
             var errList = new List<Exception>();
@@ -185,6 +186,10 @@ namespace akarnokd.reactive_extensions
                 + ", errors=" + err
                 + ", completions=" + compl;
 
+            if (subs)
+            {
+                msg += ", subscribed!";
+            }
             if (timeout)
             {
                 msg += ", timeout!";
@@ -566,6 +571,19 @@ namespace akarnokd.reactive_extensions
                     }
                 }
                 throw Fail("Wrong error type @ " + index + ". Expected: " + errorType + ", Actual: " + exs[index].GetType());
+            }
+            return this;
+        }
+
+        /// <summary>
+        /// Assert that OnSubscribe was called.
+        /// </summary>
+        /// <returns>this</returns>
+        public TestObserver<T> AssertSubscribed()
+        {
+            if (Volatile.Read(ref upstream) == null)
+            {
+                throw Fail("OnSubscribe not called");
             }
             return this;
         }

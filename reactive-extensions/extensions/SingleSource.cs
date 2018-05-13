@@ -31,5 +31,33 @@ namespace akarnokd.reactive_extensions
             source.Subscribe(to);
             return to;
         }
+        //-------------------------------------------------
+        // Factory methods
+        //-------------------------------------------------
+
+        /// <summary>
+        /// Creates a failing completable that signals the specified error
+        /// immediately.
+        /// </summary>
+        /// <typeparam name="T">The element type of the maybe.</typeparam>
+        /// <param name="error">The error to signal.</param>
+        /// <returns>The new completable instance.</returns>
+        public static ISingleSource<T> Error<T>(Exception error)
+        {
+            RequireNonNull(error, nameof(error));
+
+            return new SingleError<T>(error);
+        }
+
+        /// <summary>
+        /// Creates a single that never terminates.
+        /// </summary>
+        /// <typeparam name="T">The element type of the single.</typeparam>
+        /// <returns>The shared never-terminating single instance.</returns>
+        public static ISingleSource<T> Never<T>()
+        {
+            return SingleNever<T>.INSTANCE;
+        }
+
     }
 }

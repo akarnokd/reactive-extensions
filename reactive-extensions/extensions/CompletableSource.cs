@@ -59,6 +59,15 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
+        /// Creates an completable that never terminates.
+        /// </summary>
+        /// <returns>The shared never-terminating completable instance.</returns>
+        public static ICompletableSource Never()
+        {
+            return CompletableNever.INSTANCE;
+        }
+
+        /// <summary>
         /// Creates a failing completable that signals the specified error
         /// immediately.
         /// </summary>

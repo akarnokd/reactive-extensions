@@ -462,6 +462,7 @@ Extension methods host: `CompletableSource`
 - `Create`
 - `Empty`
 - `Error`
+- `Never`
 
 ### Instance methods
 
@@ -475,11 +476,34 @@ Consumer type: `ISingleObserver<T>`
 
 Extension methods host: `SingleSource`
 
+*Since: 0.0.5*
+
+### Factory methods
+
+- `Error`
+- `Never`
+
+### Instance methods
+
+- `Test`
+
 ## IMaybeSource
 
-A reactive type wich signals an `OnSuccess()`, an `OnError()` or an `OnCompleted()
+A reactive type wich signals an `OnSuccess()`, an `OnError()` or an `OnCompleted()`
 in a mutually exclusive fashion.
 
 Consumer type: `IMaybeObserver<T>`
 
 Extension methods host: `MaybeSource`
+
+*Since: 0.0.5*
+
+### Factory methods
+
+- `Empty`
+- `Error`
+- `Never`
+
+### Instance methods
+
+- `Test`

@@ -26,5 +26,44 @@ namespace akarnokd.reactive_extensions
             source.Subscribe(to);
             return to;
         }
+
+        //-------------------------------------------------
+        // Factory methods
+        //-------------------------------------------------
+
+        /// <summary>
+        /// Creates an empty completable that completes immediately.
+        /// </summary>
+        /// <typeparam name="T">The element type of the maybe.</typeparam>
+        /// <returns>The shared empty completable instance.</returns>
+        public static IMaybeSource<T> Empty<T>()
+        {
+            return MaybeEmpty<T>.INSTANCE;
+        }
+
+        /// <summary>
+        /// Creates a failing completable that signals the specified error
+        /// immediately.
+        /// </summary>
+        /// <typeparam name="T">The element type of the maybe.</typeparam>
+        /// <param name="error">The error to signal.</param>
+        /// <returns>The new completable instance.</returns>
+        public static IMaybeSource<T> Error<T>(Exception error)
+        {
+            RequireNonNull(error, nameof(error));
+
+            return new MaybeError<T>(error);
+        }
+
+        /// <summary>
+        /// Creates a maybe that never terminates.
+        /// </summary>
+        /// <typeparam name="T">The element type of the maybe.</typeparam>
+        /// <returns>The shared never-terminating maybe instance.</returns>
+        public static IMaybeSource<T> Never<T>()
+        {
+            return MaybeNever<T>.INSTANCE;
+        }
+
     }
 }
