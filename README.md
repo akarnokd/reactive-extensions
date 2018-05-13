@@ -35,6 +35,8 @@ These operators are available as extension methods on `IObservable` via the
 using akarnokd.reactive_extensions;
 ```
 
+- Datasources
+  - [Create](#create)
 - Side-effecting sequences
   - [DoAfterNext](#doafternext)
   - [DoAfterTerminate](#doafterterminate)
@@ -257,6 +259,37 @@ more observables are running.
 
 *Since: 0.0.2*<br/>
 See also: [ConcatEager](#concateager)
+
+### Create
+
+Creates an observable sequence by providing an emitter
+API to bridge the callback world with the reactive world.
+
+```cs
+ReactiveExtensions.Create(emitter => {
+
+	Task.Factory.StartNew(() => {
+		for (int i = 0; i < 1000; i++) {
+		    if (emitter.IsDisposed()) {
+				return;
+			}
+			emitter.OnNext(1);
+		}
+	    if (emitter.IsDisposed()) {
+			return;
+		}
+		emitter.OnCompleted();
+	});
+
+}, true)
+.Test()
+.AwaitDone(TimeSpan.FromSeconds(5))
+.AssertValueCount(1000)
+.AssertNoError()
+.AssertCompleted();
+```
+
+*Since: 0.0.5*
 
 ### DoAfterNext
 

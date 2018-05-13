@@ -786,5 +786,26 @@ namespace akarnokd.reactive_extensions
         {
             return Zip(mapper, delayErrors, sources);
         }
+
+        /// <summary>
+        /// Creates an observable sequence by providing an emitter
+        /// API to bridge the callback world with the reactive world.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="onSubscribe">The action called for each individual
+        /// observer and receives an <see cref="IObservableEmitter{T}"/> that
+        /// allows emitting events and registering a resource within the sequence
+        /// to be automatically disposed upon termination or cancellation.</param>
+        /// <param name="serialize">If true, the <see cref="IObservableEmitter{T}"/>'s
+        /// OnNext, OnError and OnCompleted will be thread-safe to call from multiple
+        /// threads.</param>
+        /// <returns>The new observable sequence.</returns>
+        /// <remarks>Since 0.0.5</remarks>
+        public static IObservable<T> Create<T>(Action<IObservableEmitter<T>> onSubscribe, bool serialize = false)
+        {
+            RequireNonNull(onSubscribe, nameof(onSubscribe));
+
+            return new Create<T>(onSubscribe, serialize);
+        }
     }
 }

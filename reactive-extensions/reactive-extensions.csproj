@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
-    <Version>0.0.4-alpha</Version>
+    <Version>0.0.5-alpha</Version>
     <Description>Extension methods for the dotnet/reactive library.</Description>
     <Authors>David Karnok</Authors>
     <PackageId>akarnokd.reactive_extensions</PackageId>
@@ -11,24 +11,20 @@
     <RepositoryUrl>https://github.com/akarnokd/reactive-extensions</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <Copyright>Copyright 2018, David Karnok</Copyright>
-    <PackageReleaseNotes>Upgrade dependencies to System.Reactive 4.0.0-preview.2
+    <PackageReleaseNotes>New operators:
++ Create
++ CombineLatest
++ Zip
 
-New operators:
-+ AutoConnect
-+ BlockingEnumerable
-+ BlockingSubscribe
-+ BlockingSubscribeWhile
-+ Cache
-+ RepeatWhen
-+ RetryWhen
-+ SwitchMany
-+ SwitchMap
-+ UnsubscribeOn
-+ WithLatestFrom
+New reactive types:
++ ICompletableSource
++ ISingleSource
++ IMaybeSource
 
-Fixes:
-- TestObserver fixes
-- SerializedObserver fixes</PackageReleaseNotes>
+New extension method hosts:
++ CompletableSource
++ SingleSource
++ MaybeSource</PackageReleaseNotes>
     <PackageTags>reactive, extensions</PackageTags>
   </PropertyGroup>
 
