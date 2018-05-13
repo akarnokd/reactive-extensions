@@ -672,6 +672,9 @@ namespace akarnokd.reactive_extensions
         /// <remarks>Since 0.0.4</remarks>
         public static void BlockingSubscribe<T>(this IObservable<T> source, IObserver<T> observer, Action<IDisposable> dispose = null)
         {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(observer, nameof(observer));
+
             var consumer = new BlockingSubscribeObserver<T>(observer);
             dispose?.Invoke(consumer);
             consumer.OnSubscribe(source.Subscribe(consumer));
@@ -691,6 +694,9 @@ namespace akarnokd.reactive_extensions
         /// <remarks>Since 0.0.4</remarks>
         public static void BlockingSubscribe<T>(this IObservable<T> source, Action<T> onNext, Action<Exception> onError = null, Action onComplete = null, Action<IDisposable> dispose = null)
         {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(onNext, nameof(onNext));
+
             var consumer = new BlockingSubscribeAction<T>(onNext, onError, onComplete);
             dispose?.Invoke(consumer);
             consumer.OnSubscribe(source.Subscribe(consumer));
@@ -712,10 +718,117 @@ namespace akarnokd.reactive_extensions
         /// <remarks>Since 0.0.4</remarks>
         public static void BlockingSubscribeWhile<T>(this IObservable<T> source, Func<T, bool> onNext, Action<Exception> onError = null, Action onComplete = null, Action<IDisposable> dispose = null)
         {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(onNext, nameof(onNext));
+
             var consumer = new BlockingSubscribePredicate<T>(onNext, onError, onComplete);
             dispose?.Invoke(consumer);
             consumer.OnSubscribe(source.Subscribe(consumer));
             consumer.Run();
+        }
+
+        /// <summary>
+        /// Combines the latest items of each source observable through
+        /// a mapper function.
+        /// </summary>
+        /// <typeparam name="T">The element type of the observables.</typeparam>
+        /// <typeparam name="R">The result type.</typeparam>
+        /// <param name="mapper">The function that receives the latest values and should return an item to be emitted.</param>
+        /// <param name="sources">The array of observables to combine.</param>
+        /// <returns>The new observable sequence.</returns>
+        /// <remarks>Since 0.0.5</remarks>
+        public static IObservable<R> CombineLatest<T, R>(Func<T[], R> mapper, params IObservable<T>[] sources)
+        {
+            return CombineLatest(mapper, false, sources);
+        }
+
+        /// <summary>
+        /// Combines the latest items of each source observable through
+        /// a mapper function, optionally delaying errors until all
+        /// of them terminates.
+        /// </summary>
+        /// <typeparam name="T">The element type of the observables.</typeparam>
+        /// <typeparam name="R">The result type.</typeparam>
+        /// <param name="mapper">The function that receives the latest values and should return an item to be emitted.</param>
+        /// <param name="delayErrors">If true, errors from all sources are delayed until all sources terminate.</param>
+        /// <param name="sources">The array of observables to combine.</param>
+        /// <returns>The new observable sequence.</returns>
+        /// <remarks>Since 0.0.5</remarks>
+        public static IObservable<R> CombineLatest<T, R>(Func<T[], R> mapper, bool delayErrors, params IObservable<T>[] sources)
+        {
+            RequireNonNull(mapper, nameof(mapper));
+            RequireNonNull(sources, nameof(sources));
+
+            return new CombineLatest<T, R>(sources, mapper, delayErrors);
+        }
+
+        /// <summary>
+        /// Combines the latest items of each source observable through
+        /// a mapper function, optionally delaying errors until all
+        /// of them terminates.
+        /// </summary>
+        /// <typeparam name="T">The element type of the observables.</typeparam>
+        /// <typeparam name="R">The result type.</typeparam>
+        /// <param name="sources">The array of observables to combine.</param>
+        /// <param name="mapper">The function that receives the latest values and should return an item to be emitted.</param>
+        /// <param name="delayErrors">If true, errors from all sources are delayed until all sources terminate.</param>
+        /// <returns>The new observable sequence.</returns>
+        /// <remarks>Since 0.0.5</remarks>
+        public static IObservable<R> CombineLatest<T, R>(this IObservable<T>[] sources, Func<T[], R> mapper, bool delayErrors = false)
+        {
+            return CombineLatest(mapper, delayErrors, sources);
+        }
+
+        /// <summary>
+        /// Combines the next item of each source observable (a row of values) through
+        /// a mapper function.
+        /// </summary>
+        /// <typeparam name="T">The element type of the observables.</typeparam>
+        /// <typeparam name="R">The result type.</typeparam>
+        /// <param name="mapper">The function that receives the latest values and should return an item to be emitted.</param>
+        /// <param name="sources">The array of observables to combine.</param>
+        /// <returns>The new observable sequence.</returns>
+        /// <remarks>Since 0.0.5</remarks>
+        public static IObservable<R> Zip<T, R>(Func<T[], R> mapper, params IObservable<T>[] sources)
+        {
+            return Zip(mapper, false, sources);
+        }
+
+        /// <summary>
+        /// Combines the next item of each source observable (a row of values) through
+        /// a mapper function, optionally delaying errors until no more rows
+        /// can be consumed.
+        /// </summary>
+        /// <typeparam name="T">The element type of the observables.</typeparam>
+        /// <typeparam name="R">The result type.</typeparam>
+        /// <param name="mapper">The function that receives the latest values and should return an item to be emitted.</param>
+        /// <param name="delayErrors">If true, errors from all sources are delayed until all sources terminate.</param>
+        /// <param name="sources">The array of observables to combine.</param>
+        /// <returns>The new observable sequence.</returns>
+        /// <remarks>Since 0.0.5</remarks>
+        public static IObservable<R> Zip<T, R>(Func<T[], R> mapper, bool delayErrors, params IObservable<T>[] sources)
+        {
+            RequireNonNull(mapper, nameof(mapper));
+            RequireNonNull(sources, nameof(sources));
+
+            return new Zip<T, R>(sources, mapper, delayErrors);
+        }
+
+        /// <summary>
+        /// Combines the next item of each source observable (a row of values) through
+        /// a mapper function, optionally delaying errors until no more rows
+        /// can be consumed.
+        /// </summary>
+        /// <typeparam name="T">The element type of the observables.</typeparam>
+        /// <typeparam name="R">The result type.</typeparam>
+        /// <param name="sources">The array of observables to combine.</param>
+        /// <param name="mapper">The function that receives the latest values and should return an item to be emitted.</param>
+        /// <param name="delayErrors">If true, errors from all sources are delayed until all sources terminate.</param>
+        /// <returns>The new observable sequence.</returns>
+        /// <remarks>Since 0.0.5</remarks>
+        public static IObservable<R> Zip<T, R>(this IObservable<T>[] sources, Func<T[], R> mapper, bool delayErrors = false)
+        {
+            return Zip(mapper, delayErrors, sources);
         }
     }
 }

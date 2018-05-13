@@ -80,6 +80,8 @@
     <Compile Include="AutoConnectTest.cs" />
     <Compile Include="BlockingEnumerableTest.cs" />
     <Compile Include="BlockingSubscribeTest.cs" />
+    <Compile Include="CombineLatestTest.cs" />
+    <Compile Include="ZipTest.cs" />
     <Compile Include="UnsubscribeOnTest.cs" />
     <Compile Include="WithLatestFromTest.cs" />
     <Compile Include="UnitTest1.cs" />

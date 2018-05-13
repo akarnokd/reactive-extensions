@@ -8,7 +8,7 @@ Extensions to the [dotnet/reactive](https://github.com/dotnet/reactive) library.
 ### Setup
 
 ```
-Install-Package akarnokd.reactive_extensions -Version 0.0.4-alpha
+Install-Package akarnokd.reactive_extensions -Version 0.0.5-alpha
 ```
 
 ### Dependencies
@@ -35,6 +35,7 @@ using akarnokd.reactive_extensions;
   - [ObserveOn](#observeon)
   - [ToSerialized](#toserialized)
 - Combinators
+  - [CombineLatest](#combinelatest)
   - [ConcatEager](#concateager)
   - [ConcatMap](#concatmap)
   - [ConcatMapEager](#concatmapeager)
@@ -43,6 +44,7 @@ using akarnokd.reactive_extensions;
   - [SwitchMany](#switchmany)
   - [SwitchMap](#switchmap)
   - [WithLatestFrom](#withlatestfrom)
+  - [Zip](#zip)
 - Aggregators
   - [Cache](#cache)
   - [Collect](#collect)
@@ -176,6 +178,20 @@ Observable.Range(1, 5)
 ```
 
 *Since: 0.0.3*
+
+### CombineLatest
+
+Combines the latest items of each source observable through
+a mapper function, optionally delaying errors until all
+of them terminates.
+
+```cs
+ReactiveExtensions.CombineLatest(a => a, source1, source);
+
+new [] { source1, source2 }.CombineLatest(a => a, true);
+```
+
+*Since: 0.0.5*
 
 ### Compose
 
@@ -372,6 +388,24 @@ from the alternate observables do not trigger an emission. The operator can
 optionally delay errors from the alternate sources until the main source terminates.
 
 *Since: 0.0.4*
+
+### Zip
+
+Combines the next item of each source observable (a row of values) through
+a mapper function, optionally delaying errors until no more
+rows can be created.
+
+```cs
+ReactiveExtensions.Zip(a => a, source1, source);
+
+new [] { Observable.Range(1, 5), Observable.Range(1, 10) }
+.Zip(a => a[0] + a[1], true)
+.Test()
+.AssertResult(2, 4, 6, 8, 10);
+```
+
+*Since: 0.0.5*
+
 
 ## Other classes
 
