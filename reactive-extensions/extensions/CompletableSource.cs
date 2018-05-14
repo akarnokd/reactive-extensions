@@ -535,6 +535,7 @@ namespace akarnokd.reactive_extensions
         /// <remarks>Since 0.0.6</remarks>
         public static T SubscribeWith<T>(this ICompletableSource source, T observer) where T : ICompletableObserver
         {
+            RequireNonNull(observer, nameof(observer));
             source.Subscribe(observer);
             return observer;
         }
@@ -543,23 +544,54 @@ namespace akarnokd.reactive_extensions
         // Interoperation with other reactive types
         //-------------------------------------------------
 
+        /// <summary>
+        /// Subscribes to the next observable sequence and relays its
+        /// values when the completable source completes normally.
+        /// </summary>
+        /// <typeparam name="T">The element type of the next observable sequence.</typeparam>
+        /// <param name="source">The completable source to start with.</param>
+        /// <param name="next">The observable sequence to resume with when the <paramref name="source"/>
+        /// completes.</param>
+        /// <returns>The new observable instance.</returns>
+        /// <remarks>Since 0.0.6</remarks>
         public static IObservable<T> AndThen<T>(this ICompletableSource source, IObservable<T> next)
         {
-            throw new NotImplementedException();
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(next, nameof(next));
+
+            return new CompletableAndThenObservable<T>(source, next);
         }
 
+        /// <summary>
+        /// Subscribes to the next completable source and relays its
+        /// values when the main completable source completes normally.
+        /// </summary>
+        /// <param name="source">The completable source to start with.</param>
+        /// <param name="next">The completable sequence to resume with when the <paramref name="source"/>
+        /// completes.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.6</remarks>
         public static ICompletableSource AndThen(this ICompletableSource source, ICompletableSource next)
         {
-            throw new NotImplementedException();
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(next, nameof(next));
+
+            return new CompletableAndThen(source, next);
         }
 
         public static ISingleSource<T> AndThen<T>(this ICompletableSource source, ISingleSource<T> next)
         {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(next, nameof(next));
+
             throw new NotImplementedException();
         }
 
         public static IMaybeSource<T> AndThen<T>(this ICompletableSource source, IMaybeSource<T> next)
         {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(next, nameof(next));
+
             throw new NotImplementedException();
         }
 
@@ -588,18 +620,38 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Converts an ongoing or already terminated task to a completable source 
+        /// and relays its terminal event to observers.
+        /// </summary>
+        /// <param name="task">The task to observe as a completable source.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.6<br/>
+        /// Note that the <see cref="Task"/> API uses an <see cref="AggregateException"/>
+        /// to signal there were one or more errors.
+        /// </remarks>
         public static ICompletableSource ToCompletable(this Task task)
         {
             RequireNonNull(task, nameof(task));
 
-            throw new NotImplementedException();
+            return new CompletableFromTask(task);
         }
 
+        /// <summary>
+        /// Converts an ongoing or already terminated task to a completable source 
+        /// and relays its terminal event to observers.
+        /// </summary>
+        /// <param name="task">The task to observe as a completable source.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.6<br/>
+        /// Note that the <see cref="Task{TResult}"/> API uses an <see cref="AggregateException"/>
+        /// to signal there were one or more errors.
+        /// </remarks>
         public static ICompletableSource ToCompletable<T>(this Task<T> task)
         {
             RequireNonNull(task, nameof(task));
 
-            throw new NotImplementedException();
+            return new CompletableFromTask<T>(task);
         }
 
         /// <summary>

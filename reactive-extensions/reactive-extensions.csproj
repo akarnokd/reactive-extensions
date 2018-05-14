@@ -15,11 +15,16 @@
 + IObservable
   - IntervalRange
 + ICompletableSource
+  - AndThen
   - Defer
-  - Timer
+  - FromAction
+  - FromTask
   - IgnoreAllElements(IObservable)
-
-</PackageReleaseNotes>
+  - Timer
+  - Subscribe
+  - SubscribeWith
+  - ToCompletable
+  - ToObservable</PackageReleaseNotes>
     <PackageTags>reactive, extensions</PackageTags>
   </PropertyGroup>
 

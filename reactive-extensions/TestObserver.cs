@@ -547,7 +547,7 @@ namespace akarnokd.reactive_extensions
         {
             AssertError(typeof(AggregateException));
             var exs = (errors[0] as AggregateException).InnerExceptions;
-            if (exs.Count <= index)
+            if (index < 0 || index >= exs.Count)
             {
                 throw Fail("The AggregateException index out of bounds. Expected: " + index + ", Actual: " + exs.Count);
             }
@@ -573,6 +573,50 @@ namespace akarnokd.reactive_extensions
                 throw Fail("Wrong error type @ " + index + ". Expected: " + errorType + ", Actual: " + exs[index].GetType());
             }
             return this;
+        }
+
+        /// <summary>
+        /// Assert that there is exactly one <see cref="AggregateException"/>
+        /// and it contains an error that is assignable to the given
+        /// <paramref name="errorType"/>.
+        /// </summary>
+        /// <param name="errorType">The expected error type</param>
+        /// <param name="message">The expected message (or part of it if <paramref name="messageContains"/> is true).</param>
+        /// <param name="messageContains">If true and <paramref name="message"/> is not null, the error messages are compared as well.</param>
+        /// <returns>this</returns>
+        /// <remarks>Since 0.0.6</remarks>
+        public TestObserver<T> AssertCompositeError(Type errorType, string message = null, bool messageContains = false)
+        {
+            AssertError(typeof(AggregateException));
+            var exs = (errors[0] as AggregateException).InnerExceptions;
+
+            TypeInfo typeInfo = errorType.GetTypeInfo();
+
+            foreach (var ex in exs)
+            {
+                if (typeInfo.IsAssignableFrom(ex.GetType().GetTypeInfo()))
+                {
+                    if (message != null)
+                    {
+                        if (messageContains)
+                        {
+                            if (!ex.Message.Contains(message))
+                            {
+                                throw Fail("Error found with a different message part. Expected: " + message + ", Actual: " + ex.Message);
+                            }
+                        }
+                        else
+                        {
+                            if (!ex.Message.Equals(message))
+                            {
+                                throw Fail("Error found with a different message. Expected: " + message + ", Actual: " + ex.Message);
+                            }
+                        }
+                    }
+                    return this;
+                }
+            }
+            throw Fail("Error not found inside the AggregateException: " + errorType);
         }
 
         /// <summary>

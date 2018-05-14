@@ -14,12 +14,11 @@ namespace akarnokd.reactive_extensions
         /// <summary>
         /// Perform a null-check on an argument and throws an <see cref="ArgumentNullException"/>.
         /// </summary>
-        /// <typeparam name="X">Nullable classes only.</typeparam>
         /// <param name="reference">The target reference to check.</param>
         /// <param name="paramName">The name of the parameter in the original method.</param>
         /// <exception cref="ArgumentNullException">If <paramref name="reference"/> is null.</exception>
         /// <remarks>Since 0.0.2</remarks>
-        internal static void RequireNonNull<X>(X reference, string paramName) where X : class
+        internal static void RequireNonNull<X>(X reference, string paramName)
         {
             if (reference == null)
             {

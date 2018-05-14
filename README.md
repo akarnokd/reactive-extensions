@@ -545,6 +545,7 @@ Extension methods host: `CompletableSource`
 
 ### Instance methods
 
+- `AndThen`
 - `Compose`
 
 ### Consumer methods
@@ -555,7 +556,9 @@ Extension methods host: `CompletableSource`
 
 ### Interoperation
 
-- `IgnoreAllElements` (of `IObservable`)
+- `AndThen` (with `IObservable`)
+- `IgnoreAllElements` (on `IObservable`)
+- `ToCompletable` (on `Task`)
 - `ToObservable`
 
 ### CompletableSubject
