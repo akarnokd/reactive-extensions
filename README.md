@@ -8,7 +8,7 @@ Extensions to the [dotnet/reactive](https://github.com/dotnet/reactive) library.
 ### Setup
 
 ```
-Install-Package akarnokd.reactive_extensions -Version 0.0.5-alpha
+Install-Package akarnokd.reactive_extensions -Version 0.0.6-alpha
 ```
 
 ### Dependencies
@@ -516,6 +516,8 @@ to.AssertResult(1, 2, 3, 4, 5);
 
 Assert.False(scheduler.HasTasks());
 ```
+
+*Since 0.0.6*
 
 ### UnicastSubject
 
