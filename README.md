@@ -37,6 +37,7 @@ using akarnokd.reactive_extensions;
 
 - Datasources
   - [Create](#create)
+  - [IntervalRange](#intervalrange)
 - Side-effecting sequences
   - [DoAfterNext](#doafternext)
   - [DoAfterTerminate](#doafterterminate)
@@ -312,6 +313,19 @@ Call a handler when the downstream disposes the sequence.
 Call a handler after the upstream terminates normally, with an error or the
 downstream disposes the sequence.
 
+### IntervalRange
+
+Emits a range of values over time.
+
+
+```cs
+ReactiveExtensions.IntervalRange(1, 5, 
+    TimeSpan.FromSeconds(1), TimeSpan.FromSecoconds(2), NewThreadScheduler.Default)
+	.Test()
+	.AwaitDone(TimeSpan.FromSeconds(12))
+	.AssertResult(1, 2, 3, 4, 5);
+```
+
 ### MergeMany
 
 Merges some or all inner observables provided via an observable sequence and emits their
@@ -473,6 +487,34 @@ Observable.Range(1, 5)
 .Test()
 .AwaitDone(TimeSpan.FromSeconds(5))
 .AssertResult(1, 2, 3, 4 ,5)
+```
+
+### TestScheduler
+
+An `IScheduler` implementation that allows manually advancing a virtual
+time and thus executing tasks up to a certain due time.
+
+```cs
+var scheduler = new TestScheduler();
+
+var to = Observable.IntervalRange(1, 5, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(2), scheduler)
+.Test();
+
+to.AssertEmpty();
+
+scheduler.AdvanceTimeBy(TimeSpan.FromSeconds(1));
+
+to.AssertValuesOnly(1);
+
+scheduler.AdvanceTimeBy(TimeSpan.FromSeconds(4));
+
+to.AssertValuesOnly(1, 2, 3);
+
+scheduler.AdvanceTimeBy(TimeSpan.FromSeconds(4));
+
+to.AssertResult(1, 2, 3, 4, 5);
+
+Assert.False(scheduler.HasTasks());
 ```
 
 ### UnicastSubject

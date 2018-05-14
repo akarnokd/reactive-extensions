@@ -807,5 +807,22 @@ namespace akarnokd.reactive_extensions
 
             return new Create<T>(onSubscribe, serialize);
         }
+
+        /// <summary>
+        /// Emits a range of long values over time.
+        /// </summary>
+        /// <param name="start">The starting value.</param>
+        /// <param name="count">The number of values to emit.</param>
+        /// <param name="initialDelay">The initial delay before the first value is emitted.</param>
+        /// <param name="period">The period of subsequent value emissions.</param>
+        /// <param name="scheduler">The scheduler providing a timed delay for the emissions.</param>
+        /// <returns>The new observable instance.</returns>
+        /// <remarks>Since 0.0.6</remarks>
+        public static IObservable<long> IntervalRange(long start, long count, TimeSpan initialDelay, TimeSpan period, IScheduler scheduler)
+        {
+            RequireNonNull(scheduler, nameof(scheduler));
+
+            return new IntervalRange(start, start + count, initialDelay, period, scheduler);
+        }
     }
 }

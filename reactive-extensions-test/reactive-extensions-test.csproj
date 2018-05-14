@@ -68,6 +68,7 @@
     <Compile Include="observable\RepeatWhenTest.cs" />
     <Compile Include="observable\SpscLinkedArrayQueueTest.cs" />
     <Compile Include="observable\CreateTest.cs" />
+    <Compile Include="observable\IntervalRangeTest.cs" />
     <Compile Include="observable\UnitTest1.cs" />
     <Compile Include="single\SingleCreateTest.cs" />
     <Compile Include="single\SingleNeverTest.cs" />
