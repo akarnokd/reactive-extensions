@@ -538,13 +538,36 @@ Extension methods host: `CompletableSource`
 - `Defer`
 - `Empty`
 - `Error`
+- `FromAction`
+- `FromTask`
 - `Never`
 - `Timer`
 
 ### Instance methods
 
 - `Compose`
+
+### Consumer methods
+
+- `Subscribe`
+- `SubscribeWith`
 - `Test`
+
+### Interoperation
+
+- `IgnoreAllElements` (of `IObservable`)
+- `ToObservable`
+
+### CompletableSubject
+
+A completable-based, hot subject that multicasts the termination event
+it receives through its completable observer API surface.
+
+This subject supports an optional reference-counting behavior: when
+all completable observers dispose before the subject terminates, it will
+terminate its upstream connection (if any).
+
+*Since 0.0.6*
 
 ## ISingleSource
 

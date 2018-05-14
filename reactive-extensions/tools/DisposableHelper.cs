@@ -23,6 +23,9 @@ namespace akarnokd.reactive_extensions
         /// </summary>
         internal static readonly IDisposable DISPOSED = new DisposedDisposable();
 
+        /// <summary>
+        /// Represents an empty disposable that does nothing upon dispose.
+        /// </summary>
         sealed class EmptyDisposable : IDisposable
         {
             public void Dispose()
@@ -31,6 +34,10 @@ namespace akarnokd.reactive_extensions
             }
         }
 
+        /// <summary>
+        /// Represents a disposable that indicates an <see cref="IDisposable"/> field
+        /// has been marked as disposed.
+        /// </summary>
         sealed class DisposedDisposable : IDisposable
         {
             public void Dispose()
@@ -39,6 +46,14 @@ namespace akarnokd.reactive_extensions
             }
         }
 
+        /// <summary>
+        /// Atomically set the target field to contain the shared
+        /// disposed indicator and dispose any previous <see cref="IDisposable"/>
+        /// it contained.
+        /// </summary>
+        /// <param name="field">The target field to dispose the contents of.</param>
+        /// <returns>True if the current thread disposed the contents, false
+        /// if it was disposed already or concurrently by some other thread.</returns>
         internal static bool Dispose(ref IDisposable field)
         {
             var d = Volatile.Read(ref field);
@@ -54,6 +69,24 @@ namespace akarnokd.reactive_extensions
             return false;
         }
 
+        /// <summary>
+        /// Sets the target <paramref name="field"/> to contain
+        /// the common disposed indicator value using
+        /// atomic release-write (store-store barrier).
+        /// </summary>
+        /// <param name="field">The target field to set.</param>
+        /// <remarks>Since 0.0.6</remarks>
+        internal static void WeakDispose(ref IDisposable field)
+        {
+            Volatile.Write(ref field, DisposableHelper.DISPOSED);
+        }
+
+        /// <summary>
+        /// Checks if the given field contains the common
+        /// disposed indicator in a thread-safe manner.
+        /// </summary>
+        /// <param name="field">The target field to check.</param>
+        /// <returns></returns>
         internal static bool IsDisposed(ref IDisposable field)
         {
             return Volatile.Read(ref field) == DISPOSED;

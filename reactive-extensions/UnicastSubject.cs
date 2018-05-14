@@ -9,7 +9,7 @@ namespace akarnokd.reactive_extensions
     /// and buffers events until one subscribes.
     /// </summary>
     /// <typeparam name="T">The input and output type.</typeparam>
-    public sealed class UnicastSubject<T> : ISubject<T>
+    public sealed class UnicastSubject<T> : ISubject<T>, ISubjectExtensions
     {
         readonly SpscLinkedArrayQueue<T> queue;
 

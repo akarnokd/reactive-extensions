@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
-    <Version>0.0.5-alpha</Version>
+    <Version>0.0.6-alpha</Version>
     <Description>Extension methods for the dotnet/reactive library.</Description>
     <Authors>David Karnok</Authors>
     <PackageId>akarnokd.reactive_extensions</PackageId>
@@ -12,19 +12,14 @@
     <RepositoryType>GitHub</RepositoryType>
     <Copyright>Copyright 2018, David Karnok</Copyright>
     <PackageReleaseNotes>New operators:
-+ Create
-+ CombineLatest
-+ Zip
-
-New reactive types:
++ IObservable
+  - IntervalRange
 + ICompletableSource
-+ ISingleSource
-+ IMaybeSource
+  - Defer
+  - Timer
+  - IgnoreAllElements(IObservable)
 
-New extension method hosts:
-+ CompletableSource
-+ SingleSource
-+ MaybeSource</PackageReleaseNotes>
+</PackageReleaseNotes>
     <PackageTags>reactive, extensions</PackageTags>
   </PropertyGroup>
 

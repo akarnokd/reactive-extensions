@@ -77,7 +77,7 @@ namespace akarnokd.reactive_extensions
         /// immediately.
         /// </summary>
         /// <param name="error">The error to signal.</param>
-        /// <returns>The new completable instance.</returns>
+        /// <returns>The new completable source instance.</returns>
         public static ICompletableSource Error(Exception error)
         {
             RequireNonNull(error, nameof(error));
@@ -85,16 +85,42 @@ namespace akarnokd.reactive_extensions
             return new CompletableError(error);
         }
 
+        /// <summary>
+        /// Wraps and calls the given action for each individual
+        /// completable observer then completes or fails the observer
+        /// depending on the action completes normally or threw an exception.
+        /// </summary>
+        /// <param name="action">The action to invoke for each individual completable observer.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.6</remarks>
         public static ICompletableSource FromAction(Action action)
         {
-            throw new NotImplementedException();
+            RequireNonNull(action, nameof(action));
+
+            return new CompletableFromAction(action);
         }
 
+        /// <summary>
+        /// Creates a completable source that completes or fails
+        /// its observers when the given (possibly still ongoing)
+        /// task terminates.
+        /// </summary>
+        /// <param name="task">The task to wrap.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.6</remarks>
         public static ICompletableSource FromTask(Task task)
         {
             return task.ToCompletable();
         }
 
+        /// <summary>
+        /// Creates a completable source that completes or fails
+        /// its observers when the given (possibly still ongoing)
+        /// task terminates.
+        /// </summary>
+        /// <param name="task">The task to wrap.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.6</remarks>
         public static ICompletableSource FromTask<T>(Task<T> task)
         {
             return task.ToCompletable();
@@ -459,11 +485,22 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Subscribe to this completable source and call the
+        /// appropriate action depending on the terminal signal received.
+        /// </summary>
+        /// <param name="source">The completable source to observer.</param>
+        /// <param name="onCompleted">Called when the completable source completes normally.</param>
+        /// <param name="onError">Called with the exception when the completable source terminates with an error.</param>
+        /// <returns>The disposable that allows cancelling the source.</returns>
+        /// <remarks>Since 0.0.6</remarks>
         public static IDisposable Subscribe(this ICompletableSource source, Action onCompleted = null, Action<Exception> onError = null)
         {
             RequireNonNull(source, nameof(source));
 
-            throw new NotImplementedException();
+            var parent = new CompletableLambdaObserver(onCompleted, onError);
+            source.Subscribe(parent);
+            return parent;
         }
 
         public static void BlockingSubscribe(this ICompletableSource source, ICompletableObserver observer)
@@ -485,6 +522,21 @@ namespace akarnokd.reactive_extensions
             RequireNonNull(source, nameof(source));
 
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Subscribes an completable observer (subclass) to the completable
+        /// source and returns this observer instance as well.
+        /// </summary>
+        /// <typeparam name="T">The completable observer type.</typeparam>
+        /// <param name="source">The completable source to subscribe to.</param>
+        /// <param name="observer">The completable observer (subclass) to subscribe with.</param>
+        /// <returns>The <paramref name="observer"/> provided as parameter.</returns>
+        /// <remarks>Since 0.0.6</remarks>
+        public static T SubscribeWith<T>(this ICompletableSource source, T observer) where T : ICompletableObserver
+        {
+            source.Subscribe(observer);
+            return observer;
         }
 
         //-------------------------------------------------
@@ -511,9 +563,19 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Ignores the elements of a legacy observable and only relays
+        /// the terminal events.
+        /// </summary>
+        /// <typeparam name="T">The element type of the legacy observable.</typeparam>
+        /// <param name="source">The source sequence whoe elements to ignore.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.6</remarks>
         public static ICompletableSource IgnoreAllElements<T>(this IObservable<T> source)
         {
-            throw new NotImplementedException();
+            RequireNonNull(source, nameof(source));
+
+            return new CompletableIgnoreAllElements<T>(source);
         }
 
         public static ICompletableSource IgnoreElement<T>(this ISingleSource<T> source)
@@ -540,11 +602,18 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Exposes a completable source as a legacy observable.
+        /// </summary>
+        /// <typeparam name="T">The element type of the observable sequence.</typeparam>
+        /// <param name="source">The completable source to expose as an <see cref="IObservable{T}"/></param>
+        /// <returns>The new observable instance.</returns>
+        /// <remarks>Since 0.0.6</remarks>
         public static IObservable<T> ToObservable<T>(this ICompletableSource source)
         {
             RequireNonNull(source, nameof(source));
 
-            throw new NotImplementedException();
+            return new CompletableToObservable<T>(source);
         }
 
         public static ISingleSource<T> ToSingle<T>(this ICompletableSource source, T successItem)
