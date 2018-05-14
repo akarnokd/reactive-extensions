@@ -535,12 +535,15 @@ Extension methods host: `CompletableSource`
 ### Factory methods
 
 - `Create`
+- `Defer`
 - `Empty`
 - `Error`
 - `Never`
+- `Timer`
 
 ### Instance methods
 
+- `Compose`
 - `Test`
 
 ## ISingleSource
@@ -561,6 +564,7 @@ Extension methods host: `SingleSource`
 
 ### Instance methods
 
+- `Compose`
 - `Test`
 
 ## IMaybeSource
@@ -583,4 +587,5 @@ Extension methods host: `MaybeSource`
 
 ### Instance methods
 
+- `Compose`
 - `Test`

@@ -102,10 +102,7 @@ namespace akarnokd.reactive_extensions
 
                 var delay = next - now;
 
-                var sad = new SingleAssignmentDisposable();
-                SetTask(sad);
-
-                sad.Disposable = scheduler.Schedule(this, delay, TASK);
+                SetTask(scheduler.Schedule(this, delay, TASK));
             }
         }
     }

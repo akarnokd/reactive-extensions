@@ -170,9 +170,19 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Defers the creation of the actual completable source
+        /// provided by a supplier function until a completable observer completes.
+        /// </summary>
+        /// <param name="supplier">The function called for each individual completable
+        /// observer and should return a completable source to subscribe to.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.6</remarks>
         public static ICompletableSource Defer(Func<ICompletableSource> supplier)
         {
-            throw new NotImplementedException();
+            RequireNonNull(supplier, nameof(supplier));
+
+            return new CompletableDefer(supplier);
         }
 
         public static ICompletableSource MergeAll(this ICompletableSource[] sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
@@ -205,9 +215,18 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Completes after a specified time elapsed on the given scheduler.
+        /// </summary>
+        /// <param name="time">The time to wait before signaling OnCompleted.</param>
+        /// <param name="scheduler">The scheduler to use for emitting the terminal event.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.6</remarks>
         public static ICompletableSource Timer(TimeSpan time, IScheduler scheduler)
         {
-            throw new NotImplementedException();
+            RequireNonNull(scheduler, nameof(scheduler));
+
+            return new CompletableTimer(time, scheduler);
         }
 
         public static ICompletableSource Using<S>(Func<S> stateFactory, Func<S, ICompletableSource> sourceSelector, Action<S> stateCleanup = null, bool eagerCleanup = false)

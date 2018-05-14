@@ -59,6 +59,8 @@
     <Compile Include="completable\CompletableErrorTest.cs" />
     <Compile Include="completable\CompletableCreateTest.cs" />
     <Compile Include="completable\CompletableNeverTest.cs" />
+    <Compile Include="completable\CompletableDeferTest.cs" />
+    <Compile Include="completable\CompletableTimerTest.cs" />
     <Compile Include="completable\UnitTest1.cs" />
     <Compile Include="maybe\MaybeCreateTest.cs" />
     <Compile Include="maybe\MaybeEmptyTest.cs" />
@@ -99,6 +101,7 @@
     <Compile Include="observable\ZipTest.cs" />
     <Compile Include="observable\UnsubscribeOnTest.cs" />
     <Compile Include="observable\WithLatestFromTest.cs" />
+    <Compile Include="TestSchedulerTest.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

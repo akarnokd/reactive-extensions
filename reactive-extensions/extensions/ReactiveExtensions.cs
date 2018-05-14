@@ -821,6 +821,7 @@ namespace akarnokd.reactive_extensions
         public static IObservable<long> IntervalRange(long start, long count, TimeSpan initialDelay, TimeSpan period, IScheduler scheduler)
         {
             RequireNonNull(scheduler, nameof(scheduler));
+            RequireNonNegative(count, nameof(count));
 
             return new IntervalRange(start, start + count, initialDelay, period, scheduler);
         }

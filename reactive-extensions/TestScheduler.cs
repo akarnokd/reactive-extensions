@@ -47,7 +47,8 @@ namespace akarnokd.reactive_extensions
         /// <returns>The disposable that allows cancelling this particular scheduled action.</returns>
         public IDisposable Schedule<TState>(TState state, Func<IScheduler, TState, IDisposable> action)
         {
-            return Schedule(state, Now, action);
+            ValidationHelper.RequireNonNull(action, nameof(action));
+            return ScheduleActual(state, Now, action);
         }
 
         /// <summary>
@@ -61,7 +62,13 @@ namespace akarnokd.reactive_extensions
         /// <returns>The disposable that allows cancelling this particular scheduled action.</returns>
         public IDisposable Schedule<TState>(TState state, TimeSpan dueTime, Func<IScheduler, TState, IDisposable> action)
         {
-            return Schedule(state, Now + dueTime, action);
+            ValidationHelper.RequireNonNull(action, nameof(action));
+            var now = Now;
+            if (dueTime < TimeSpan.Zero)
+            {
+                return ScheduleActual(state, now, action);
+            }
+            return ScheduleActual(state, now + dueTime, action);
         }
 
         /// <summary>
@@ -74,8 +81,20 @@ namespace akarnokd.reactive_extensions
         /// <returns>The disposable that allows cancelling this particular scheduled action.</returns>
         public IDisposable Schedule<TState>(TState state, DateTimeOffset dueTime, Func<IScheduler, TState, IDisposable> action)
         {
+            var now = Now;
+            if (dueTime < now)
+            {
+                return ScheduleActual(state, now, action);
+            }
+            return ScheduleActual(state, dueTime, action);
+        }
+
+        IDisposable ScheduleActual<TState>(TState state, DateTimeOffset dueTime, Func<IScheduler, TState, IDisposable> action)
+        {
             var key = new TestSchedulerTaskKey(Interlocked.Increment(ref index), dueTime);
-            Add(key, () => action(this, state));
+            Add(key, () => {
+                key.SetNext(action(this, state));
+            });
             return key;
         }
 
@@ -102,7 +121,7 @@ namespace akarnokd.reactive_extensions
             {
                 if (TryPeek(out var key, out var task))
                 {
-                    if (key.disposed)
+                    if (key.IsDisposed())
                     {
                         Remove(key);
                         continue;
@@ -131,7 +150,7 @@ namespace akarnokd.reactive_extensions
             {
                 if (TryPeek(out var key, out var task))
                 {
-                    if (key.disposed)
+                    if (key.IsDisposed())
                     {
                         Remove(key);
                     }
@@ -196,7 +215,8 @@ namespace akarnokd.reactive_extensions
         {
             internal readonly long index;
             internal readonly long due;
-            internal volatile bool disposed;
+
+            IDisposable next;
 
             public TestSchedulerTaskKey(long index, DateTimeOffset due)
             {
@@ -206,7 +226,20 @@ namespace akarnokd.reactive_extensions
 
             public void Dispose()
             {
-                disposed = true;
+                DisposableHelper.Dispose(ref next);
+            }
+
+            internal bool IsDisposed()
+            {
+                return DisposableHelper.IsDisposed(ref next);
+            }
+
+            internal void SetNext(IDisposable next)
+            {
+                if (next != DisposableHelper.EMPTY)
+                {
+                    DisposableHelper.Replace(ref this.next, next);
+                }
             }
         }
 
