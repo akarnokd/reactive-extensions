@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
-    <Version>0.0.6-alpha</Version>
+    <Version>0.0.7-alpha</Version>
     <Description>Extension methods for the dotnet/reactive library.</Description>
     <Authors>David Karnok</Authors>
     <PackageId>akarnokd.reactive_extensions</PackageId>
@@ -13,18 +13,18 @@
     <Copyright>Copyright 2018, David Karnok</Copyright>
     <PackageReleaseNotes>New operators:
 + IObservable
-  - IntervalRange
+  - ...
 + ICompletableSource
-  - AndThen
-  - Defer
-  - FromAction
-  - FromTask
-  - IgnoreAllElements(IObservable)
-  - Timer
-  - Subscribe
-  - SubscribeWith
-  - ToCompletable
-  - ToObservable</PackageReleaseNotes>
+  - ...
+
+New classes:
+
+- CompletableSubject
+- TestScheduler
+
+Other:
+
+- `TestObserver` additional assertions</PackageReleaseNotes>
     <PackageTags>reactive, extensions</PackageTags>
   </PropertyGroup>
 
