@@ -439,6 +439,56 @@ namespace akarnokd.reactive_extensions_test.completable
             var subscribe = 0;
             var dispose = 0;
             var final = 0;
+
+            CompletableSource.Empty()
+                .DoOnCompleted(() => completed++)
+                .DoOnError(e => error++)
+                .DoOnTerminate(() => terminate++)
+                .DoAfterTerminate(() => afterterminate++)
+                .DoOnSubscribe(d => subscribe++)
+                .DoOnDispose(() => dispose++)
+                .DoFinally(() => final++)
+                .Test()
+                .AssertResult();
+
+            Assert.AreEqual(1, completed);
+            Assert.AreEqual(0, error);
+            Assert.AreEqual(1, terminate);
+            Assert.AreEqual(1, afterterminate);
+            Assert.AreEqual(1, subscribe);
+            Assert.AreEqual(0, dispose);
+            Assert.AreEqual(1, final);
+        }
+
+        [Test]
+        public void All_Error()
+        {
+            var completed = 0;
+            var error = 0;
+            var terminate = 0;
+            var afterterminate = 0;
+            var subscribe = 0;
+            var dispose = 0;
+            var final = 0;
+
+            CompletableSource.Error(new InvalidOperationException())
+                .DoOnCompleted(() => completed++)
+                .DoOnError(e => error++)
+                .DoOnTerminate(() => terminate++)
+                .DoAfterTerminate(() => afterterminate++)
+                .DoOnSubscribe(d => subscribe++)
+                .DoOnDispose(() => dispose++)
+                .DoFinally(() => final++)
+                .Test()
+                .AssertFailure(typeof(InvalidOperationException));
+
+            Assert.AreEqual(0, completed);
+            Assert.AreEqual(1, error);
+            Assert.AreEqual(1, terminate);
+            Assert.AreEqual(1, afterterminate);
+            Assert.AreEqual(1, subscribe);
+            Assert.AreEqual(0, dispose);
+            Assert.AreEqual(1, final);
         }
     }
 }

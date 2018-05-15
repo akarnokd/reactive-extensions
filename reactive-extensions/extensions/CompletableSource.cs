@@ -126,17 +126,47 @@ namespace akarnokd.reactive_extensions
             return task.ToCompletable();
         }
 
+        /// <summary>
+        /// Relays the terminal event of the fastest responding
+        /// completable source while disposing the others.
+        /// </summary>
+        /// <param name="sources">The completable sources.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.7</remarks>
         public static ICompletableSource AmbAll(this ICompletableSource[] sources)
         {
-            throw new NotImplementedException();
+            RequireNonNull(sources, nameof(sources));
+
+            return new CompletableAmb(sources);
         }
 
+        /// <summary>
+        /// Relays the terminal event of the fastest responding
+        /// completable source while disposing the others.
+        /// </summary>
+        /// <param name="sources">The completable sources.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.7</remarks>
         public static ICompletableSource Amb(params ICompletableSource[] sources)
         {
-            throw new NotImplementedException();
+            return AmbAll(sources);
         }
 
-        public static ICompletableSource ConcatAll(this ICompletableSource[] sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
+        /// <summary>
+        /// Relays the terminal event of the fastest responding
+        /// completable source while disposing the others.
+        /// </summary>
+        /// <param name="sources">The completable sources.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.7</remarks>
+        public static ICompletableSource Amb(IEnumerable<ICompletableSource> sources)
+        {
+            RequireNonNull(sources, nameof(sources));
+
+            return new CompletableAmbEnumerable(sources);
+        }
+
+        public static ICompletableSource ConcatAll(this ICompletableSource[] sources, bool delayErrors = false)
         {
             throw new NotImplementedException();
         }
@@ -146,22 +176,17 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
-        public static ICompletableSource Concat(IEnumerable<ICompletableSource> sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
+        public static ICompletableSource Concat(IEnumerable<ICompletableSource> sources, bool delayErrors = false)
         {
             throw new NotImplementedException();
         }
 
-        public static ICompletableSource Concat(int maxConcurrency, params ICompletableSource[] sources)
+        public static ICompletableSource Concat(bool delayErrors, params ICompletableSource[] sources)
         {
             throw new NotImplementedException();
         }
 
-        public static ICompletableSource Concat(int maxConcurrency, bool delayErrors, params ICompletableSource[] sources)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static ICompletableSource Concat(this IObservable<ICompletableSource> sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
+        public static ICompletableSource Concat(this IObservable<ICompletableSource> sources, bool delayErrors = false)
         {
             throw new NotImplementedException();
         }

@@ -536,6 +536,8 @@ Extension methods host: `CompletableSource`
 
 ### Factory methods
 
+- `Amb`
+- `AmbAll`
 - `Create`
 - `Defer`
 - `Empty`
