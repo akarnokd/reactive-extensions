@@ -13,15 +13,18 @@
     <Copyright>Copyright 2018, David Karnok</Copyright>
     <PackageReleaseNotes>New operators:
 + ICompletableSource
-  - Amb, AmbAll
-  - Concat, ConcatAll, ConcatMap
-  - `DoAfterTerminate`
-  - `DoFinally`
-  - `DoOnCompleted`
-  - `DoOnDispose`
-  - `DoOnError`
-  - `DoOnSubscribe`
-  - `DoOnTerminate`
+  - Amb 
+  - AmbAll
+  - Concat
+  - ConcatAll
+  - ConcatMap
+  - DoAfterTerminate
+  - DoFinally
+  - DoOnCompleted
+  - DoOnDispose
+  - DoOnError
+  - DoOnSubscribe
+  - DoOnTerminate
 
 New classes:
 
