@@ -67,6 +67,7 @@
     <Compile Include="completable\CompletableLambdaObserverTest.cs" />
     <Compile Include="completable\CompletableFromTaskTest.cs" />
     <Compile Include="completable\CompletableAndThenTest.cs" />
+    <Compile Include="completable\CompletableDoTest.cs" />
     <Compile Include="completable\UnitTest1.cs" />
     <Compile Include="maybe\MaybeCreateTest.cs" />
     <Compile Include="maybe\MaybeEmptyTest.cs" />

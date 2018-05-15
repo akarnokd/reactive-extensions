@@ -549,6 +549,13 @@ Extension methods host: `CompletableSource`
 
 - `AndThen`
 - `Compose`
+- `DoAfterTerminate`
+- `DoFinally`
+- `DoOnCompleted`
+- `DoOnDispose`
+- `DoOnError`
+- `DoOnSubscribe`
+- `DoOnTerminate`
 
 ### Consumer methods
 

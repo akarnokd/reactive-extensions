@@ -278,60 +278,123 @@ namespace akarnokd.reactive_extensions
             return composer(source);
         }
 
+        /// <summary>
+        /// Calls the given <paramref name="handler"/> whenever a
+        /// completable observer subscribes to the completable <paramref name="source"/>.
+        /// </summary>
+        /// <param name="source">The completable source to peek into.</param>
+        /// <param name="handler">The handler to call.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.7</remarks>
         public static ICompletableSource DoOnSubscribe(this ICompletableSource source, Action<IDisposable> handler)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(handler, nameof(handler));
 
-            throw new NotImplementedException();
+            return CompletablePeek.Create(source, onSubscribe: handler);
         }
 
+        /// <summary>
+        /// Calls the given <paramref name="handler"/> whenever a
+        /// completable observer disposes to the connection to
+        /// the completable <paramref name="source"/>.
+        /// </summary>
+        /// <param name="source">The completable source to peek into.</param>
+        /// <param name="handler">The handler to call.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.7</remarks>
         public static ICompletableSource DoOnDispose(this ICompletableSource source, Action handler)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(handler, nameof(handler));
 
-            throw new NotImplementedException();
+            return CompletablePeek.Create(source, onDispose: handler);
         }
 
+        /// <summary>
+        /// Calls the given <paramref name="handler"/> before a
+        /// completable observer gets completed by
+        /// the completable <paramref name="source"/>.
+        /// </summary>
+        /// <param name="source">The completable source to peek into.</param>
+        /// <param name="handler">The handler to call.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.7</remarks>
         public static ICompletableSource DoOnCompleted(this ICompletableSource source, Action handler)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(handler, nameof(handler));
 
-            throw new NotImplementedException();
+            return CompletablePeek.Create(source, onCompleted: handler);
         }
 
+        /// <summary>
+        /// Calls the given <paramref name="handler"/> before a
+        /// completable observer receives the error signal from
+        /// the completable <paramref name="source"/>.
+        /// </summary>
+        /// <param name="source">The completable source to peek into.</param>
+        /// <param name="handler">The handler to call.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.7</remarks>
         public static ICompletableSource DoOnError(this ICompletableSource source, Action<Exception> handler)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(handler, nameof(handler));
 
-            throw new NotImplementedException();
+            return CompletablePeek.Create(source, onError: handler);
         }
 
+        /// <summary>
+        /// Calls the given <paramref name="handler"/> before a
+        /// completable observer gets terminated normally or with an error by
+        /// the completable <paramref name="source"/>.
+        /// </summary>
+        /// <param name="source">The completable source to peek into.</param>
+        /// <param name="handler">The handler to call.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.7</remarks>
         public static ICompletableSource DoOnTerminate(this ICompletableSource source, Action handler)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(handler, nameof(handler));
 
-            throw new NotImplementedException();
+            return CompletablePeek.Create(source, onTerminate: handler);
         }
 
+        /// <summary>
+        /// Calls the given <paramref name="handler"/> after a
+        /// completable observer gets terminated normally or exceptionally by
+        /// the completable <paramref name="source"/>.
+        /// </summary>
+        /// <param name="source">The completable source to peek into.</param>
+        /// <param name="handler">The handler to call.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.7</remarks>
         public static ICompletableSource DoAfterTerminate(this ICompletableSource source, Action handler)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(handler, nameof(handler));
 
-            throw new NotImplementedException();
+            return CompletablePeek.Create(source, onAfterTerminate: handler);
         }
 
+        /// <summary>
+        /// Calls the given <paramref name="handler"/> exactly once per completable
+        /// observer and after the completable observer gets terminated normally
+        /// or exceptionally or the observer disposes the connection to the
+        /// the completable <paramref name="source"/>.
+        /// </summary>
+        /// <param name="source">The completable source to peek into.</param>
+        /// <param name="handler">The handler to call.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.7</remarks>
         public static ICompletableSource DoFinally(this ICompletableSource source, Action handler)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(handler, nameof(handler));
 
-            throw new NotImplementedException();
+            return CompletablePeek.Create(source, doFinally: handler);
         }
 
         public static ICompletableSource Timeout(this ICompletableSource source, TimeSpan time, IScheduler scheduler, ICompletableSource fallback = null)
