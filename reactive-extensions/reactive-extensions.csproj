@@ -12,10 +12,16 @@
     <RepositoryType>GitHub</RepositoryType>
     <Copyright>Copyright 2018, David Karnok</Copyright>
     <PackageReleaseNotes>New operators:
-+ IObservable
-  - ...
 + ICompletableSource
-  - ...
+  - Amb, AmbAll
+  - Concat, ConcatAll, ConcatMap
+  - `DoAfterTerminate`
+  - `DoFinally`
+  - `DoOnCompleted`
+  - `DoOnDispose`
+  - `DoOnError`
+  - `DoOnSubscribe`
+  - `DoOnTerminate`
 
 New classes:
 

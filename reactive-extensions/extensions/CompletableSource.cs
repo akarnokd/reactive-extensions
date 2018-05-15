@@ -238,36 +238,6 @@ namespace akarnokd.reactive_extensions
             return sources.ConcatMap(v => v, delayErrors);
         }
 
-        public static ICompletableSource ConcatEagerAll(this ICompletableSource[] sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static ICompletableSource ConcatEager(params ICompletableSource[] sources)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static ICompletableSource ConcatEager(IEnumerable<ICompletableSource> sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static ICompletableSource ConcatEager(int maxConcurrency, params ICompletableSource[] sources)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static ICompletableSource ConcatEager(int maxConcurrency, bool delayErrors, params ICompletableSource[] sources)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static ICompletableSource ConcatEager(this IObservable<ICompletableSource> sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// Defers the creation of the actual completable source
         /// provided by a supplier function until a completable observer completes.
@@ -831,12 +801,24 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Maps the elements of an observable source into completable sources
+        /// and runs them one after the other completes, optionally delaying
+        /// errors until all sources terminate.
+        /// </summary>
+        /// <typeparam name="T">The element type of the upstream observable source.</typeparam>
+        /// <param name="source">The observable source to map into completables.</param>
+        /// <param name="mapper">The function receiving the upstream item and returns a completable source.</param>
+        /// <param name="delayErrors">If true, all errors are delayed until the main source and all
+        /// inner sources terminate.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.7</remarks>
         public static ICompletableSource ConcatMap<T>(this IObservable<T> source, Func<T, ICompletableSource> mapper, bool delayErrors = false)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(mapper, nameof(mapper));
 
-            throw new NotImplementedException();
+            return new CompletableConcatMap<T>(source, mapper, delayErrors);
         }
 
         public static ICompletableSource FlatMap<T>(this IObservable<T> source, Func<T, ICompletableSource> mapper, bool delayErrors = false, int maxConcurrency = int.MaxValue)

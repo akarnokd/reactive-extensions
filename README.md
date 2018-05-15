@@ -8,7 +8,7 @@ Extensions to the [dotnet/reactive](https://github.com/dotnet/reactive) library.
 ### Setup
 
 ```
-Install-Package akarnokd.reactive_extensions -Version 0.0.6-alpha
+Install-Package akarnokd.reactive_extensions -Version 0.0.7-alpha
 ```
 
 ### Dependencies
@@ -570,6 +570,7 @@ Extension methods host: `CompletableSource`
 ### Interoperation
 
 - `AndThen` (with `IObservable`)
+- `ConcatMap` (on `Observable`)
 - `IgnoreAllElements` (on `IObservable`)
 - `ToCompletable` (on `Task`)
 - `ToObservable`
