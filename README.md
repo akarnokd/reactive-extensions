@@ -538,6 +538,8 @@ Extension methods host: `CompletableSource`
 
 - `Amb`
 - `AmbAll`
+- `Concat`
+- `ConcatAll`
 - `Create`
 - `Defer`
 - `Empty`

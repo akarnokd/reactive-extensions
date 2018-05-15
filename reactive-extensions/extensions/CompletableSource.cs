@@ -166,29 +166,76 @@ namespace akarnokd.reactive_extensions
             return new CompletableAmbEnumerable(sources);
         }
 
+        /// <summary>
+        /// Runs the completable sources one after the other and
+        /// completes if all of them completed normally or
+        /// terminates eagerly or after all terminated.
+        /// </summary>
+        /// <param name="sources">The completable sources.</param>
+        /// <param name="delayErrors">If true, errors from completable sources are delayed until all of them terminates.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.7</remarks>
         public static ICompletableSource ConcatAll(this ICompletableSource[] sources, bool delayErrors = false)
         {
-            throw new NotImplementedException();
+            RequireNonNull(sources, nameof(sources));
+
+            return new CompletableConcat(sources, delayErrors);
         }
 
+        /// <summary>
+        /// Runs the completable sources one after the other and
+        /// completes if all of them completed normally or
+        /// fails if the current completable source failed.
+        /// </summary>
+        /// <param name="sources">The completable sources.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.7</remarks>
         public static ICompletableSource Concat(params ICompletableSource[] sources)
         {
-            throw new NotImplementedException();
+            return ConcatAll(sources);
         }
 
+        /// <summary>
+        /// Runs the completable sources one after the other and
+        /// completes if all of them completed normally or
+        /// terminates eagerly or after all terminated.
+        /// </summary>
+        /// <param name="sources">The completable sources.</param>
+        /// <param name="delayErrors">If true, errors from completable sources are delayed until all of them terminates.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.7</remarks>
         public static ICompletableSource Concat(IEnumerable<ICompletableSource> sources, bool delayErrors = false)
         {
-            throw new NotImplementedException();
+            return new CompletableConcatEnumerable(sources, delayErrors);
         }
 
+        /// <summary>
+        /// Runs the completable sources one after the other and
+        /// completes if all of them completed normally or
+        /// terminates eagerly or after all terminated.
+        /// </summary>
+        /// <param name="sources">The completable sources.</param>
+        /// <param name="delayErrors">If true, errors from completable sources are delayed until all of them terminates.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.7</remarks>
         public static ICompletableSource Concat(bool delayErrors, params ICompletableSource[] sources)
         {
-            throw new NotImplementedException();
+            return ConcatAll(sources, delayErrors);
         }
 
+        /// <summary>
+        /// Runs the completable sources one after the other 
+        /// provided by the observable sequence and
+        /// completes if all of them completed normally or
+        /// terminates eagerly or after all terminated.
+        /// </summary>
+        /// <param name="sources">The completable sources.</param>
+        /// <param name="delayErrors">If true, errors from completable sources are delayed until all of them terminates.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.7</remarks>
         public static ICompletableSource Concat(this IObservable<ICompletableSource> sources, bool delayErrors = false)
         {
-            throw new NotImplementedException();
+            return sources.ConcatMap(v => v, delayErrors);
         }
 
         public static ICompletableSource ConcatEagerAll(this ICompletableSource[] sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
