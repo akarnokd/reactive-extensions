@@ -46,13 +46,14 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Reactive, Version=4.0.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Reactive.4.0.0-preview.2.build.379\lib\net46\System.Reactive.dll</HintPath>
+      <HintPath>..\packages\System.Reactive.4.0.0-preview.3.build.380\lib\net46\System.Reactive.dll</HintPath>
     </Reference>
     <Reference Include="System.Reactive.Interfaces, Version=4.0.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Reactive.Interfaces.4.0.0-preview.2.build.379\lib\net45\System.Reactive.Interfaces.dll</HintPath>
+      <HintPath>..\packages\System.Reactive.Interfaces.4.0.0-preview.2.build.380\lib\net45\System.Reactive.Interfaces.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="completable\CompletableEmptyTest.cs" />
