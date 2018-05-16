@@ -46,7 +46,7 @@ Other:
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Reactive.Interfaces" Version="4.0.0-preview.2.build.379" />
+    <PackageReference Include="System.Reactive.Interfaces" Version="4.0.0-preview.2.build.380" />
   </ItemGroup>
 
 </Project>
