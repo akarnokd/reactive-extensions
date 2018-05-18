@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
-    <Version>0.0.8-alpha</Version>
+    <Version>0.0.9-alpha</Version>
     <Description>Extension methods for the dotnet/reactive library.</Description>
     <Authors>David Karnok</Authors>
     <PackageId>akarnokd.reactive_extensions</PackageId>
@@ -13,21 +13,22 @@
     <Copyright>Copyright 2018, David Karnok</Copyright>
     <PackageReleaseNotes>New operators:
 + ICompletableSource
-  - ObserveOn
-  - OnErrorComplete
-  - OnErrorResumeNext
-  - OnTerminateDetach
-  - Repeat
-  - Retry
-  - SubscribeOn
-  - Timeout
-  - UnsubscribeOn
-  - Using
+  - AndThen (IMaybeSource, ISingleSource)
 
-+TestObserver
-  - AssertCompositeErrorCount
-  - Tag (property)
-  - WithTag</PackageReleaseNotes>
++ IMaybeSource
+  - Just
+  - Subscribe (delegate)
+  - SubscribeWith
+
++ ISingleSource
+  - Just
+
+New classes:
+
+- MaybeSubject
+- SingleSubject 
+Bugfixes:
+- Fix ConcatMany error handling</PackageReleaseNotes>
     <PackageTags>reactive, extensions</PackageTags>
   </PropertyGroup>
 

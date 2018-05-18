@@ -87,11 +87,15 @@
     <Compile Include="maybe\MaybeEmptyTest.cs" />
     <Compile Include="maybe\MaybeErrorTest.cs" />
     <Compile Include="maybe\MaybeNeverTest.cs" />
+    <Compile Include="maybe\MaybeJustTest.cs" />
+    <Compile Include="maybe\MaybeLambdaObserverTest.cs" />
+    <Compile Include="maybe\UnitTest1.cs" />
     <Compile Include="observable\DoAfterTerminateTest.cs" />
     <Compile Include="observable\RepeatWhenTest.cs" />
     <Compile Include="observable\SpscLinkedArrayQueueTest.cs" />
     <Compile Include="observable\CreateTest.cs" />
     <Compile Include="observable\IntervalRangeTest.cs" />
+    <Compile Include="observable\ConcatManyTest.cs" />
     <Compile Include="observable\UnitTest1.cs" />
     <Compile Include="single\SingleCreateTest.cs" />
     <Compile Include="single\SingleNeverTest.cs" />
@@ -124,6 +128,7 @@
     <Compile Include="observable\WithLatestFromTest.cs" />
     <Compile Include="TestSchedulerTest.cs" />
     <Compile Include="CompletableSubjectTest.cs" />
+    <Compile Include="MaybeSubjectTest.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

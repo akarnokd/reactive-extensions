@@ -84,7 +84,7 @@ namespace akarnokd.reactive_extensions
 
             public void OnError(Exception error)
             {
-                if (Interlocked.CompareExchange(ref error, error, null) == null)
+                if (Interlocked.CompareExchange(ref this.error, error, null) == null)
                 {
                     Volatile.Write(ref done, true);
                     Drain();
@@ -106,7 +106,7 @@ namespace akarnokd.reactive_extensions
             {
                 if (innerObserver.Finish())
                 {
-                    if (Interlocked.CompareExchange(ref error, error, null) == null)
+                    if (Interlocked.CompareExchange(ref this.error, error, null) == null)
                     {
                         Volatile.Write(ref done, true);
                         Volatile.Write(ref active, 0);
@@ -131,7 +131,7 @@ namespace akarnokd.reactive_extensions
                     return;
                 }
 
-                do
+                for (; ; )
                 {
                     if (IsDisposed())
                     {
@@ -173,7 +173,12 @@ namespace akarnokd.reactive_extensions
                             }
                         }
                     }
-                } while (Interlocked.Decrement(ref trampoline) != 0);
+
+                    if (Interlocked.Decrement(ref trampoline) == 0)
+                    {
+                        break;
+                    }
+                }
             }
 
             internal sealed class InnerObserver : IObserver<T>, IDisposable

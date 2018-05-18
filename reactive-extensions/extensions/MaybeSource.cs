@@ -58,7 +58,7 @@ namespace akarnokd.reactive_extensions
         /// Creates an empty completable that completes immediately.
         /// </summary>
         /// <typeparam name="T">The element type of the maybe.</typeparam>
-        /// <returns>The shared empty completable instance.</returns>
+        /// <returns>The shared empty maybe source instance.</returns>
         public static IMaybeSource<T> Empty<T>()
         {
             return MaybeEmpty<T>.INSTANCE;
@@ -70,7 +70,7 @@ namespace akarnokd.reactive_extensions
         /// </summary>
         /// <typeparam name="T">The element type of the maybe.</typeparam>
         /// <param name="error">The error to signal.</param>
-        /// <returns>The new completable instance.</returns>
+        /// <returns>The new maybe source instance.</returns>
         public static IMaybeSource<T> Error<T>(Exception error)
         {
             RequireNonNull(error, nameof(error));
@@ -86,6 +86,18 @@ namespace akarnokd.reactive_extensions
         public static IMaybeSource<T> Never<T>()
         {
             return MaybeNever<T>.INSTANCE;
+        }
+
+        /// <summary>
+        /// Creates a maybe that succeeds with the given <paramref name="item"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of the single item.</typeparam>
+        /// <param name="item">The item to succeed with.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.9</remarks>
+        public static IMaybeSource<T> Just<T>(T item)
+        {
+            return new MaybeJust<T>(item);
         }
 
         public static IMaybeSource<T> FromAction<T>(Action action)
@@ -532,6 +544,14 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
+        public static IMaybeSource<T> Hide<T>(this IMaybeSource<T> source)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
+
         // ------------------------------------------------
         // Leaving the reactive world
         // ------------------------------------------------
@@ -543,11 +563,23 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Subscribe to this maybe source and call the
+        /// appropriate action depending on the success or terminal signal received.
+        /// </summary>
+        /// <param name="source">The maybee source to observe.</param>
+        /// <param name="onSuccess">Called with the success item when the maybe source succeeds.</param>
+        /// <param name="onError">Called with the exception when the maybe source terminates with an error.</param>
+        /// <param name="onCompleted">Called when the maybe source completes normally.</param>
+        /// <returns>The disposable that allows cancelling the source.</returns>
+        /// <remarks>Since 0.0.9</remarks>
         public static IDisposable Subscribe<T>(this IMaybeSource<T> source, Action<T> onSuccess, Action<Exception> onError = null, Action onCompleted = null)
         {
             RequireNonNull(source, nameof(source));
 
-            throw new NotImplementedException();
+            var parent = new MaybeLambdaObserver<T>(onSuccess, onError, onCompleted);
+            source.Subscribe(parent);
+            return parent;
         }
 
         public static void BlockingSubscribe<T>(this IMaybeSource<T> source, IMaybeObserver<T> observer)
@@ -583,6 +615,22 @@ namespace akarnokd.reactive_extensions
             RequireNonNull(source, nameof(source));
 
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Subscribes a maybe observer (subclass) to the maybe
+        /// source and returns this observer instance as well.
+        /// </summary>
+        /// <typeparam name="T">The maybe observer type.</typeparam>
+        /// <param name="source">The maybe source to subscribe to.</param>
+        /// <param name="observer">The maybe observer (subclass) to subscribe with.</param>
+        /// <returns>The <paramref name="observer"/> provided as parameter.</returns>
+        /// <remarks>Since 0.0.9</remarks>
+        public static U SubscribeWith<T, U>(this IMaybeSource<T> source, U observer) where U : IMaybeObserver<T>
+        {
+            RequireNonNull(observer, nameof(observer));
+            source.Subscribe(observer);
+            return observer;
         }
 
         //-------------------------------------------------

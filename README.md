@@ -21,10 +21,15 @@ Due to some versioning shenanigans, this library requires at least the
 - `IObservable` support
   - [Operators](#operators)
   - [Other classes](#other-classes) 
+    - [TestObserver](#testobserver)
+    - [TestScheduler](#testscheduler)
 - New reactive types
   - [ICompletableSource](#icompletablesource)
+    - [CompletableSubject](#completablesubject)
   - [ISingleSource](#isinglesource)
+    - [SingleSubject](#singlesubject)
   - [IMaybeSource](#imaybesource)
+    - [MaybeSubject](#maybesubject)
 
 ## Operators
 
@@ -579,7 +584,7 @@ Extension methods host: `CompletableSource`
 
 ### Interoperation
 
-- `AndThen` (with `IObservable`)
+- `AndThen` (with `IObservable`, `ISingleSource` & `IMaybeSource`)
 - `ConcatMap` (on `Observable`)
 - `IgnoreAllElements` (on `IObservable`)
 - `ToCompletable` (on `Task`)
@@ -610,12 +615,31 @@ Extension methods host: `SingleSource`
 
 - `Create`
 - `Error`
+- `Just`
 - `Never`
 
 ### Instance methods
 
 - `Compose`
+
+### Consumer methods
+
 - `Test`
+
+### Interoperation
+
+
+
+### SingleSubject
+
+A single-based, hot subject that multicasts the value or failure event
+it receives through its single observer API surface.
+
+This subject supports an optional reference-counting behavior: when
+all single observers dispose before the subject succeeds or fails, it will
+terminate its upstream connection (if any).
+
+*Since 0.0.9*
 
 ## IMaybeSource
 
@@ -633,9 +657,32 @@ Extension methods host: `MaybeSource`
 - `Create`
 - `Empty`
 - `Error`
+- `Just`
 - `Never`
 
 ### Instance methods
 
 - `Compose`
+
+### Consumer methods
+
+- `Subscribe`
+- `SubscribeWith`
 - `Test`
+
+### Interoperation
+
+- `Subscribe`
+- `SubscribeWith`
+- `Test`
+
+### MaybeSubject
+
+A maybe-based, hot subject that multicasts the value or termination event
+it receives through its maybe observer API surface.
+
+This subject supports an optional reference-counting behavior: when
+all maybe observers dispose before the subject succeeds or terminates, it will
+terminate its upstream connection (if any).
+
+*Since 0.0.9*

@@ -736,7 +736,7 @@ namespace akarnokd.reactive_extensions
         /// Subscribe to this completable source and call the
         /// appropriate action depending on the terminal signal received.
         /// </summary>
-        /// <param name="source">The completable source to observer.</param>
+        /// <param name="source">The completable source to observe.</param>
         /// <param name="onCompleted">Called when the completable source completes normally.</param>
         /// <param name="onError">Called with the exception when the completable source terminates with an error.</param>
         /// <returns>The disposable that allows cancelling the source.</returns>
@@ -772,7 +772,7 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Subscribes an completable observer (subclass) to the completable
+        /// Subscribes a completable observer (subclass) to the completable
         /// source and returns this observer instance as well.
         /// </summary>
         /// <typeparam name="T">The completable observer type.</typeparam>
@@ -826,20 +826,38 @@ namespace akarnokd.reactive_extensions
             return new CompletableAndThen(source, next);
         }
 
+        /// <summary>
+        /// Subscribes to the next single source and relays its
+        /// values when the main completable source completes normally.
+        /// </summary>
+        /// <param name="source">The completable source to start with.</param>
+        /// <param name="next">The single source to resume with when the <paramref name="source"/>
+        /// completes.</param>
+        /// <returns>The new single source instance.</returns>
+        /// <remarks>Since 0.0.9</remarks>
         public static ISingleSource<T> AndThen<T>(this ICompletableSource source, ISingleSource<T> next)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(next, nameof(next));
 
-            throw new NotImplementedException();
+            return new CompletableAndThenSingle<T>(source, next);
         }
 
+        /// <summary>
+        /// Subscribes to the next maybe source and relays its
+        /// values when the main completable source completes normally.
+        /// </summary>
+        /// <param name="source">The completable source to start with.</param>
+        /// <param name="next">The maybe source to resume with when the <paramref name="source"/>
+        /// completes.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.9</remarks>
         public static IMaybeSource<T> AndThen<T>(this ICompletableSource source, IMaybeSource<T> next)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(next, nameof(next));
 
-            throw new NotImplementedException();
+            return new CompletableAndThenMaybe<T>(source, next);
         }
 
         /// <summary>

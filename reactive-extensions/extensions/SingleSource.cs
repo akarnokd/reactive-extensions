@@ -45,7 +45,7 @@ namespace akarnokd.reactive_extensions
         /// </summary>
         /// <param name="onSubscribe">The action that is called with an emitter
         /// that can be used for signalling an item or error event.</param>
-        /// <returns>The new single instance</returns>
+        /// <returns>The new single source instance</returns>
         public static ISingleSource<T> Create<T>(Action<ISingleEmitter<T>> onSubscribe)
         {
             RequireNonNull(onSubscribe, nameof(onSubscribe));
@@ -59,7 +59,7 @@ namespace akarnokd.reactive_extensions
         /// </summary>
         /// <typeparam name="T">The element type of the maybe.</typeparam>
         /// <param name="error">The error to signal.</param>
-        /// <returns>The new completable instance.</returns>
+        /// <returns>The new single source instance.</returns>
         public static ISingleSource<T> Error<T>(Exception error)
         {
             RequireNonNull(error, nameof(error));
@@ -76,6 +76,19 @@ namespace akarnokd.reactive_extensions
         {
             return SingleNever<T>.INSTANCE;
         }
+
+        /// <summary>
+        /// Creates a single that succeeds with the given <paramref name="item"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of the single item.</typeparam>
+        /// <param name="item">The item to succeed with.</param>
+        /// <returns>The new single source instance.</returns>
+        /// <remarks>Since 0.0.9</remarks>
+        public static ISingleSource<T> Just<T>(T item)
+        {
+            return new SingleJust<T>(item);
+        }
+
 
         public static ISingleSource<T> FromFunc<T>(Func<T> action)
         {
@@ -483,6 +496,12 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
+        public static ISingleSource<T> Hide<T>(this ISingleSource<T> source)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
 
         // ------------------------------------------------
         // Leaving the reactive world
