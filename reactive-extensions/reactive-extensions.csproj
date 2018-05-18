@@ -13,10 +13,17 @@
     <Copyright>Copyright 2018, David Karnok</Copyright>
     <PackageReleaseNotes>New operators:
 + ICompletableSource
-  - Using
+  - ObserveOn
   - OnErrorComplete
   - Repeat
-  - Retry</PackageReleaseNotes>
+  - Retry
+  - SubscribeOn
+  - UnsubscribeOn
+  - Using
+
++TestObserver
+  - Tag (property)
+  - WithTag</PackageReleaseNotes>
     <PackageTags>reactive, extensions</PackageTags>
   </PropertyGroup>
 

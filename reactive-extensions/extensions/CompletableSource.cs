@@ -576,25 +576,53 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Subscribes to the source on the given scheduler.
+        /// </summary>
+        /// <param name="source">The target completable source to subscribe to</param>
+        /// <param name="scheduler">The scheduler to use when subscribing to <paramref name="source"/>.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.8</remarks>
         public static ICompletableSource SubscribeOn(this ICompletableSource source, IScheduler scheduler)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNull(scheduler, nameof(scheduler));
 
-            throw new NotImplementedException();
+            return new CompletableSubscribeOn(source, scheduler);
         }
 
+        /// <summary>
+        /// Signals the terminal events of the completable source
+        /// through the specified <paramref name="scheduler"/>.
+        /// </summary>
+        /// <param name="source">The completable source to observe on the specified scheduler.</param>
+        /// <param name="scheduler">The scheduler to use.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.8</remarks>
         public static ICompletableSource ObserveOn(this ICompletableSource source, IScheduler scheduler)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNull(scheduler, nameof(scheduler));
 
-            throw new NotImplementedException();
+            return new CompletableObserveOn(source, scheduler);
         }
 
+        /// <summary>
+        /// When the downstream disposes, the upstream's disposable
+        /// is called from the given scheduler.
+        /// Note that termination in general doesn't call
+        /// <code>Dispose()</code> on the upstream.
+        /// </summary>
+        /// <param name="source">The completable source to unsubscribe.</param>
+        /// <param name="scheduler">The scheduler to use.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.8</remarks>
         public static ICompletableSource UnsubscribeOn(this ICompletableSource source, IScheduler scheduler)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNull(scheduler, nameof(scheduler));
 
-            throw new NotImplementedException();
+            return new CompletableUnsubscribeOn(source, scheduler);
         }
 
         public static ICompletableSource OnTerminateDetach(this ICompletableSource source)
