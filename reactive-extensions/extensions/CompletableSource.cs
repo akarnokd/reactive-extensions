@@ -657,11 +657,19 @@ namespace akarnokd.reactive_extensions
             return new CompletableUnsubscribeOn(source, scheduler);
         }
 
+        /// <summary>
+        /// When the upstream terminates or the downstream disposes,
+        /// it detaches the references between the two, avoiding
+        /// leaks of one or the other.
+        /// </summary>
+        /// <param name="source">The completable source to detach from upon termination or cancellation.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.8</remarks>
         public static ICompletableSource OnTerminateDetach(this ICompletableSource source)
         {
             RequireNonNull(source, nameof(source));
 
-            throw new NotImplementedException();
+            return new CompletableOnTerminateDetach(source);
         }
 
         public static ICompletableSource Cache(this ICompletableSource source, Action<IDisposable> cancel = null)
@@ -700,6 +708,13 @@ namespace akarnokd.reactive_extensions
         }
 
         public static ICompletableSource TakeUntil<U>(this ICompletableSource source, IObservable<U> other)
+        {
+            RequireNonNull(source, nameof(source));
+
+            throw new NotImplementedException();
+        }
+
+        public static ICompletableSource Hide(this ICompletableSource source)
         {
             RequireNonNull(source, nameof(source));
 
