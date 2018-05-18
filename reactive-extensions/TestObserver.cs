@@ -626,6 +626,25 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
+        /// Assert that there is an AggregateException and it has
+        /// the given number of inner exceptions.
+        /// </summary>
+        /// <param name="count">The expected count of inner exceptions</param>
+        /// <returns>this</returns>
+        /// <remarks>Since 0.0.8</remarks>
+        public TestObserver<T> AssertCompositeErrorCount(int count)
+        {
+            AssertError(typeof(AggregateException));
+            var exs = (errors[0] as AggregateException).InnerExceptions.Count;
+
+            if (count != exs)
+            {
+                throw Fail("The AggregateException has different number of exceptions. Expected: " + count + ", Actual: " + exs);
+            }
+            return this;
+        }
+
+        /// <summary>
         /// Assert that OnSubscribe was called.
         /// </summary>
         /// <returns>this</returns>

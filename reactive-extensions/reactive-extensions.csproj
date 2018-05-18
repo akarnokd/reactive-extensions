@@ -15,6 +15,7 @@
 + ICompletableSource
   - ObserveOn
   - OnErrorComplete
+  - OnErrorResumeNext
   - Repeat
   - Retry
   - SubscribeOn
@@ -23,6 +24,7 @@
   - Using
 
 +TestObserver
+  - AssertCompositeErrorCount
   - Tag (property)
   - WithTag</PackageReleaseNotes>
     <PackageTags>reactive, extensions</PackageTags>

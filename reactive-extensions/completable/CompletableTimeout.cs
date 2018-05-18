@@ -119,44 +119,12 @@ namespace akarnokd.reactive_extensions
                     {
                         fallback = null;
 
-                        var inner = new InnerObserver(downstream);
+                        var inner = new CompletableInnerObserver(downstream);
                         if (Interlocked.CompareExchange(ref fallbackObserver, inner, null) == null)
                         {
                             c.Subscribe(inner);
                         }
                     }
-                }
-            }
-
-            sealed class InnerObserver : ICompletableObserver, IDisposable
-            {
-                readonly ICompletableObserver downstream;
-
-                IDisposable upstream;
-
-                public InnerObserver(ICompletableObserver downstream)
-                {
-                    this.downstream = downstream;
-                }
-
-                public void Dispose()
-                {
-                    DisposableHelper.Dispose(ref upstream);
-                }
-
-                public void OnCompleted()
-                {
-                    downstream.OnCompleted();
-                }
-
-                public void OnError(Exception error)
-                {
-                    downstream.OnError(error);
-                }
-
-                public void OnSubscribe(IDisposable d)
-                {
-                    DisposableHelper.SetOnce(ref upstream, d);
                 }
             }
         }

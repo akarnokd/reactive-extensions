@@ -563,6 +563,7 @@ Extension methods host: `CompletableSource`
 - `DoOnTerminate`
 - `ObserveOn`
 - `OnErrorComplete`
+- `OnErrorResumeNext`
 - `Repeat`
 - `Retry`
 - `SubscribeOn`

@@ -492,18 +492,37 @@ namespace akarnokd.reactive_extensions
             return new CompletableOnErrorComplete(source);
         }
 
+        /// <summary>
+        /// Switches to a fallback completable source if
+        /// the upstream fails.
+        /// </summary>
+        /// <param name="source">The completable source that can fail.</param>
+        /// <param name="fallback">The fallback to resume with if <paramref name="source"/> fails.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.8</remarks>
         public static ICompletableSource OnErrorResumeNext(this ICompletableSource source, ICompletableSource fallback)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNull(fallback, nameof(fallback));
 
-            throw new NotImplementedException();
+            return new CompletableOnErrorResumeNext(source, fallback);
         }
 
+        /// <summary>
+        /// Switches to a fallback completable source provided
+        /// by a handler function if the main completable source fails.
+        /// </summary>
+        /// <param name="source">The completable source that can fail.</param>
+        /// <param name="handler">The function that receives the exception from the main
+        /// source and should return a fallback completable source to resume with.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.8</remarks>
         public static ICompletableSource OnErrorResumeNext(this ICompletableSource source, Func<Exception, ICompletableSource> handler)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
 
-            throw new NotImplementedException();
+            return new CompletableOnErrorResumeNextSelector(source, handler);
         }
 
         /// <summary>
