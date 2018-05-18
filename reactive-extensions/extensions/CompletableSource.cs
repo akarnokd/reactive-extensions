@@ -465,11 +465,18 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Suppresses an upstream error and completes the completable observer
+        /// instead.
+        /// </summary>
+        /// <param name="source">The completable source to suppress the errors of.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.8</remarks>
         public static ICompletableSource OnErrorComplete(this ICompletableSource source)
         {
             RequireNonNull(source, nameof(source));
 
-            throw new NotImplementedException();
+            return new CompletableOnErrorComplete(source);
         }
 
         public static ICompletableSource OnErrorResumeNext(this ICompletableSource source, ICompletableSource fallback)

@@ -73,6 +73,7 @@
     <Compile Include="completable\CompletableConcatTest.cs" />
     <Compile Include="completable\CompletableConcatMapTest.cs" />
     <Compile Include="completable\CompletableUsingTest.cs" />
+    <Compile Include="completable\CompletableOnErrorCompleteTest.cs" />
     <Compile Include="completable\UnitTest1.cs" />
     <Compile Include="maybe\MaybeCreateTest.cs" />
     <Compile Include="maybe\MaybeEmptyTest.cs" />

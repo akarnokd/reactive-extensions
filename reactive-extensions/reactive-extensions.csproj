@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
-    <Version>0.0.7-alpha</Version>
+    <Version>0.0.8-alpha</Version>
     <Description>Extension methods for the dotnet/reactive library.</Description>
     <Authors>David Karnok</Authors>
     <PackageId>akarnokd.reactive_extensions</PackageId>
@@ -13,27 +13,8 @@
     <Copyright>Copyright 2018, David Karnok</Copyright>
     <PackageReleaseNotes>New operators:
 + ICompletableSource
-  - Amb 
-  - AmbAll
-  - Concat
-  - ConcatAll
-  - ConcatMap
-  - DoAfterTerminate
-  - DoFinally
-  - DoOnCompleted
-  - DoOnDispose
-  - DoOnError
-  - DoOnSubscribe
-  - DoOnTerminate
-
-New classes:
-
-- CompletableSubject
-- TestScheduler
-
-Other:
-
-- `TestObserver` additional assertions</PackageReleaseNotes>
+  - Using
+  - OnErrorComplete</PackageReleaseNotes>
     <PackageTags>reactive, extensions</PackageTags>
   </PropertyGroup>
 
