@@ -39,5 +39,23 @@ namespace akarnokd.reactive_extensions_test.maybe
 
             Assert.AreEqual(3, count);
         }
+
+        [Test]
+        public void Dispose()
+        {
+            var count = 0;
+
+            var ss = new MaybeSubject<int>();
+
+            var d = ss
+                .Subscribe(v => { count = v; }, e => { count = 2; }, () => { count = 3; });
+
+            Assert.True(ss.HasObserver());
+
+            d.Dispose();
+
+            Assert.False(ss.HasObserver());
+            Assert.AreEqual(0, count);
+        }
     }
 }

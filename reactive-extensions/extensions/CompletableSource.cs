@@ -782,7 +782,9 @@ namespace akarnokd.reactive_extensions
         /// <remarks>Since 0.0.6</remarks>
         public static T SubscribeWith<T>(this ICompletableSource source, T observer) where T : ICompletableObserver
         {
+            RequireNonNull(source, nameof(source));
             RequireNonNull(observer, nameof(observer));
+
             source.Subscribe(observer);
             return observer;
         }

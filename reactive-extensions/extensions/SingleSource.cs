@@ -514,11 +514,24 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
-        public static IDisposable Subscribe<T>(this ISingleSource<T> source, Action<T> onSuccess, Action<Exception> onError = null)
+
+        /// <summary>
+        /// Subscribe to this maybe source and call the
+        /// appropriate action depending on the success or terminal signal received.
+        /// </summary>
+        /// <param name="source">The maybee source to observe.</param>
+        /// <param name="onSuccess">Called with the success item when the maybe source succeeds.</param>
+        /// <param name="onError">Called with the exception when the maybe source terminates with an error.</param>
+        /// <param name="onCompleted">Called when the maybe source completes normally.</param>
+        /// <returns>The disposable that allows cancelling the source.</returns>
+        /// <remarks>Since 0.0.9</remarks>
+        public static IDisposable Subscribe<T>(this ISingleSource<T> source, Action<T> onSuccess = null, Action<Exception> onError = null)
         {
             RequireNonNull(source, nameof(source));
 
-            throw new NotImplementedException();
+            var parent = new SingleLambdaObserver<T>(onSuccess, onError);
+            source.Subscribe(parent);
+            return parent;
         }
 
         public static void BlockingSubscribe<T>(this ISingleSource<T> source, ISingleObserver<T> observer)
@@ -540,6 +553,25 @@ namespace akarnokd.reactive_extensions
             RequireNonNull(source, nameof(source));
 
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Subscribes a single observer (subclass) to the single
+        /// source and returns this observer instance as well.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <typeparam name="U">The observer type.</typeparam>
+        /// <param name="source">The single source to subscribe to.</param>
+        /// <param name="observer">The single observer (subclass) to subscribe with.</param>
+        /// <returns>The <paramref name="observer"/> provided as parameter.</returns>
+        /// <remarks>Since 0.0.9</remarks>
+        public static U SubscribeWith<T, U>(this ISingleSource<T> source, U observer) where U : ISingleObserver<T>
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(observer, nameof(observer));
+
+            source.Subscribe(observer);
+            return observer;
         }
 
         //-------------------------------------------------

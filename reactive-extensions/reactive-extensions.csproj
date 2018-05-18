@@ -22,11 +22,14 @@
 
 + ISingleSource
   - Just
+  - Subscribe (delegate)
+  - SubscribeWith
 
 New classes:
 
 - MaybeSubject
 - SingleSubject 
+
 Bugfixes:
 - Fix ConcatMany error handling</PackageReleaseNotes>
     <PackageTags>reactive, extensions</PackageTags>

@@ -624,6 +624,8 @@ Extension methods host: `SingleSource`
 
 ### Consumer methods
 
+- `Subscribe`
+- `SubscribeWith`
 - `Test`
 
 ### Interoperation

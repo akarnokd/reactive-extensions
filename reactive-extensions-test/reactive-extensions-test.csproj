@@ -83,6 +83,7 @@
     <Compile Include="completable\CompletableOnErrorResumeNextTest.cs" />
     <Compile Include="completable\CompletableOnTerminateDetachTest.cs" />
     <Compile Include="completable\UnitTest1.cs" />
+    <Compile Include="SingleSubjectTest.cs" />
     <Compile Include="maybe\MaybeCreateTest.cs" />
     <Compile Include="maybe\MaybeEmptyTest.cs" />
     <Compile Include="maybe\MaybeErrorTest.cs" />
@@ -97,6 +98,8 @@
     <Compile Include="observable\IntervalRangeTest.cs" />
     <Compile Include="observable\ConcatManyTest.cs" />
     <Compile Include="observable\UnitTest1.cs" />
+    <Compile Include="single\SingleLambdaObserverTest.cs" />
+    <Compile Include="single\SingleJustTest.cs" />
     <Compile Include="single\SingleCreateTest.cs" />
     <Compile Include="single\SingleNeverTest.cs" />
     <Compile Include="single\SingleErrorTest.cs" />

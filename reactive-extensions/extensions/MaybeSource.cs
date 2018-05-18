@@ -573,7 +573,7 @@ namespace akarnokd.reactive_extensions
         /// <param name="onCompleted">Called when the maybe source completes normally.</param>
         /// <returns>The disposable that allows cancelling the source.</returns>
         /// <remarks>Since 0.0.9</remarks>
-        public static IDisposable Subscribe<T>(this IMaybeSource<T> source, Action<T> onSuccess, Action<Exception> onError = null, Action onCompleted = null)
+        public static IDisposable Subscribe<T>(this IMaybeSource<T> source, Action<T> onSuccess = null, Action<Exception> onError = null, Action onCompleted = null)
         {
             RequireNonNull(source, nameof(source));
 
@@ -621,14 +621,17 @@ namespace akarnokd.reactive_extensions
         /// Subscribes a maybe observer (subclass) to the maybe
         /// source and returns this observer instance as well.
         /// </summary>
-        /// <typeparam name="T">The maybe observer type.</typeparam>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <typeparam name="U">The observer type.</typeparam>
         /// <param name="source">The maybe source to subscribe to.</param>
         /// <param name="observer">The maybe observer (subclass) to subscribe with.</param>
         /// <returns>The <paramref name="observer"/> provided as parameter.</returns>
         /// <remarks>Since 0.0.9</remarks>
         public static U SubscribeWith<T, U>(this IMaybeSource<T> source, U observer) where U : IMaybeObserver<T>
         {
+            RequireNonNull(source, nameof(source));
             RequireNonNull(observer, nameof(observer));
+
             source.Subscribe(observer);
             return observer;
         }
