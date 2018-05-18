@@ -46,14 +46,15 @@ namespace akarnokd.reactive_extensions_test.completable
         TestObserver<object> tso;
 
         [Test]
+        //[Ignore("CI doesn't like this")]
         public void No_Leak_Consumer()
         {
             var src = CompletableSource.Create(emitter => subj = emitter);
             tso = new TestObserver<object>();
 
-            var wt = new WeakReference(tso);
-
             src.OnTerminateDetach().Subscribe(tso);
+
+            var wt = new WeakReference(tso);
 
             subj.OnCompleted();
 
@@ -81,9 +82,9 @@ namespace akarnokd.reactive_extensions_test.completable
             var src = CompletableSource.Create(emitter => subj = emitter);
             tso = new TestObserver<object>();
 
-            var wt = new WeakReference(tso);
-
             src.OnTerminateDetach().Subscribe(tso);
+
+            var wt = new WeakReference(tso);
 
             tso.Dispose();
 
@@ -111,9 +112,9 @@ namespace akarnokd.reactive_extensions_test.completable
             var src = CompletableSource.Create(emitter => subj = emitter);
             tso = new TestObserver<object>();
 
-            var wt = new WeakReference(tso);
-
             src.OnTerminateDetach().Subscribe(tso);
+
+            var wt = new WeakReference(tso);
 
             subj.OnCompleted();
 
@@ -141,9 +142,9 @@ namespace akarnokd.reactive_extensions_test.completable
             var src = CompletableSource.Create(emitter => subj = emitter);
             tso = new TestObserver<object>();
 
-            var wt = new WeakReference(subj);
-
             src.OnTerminateDetach().Subscribe(tso);
+
+            var wt = new WeakReference(subj);
 
             subj.OnCompleted();
 
@@ -171,9 +172,10 @@ namespace akarnokd.reactive_extensions_test.completable
             var src = CompletableSource.Create(emitter => subj = emitter);
             tso = new TestObserver<object>();
 
-            var wt = new WeakReference(subj);
 
             src.OnTerminateDetach().Subscribe(tso);
+
+            var wt = new WeakReference(subj);
 
             subj.OnError(new InvalidOperationException());
 
@@ -201,9 +203,9 @@ namespace akarnokd.reactive_extensions_test.completable
             var src = CompletableSource.Create(emitter => subj = emitter);
             tso = new TestObserver<object>();
 
-            var wt = new WeakReference(subj);
-
             src.OnTerminateDetach().Subscribe(tso);
+
+            var wt = new WeakReference(subj);
 
             tso.Dispose();
 
