@@ -297,9 +297,28 @@ namespace akarnokd.reactive_extensions
             return new CompletableTimer(time, scheduler);
         }
 
-        public static ICompletableSource Using<S>(Func<S> stateFactory, Func<S, ICompletableSource> sourceSelector, Action<S> stateCleanup = null, bool eagerCleanup = false)
+        /// <summary>
+        /// Generates a resource and a dependent completable source
+        /// for each completable observer and cleans up the resource
+        /// just before or just after the completable source terminated
+        /// or the observer has disposed the setup.
+        /// </summary>
+        /// <typeparam name="S">The resource type.</typeparam>
+        /// <param name="resourceSupplier">The supplier for a per-observer resource.</param>
+        /// <param name="sourceSelector">Function that receives the per-observer resource returned
+        /// by <paramref name="resourceSupplier"/> and returns a completable sourec.</param>
+        /// <param name="resourceCleanup">The optional callback for cleaning up the resource supplied by
+        /// the <paramref name="resourceSupplier"/>.</param>
+        /// <param name="eagerCleanup">If true, the per-observer resource is cleaned up before the
+        /// terminal event is signaled to the downstream. If false, the cleanup happens after.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.8</remarks>
+        public static ICompletableSource Using<S>(Func<S> resourceSupplier, Func<S, ICompletableSource> sourceSelector, Action<S> resourceCleanup = null, bool eagerCleanup = true)
         {
-            throw new NotImplementedException();
+            RequireNonNull(resourceSupplier, nameof(resourceSupplier));
+            RequireNonNull(sourceSelector, nameof(sourceSelector));
+
+            return new CompletableUsing<S>(resourceSupplier, sourceSelector, resourceCleanup, eagerCleanup);
         }
 
         //-------------------------------------------------

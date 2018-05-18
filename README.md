@@ -548,6 +548,7 @@ Extension methods host: `CompletableSource`
 - `FromTask`
 - `Never`
 - `Timer`
+- `Using`
 
 ### Instance methods
 
