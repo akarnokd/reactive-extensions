@@ -679,25 +679,54 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Delay the delivery of the terminal events from the
+        /// upstream completable source by the given time amount.
+        /// </summary>
+        /// <param name="source">The completable source to delay signals of.</param>
+        /// <param name="time">The time delay.</param>
+        /// <param name="scheduler">The scheduler to use for the timed wait and signal emission.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.9</remarks>
         public static ICompletableSource Delay(this ICompletableSource source, TimeSpan time, IScheduler scheduler)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNull(scheduler, nameof(scheduler));
 
-            throw new NotImplementedException();
+            return new CompletableDelay(source, time, scheduler);
         }
 
+        /// <summary>
+        /// Delay the subscription to the main completable source
+        /// until the specified time elapsed.
+        /// </summary>
+        /// <param name="source">The completable source to delay subscribing to.</param>
+        /// <param name="time">The delay time.</param>
+        /// <param name="scheduler">The scheduler to use for the timed wait and subscription.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.9</remarks>
         public static ICompletableSource DelaySubscription(this ICompletableSource source, TimeSpan time, IScheduler scheduler)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNull(scheduler, nameof(scheduler));
 
-            throw new NotImplementedException();
+            return new CompletableDelaySubscriptionTime(source, time, scheduler);
         }
 
+        /// <summary>
+        /// Delay the subscription to the main completable source
+        /// until the other source completes.
+        /// </summary>
+        /// <param name="source">The completable source to delay subscribing to.</param>
+        /// <param name="other">The source that should complete to trigger the main subscription.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.9</remarks>
         public static ICompletableSource DelaySubscription(this ICompletableSource source, ICompletableSource other)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNull(other, nameof(other));
 
-            throw new NotImplementedException();
+            return new CompletableDelaySubscription(source, other);
         }
 
         public static ICompletableSource TakeUntil(this ICompletableSource source, ICompletableSource other)
@@ -714,11 +743,18 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Hides the identity and disposable of the upstream from
+        /// the downstream.
+        /// </summary>
+        /// <param name="source">The completable source to hide.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.9</remarks>
         public static ICompletableSource Hide(this ICompletableSource source)
         {
             RequireNonNull(source, nameof(source));
 
-            throw new NotImplementedException();
+            return new CompletableHide(source);
         }
 
         // ------------------------------------------------
@@ -877,14 +913,34 @@ namespace akarnokd.reactive_extensions
             return new CompletableIgnoreAllElements<T>(source);
         }
 
+        /// <summary>
+        /// Ignores the success signal of the single source and
+        /// completes the downstream completable observer instead.
+        /// </summary>
+        /// <typeparam name="T">The success value type of the source.</typeparam>
+        /// <param name="source">The source to ignore the success value of.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.9</remarks>
         public static ICompletableSource IgnoreElement<T>(this ISingleSource<T> source)
         {
-            throw new NotImplementedException();
+            RequireNonNull(source, nameof(source));
+
+            return new CompletableIgnoreElementSingle<T>(source);
         }
 
+        /// <summary>
+        /// Ignores the success signal of the maybe source and
+        /// completes the downstream completable observer instead.
+        /// </summary>
+        /// <typeparam name="T">The success value type of the source.</typeparam>
+        /// <param name="source">The source to ignore the success value of.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.9</remarks>
         public static ICompletableSource IgnoreElement<T>(this IMaybeSource<T> source)
         {
-            throw new NotImplementedException();
+            RequireNonNull(source, nameof(source));
+
+            return new CompletableIgnoreElementMaybe<T>(source);
         }
 
         /// <summary>
@@ -935,32 +991,69 @@ namespace akarnokd.reactive_extensions
             return new CompletableToObservable<T>(source);
         }
 
+        /// <summary>
+        /// When the upstream completable source completes, the
+        /// downstream single observer receives a success item.
+        /// </summary>
+        /// <typeparam name="T">The type of the success item.</typeparam>
+        /// <param name="source">The source completable to convert.</param>
+        /// <param name="successItem">The item to emit when the source completes.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.9</remarks>
         public static ISingleSource<T> ToSingle<T>(this ICompletableSource source, T successItem)
         {
             RequireNonNull(source, nameof(source));
 
-            throw new NotImplementedException();
+            return new CompletableToSingle<T>(source, successItem);
         }
 
+        /// <summary>
+        /// When the upstream completable source completes, the
+        /// downstream maybe observer completes as well.
+        /// </summary>
+        /// <typeparam name="T">The type of the success item.</typeparam>
+        /// <param name="source">The source completable to convert.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.9</remarks>
         public static IMaybeSource<T> ToMaybe<T>(this ICompletableSource source)
         {
             RequireNonNull(source, nameof(source));
 
-            throw new NotImplementedException();
+            return new CompletableToMaybeComplete<T>(source);
         }
 
+        /// <summary>
+        /// When the upstream completable source completes, the
+        /// downstream maybe observer receives a success item.
+        /// </summary>
+        /// <typeparam name="T">The type of the success item.</typeparam>
+        /// <param name="source">The source completable to convert.</param>
+        /// <param name="successItem">The item to emit when the source completes.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.9</remarks>
         public static IMaybeSource<T> ToMaybe<T>(this ICompletableSource source, T successItem)
         {
             RequireNonNull(source, nameof(source));
 
-            throw new NotImplementedException();
+            return new CompletableToMaybeSuccess<T>(source, successItem);
         }
 
+        /// <summary>
+        /// Subscribe to a completable source and expose the terminal
+        /// signal as a <see cref="Task"/>.
+        /// </summary>
+        /// <param name="source">The source completable to convert.</param>
+        /// <param name="cts">The cancellation token source to watch for external cancellation.</param>
+        /// <returns>The new task instance.</returns>
+        /// <remarks>Since 0.0.9</remarks>
         public static Task ToTask(this ICompletableSource source, CancellationTokenSource cts = null)
         {
             RequireNonNull(source, nameof(source));
 
-            throw new NotImplementedException();
+            var parent = new CompletableToTask();
+            parent.Init(cts);
+            source.Subscribe(parent);
+            return parent.Task;
         }
 
         /// <summary>

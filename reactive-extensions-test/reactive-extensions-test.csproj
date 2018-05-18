@@ -72,6 +72,7 @@
     <Compile Include="completable\CompletableAmbTest.cs" />
     <Compile Include="completable\CompletableConcatTest.cs" />
     <Compile Include="completable\CompletableConcatMapTest.cs" />
+    <Compile Include="completable\CompletableToMaybeTest.cs" />
     <Compile Include="completable\CompletableUsingTest.cs" />
     <Compile Include="completable\CompletableOnErrorCompleteTest.cs" />
     <Compile Include="completable\CompletableRepeatTest.cs" />
@@ -82,7 +83,14 @@
     <Compile Include="completable\CompletableTimeoutTest.cs" />
     <Compile Include="completable\CompletableOnErrorResumeNextTest.cs" />
     <Compile Include="completable\CompletableOnTerminateDetachTest.cs" />
+    <Compile Include="completable\CompletableIgnoreElementTest.cs" />
+    <Compile Include="completable\CompletableToSingleTest.cs" />
+    <Compile Include="completable\CompletableToTaskTest.cs" />
+    <Compile Include="completable\CompletableDelayTest.cs" />
+    <Compile Include="completable\CompletableDelaySubscriptionTest.cs" />
+    <Compile Include="completable\CompletableHideTest.cs" />
     <Compile Include="completable\UnitTest1.cs" />
+    <Compile Include="maybe\MaybeHideTest.cs" />
     <Compile Include="SingleSubjectTest.cs" />
     <Compile Include="maybe\MaybeCreateTest.cs" />
     <Compile Include="maybe\MaybeEmptyTest.cs" />
@@ -98,6 +106,7 @@
     <Compile Include="observable\IntervalRangeTest.cs" />
     <Compile Include="observable\ConcatManyTest.cs" />
     <Compile Include="observable\UnitTest1.cs" />
+    <Compile Include="single\SingleHideTest.cs" />
     <Compile Include="single\SingleLambdaObserverTest.cs" />
     <Compile Include="single\SingleJustTest.cs" />
     <Compile Include="single\SingleCreateTest.cs" />

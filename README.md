@@ -559,6 +559,8 @@ Extension methods host: `CompletableSource`
 
 - `AndThen`
 - `Compose`
+- `Delay`
+- `DelaySubscription`
 - `DoAfterTerminate`
 - `DoFinally`
 - `DoOnCompleted`
@@ -587,8 +589,12 @@ Extension methods host: `CompletableSource`
 - `AndThen` (with `IObservable`, `ISingleSource` & `IMaybeSource`)
 - `ConcatMap` (on `Observable`)
 - `IgnoreAllElements` (on `IObservable`)
+- `IgnoreElement` (on `IMaybeSource` & `ISingleSource`)
 - `ToCompletable` (on `Task`)
+- `ToMaybe`
 - `ToObservable`
+- `ToSingle`
+- `ToTask`
 
 ### CompletableSubject
 

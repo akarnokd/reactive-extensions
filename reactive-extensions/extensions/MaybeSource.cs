@@ -544,11 +544,18 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Hides the identity and disposable of the upstream from
+        /// the downstream.
+        /// </summary>
+        /// <param name="source">The maybe source to hide.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.9</remarks>
         public static IMaybeSource<T> Hide<T>(this IMaybeSource<T> source)
         {
             RequireNonNull(source, nameof(source));
 
-            throw new NotImplementedException();
+            return new MaybeHide<T>(source);
         }
 
 

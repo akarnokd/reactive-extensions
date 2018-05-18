@@ -496,11 +496,18 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Hides the identity and disposable of the upstream from
+        /// the downstream.
+        /// </summary>
+        /// <param name="source">The single source to hide.</param>
+        /// <returns>The new single source instance.</returns>
+        /// <remarks>Since 0.0.9</remarks>
         public static ISingleSource<T> Hide<T>(this ISingleSource<T> source)
         {
             RequireNonNull(source, nameof(source));
 
-            throw new NotImplementedException();
+            return new SingleHide<T>(source);
         }
 
         // ------------------------------------------------

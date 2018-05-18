@@ -14,14 +14,21 @@
     <PackageReleaseNotes>New operators:
 + ICompletableSource
   - AndThen (IMaybeSource, ISingleSource)
-
+  - Delay
+  - DelaySubscription
+  - Hide
+  - IgnoreElement (IMaybeSource, ISingleSource)
+  - ToSingle
+  - ToMaybe
+  - ToTask
 + IMaybeSource
   - Just
+  - Hide
   - Subscribe (delegate)
   - SubscribeWith
-
 + ISingleSource
   - Just
+  - Hide
   - Subscribe (delegate)
   - SubscribeWith
 

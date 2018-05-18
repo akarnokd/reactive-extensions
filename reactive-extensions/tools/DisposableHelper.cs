@@ -141,6 +141,46 @@ namespace akarnokd.reactive_extensions
             return true;
         }
 
+        internal static bool SetIfNull(ref IDisposable field, IDisposable only)
+        {
+            if (only == null)
+            {
+                throw new ArgumentNullException(nameof(only));
+            }
+            if (Volatile.Read(ref field) == DISPOSED)
+            {
+                only.Dispose();
+                return false;
+            }
+            if (Interlocked.CompareExchange(ref field, only, null) != null)
+            {
+                only.Dispose();
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Replace the disposable in the field if it is null,
+        /// dispose <paramref name="only"/> if the field is disposed.
+        /// </summary>
+        /// <param name="field">The target field.</param>
+        /// <param name="only">The new disposable to replace the contents of the field with.</param>
+        /// <returns>True if successful, false if the field was not null</returns>
+        internal static bool ReplaceIfNull(ref IDisposable field, IDisposable only)
+        {
+            if (only == null)
+            {
+                throw new ArgumentNullException(nameof(only));
+            }
+            if (Volatile.Read(ref field) == DISPOSED)
+            {
+                only.Dispose();
+                return false;
+            }
+            return Interlocked.CompareExchange(ref field, only, null) == null;
+        }
+
         internal static void Complete(this ICompletableObserver observer)
         {
             observer.OnSubscribe(EMPTY);
