@@ -33,6 +33,8 @@ namespace akarnokd.reactive_extensions
 
         int once;
 
+        string tag;
+
         /// <summary>
         /// Constructs an empty TestObserver.
         /// </summary>
@@ -198,6 +200,10 @@ namespace akarnokd.reactive_extensions
             if (disposed)
             {
                 msg += ", disposed!";
+            }
+            if (tag != null)
+            {
+                msg += ", tag=" + tag;
             }
 
             msg += ")";
@@ -425,7 +431,7 @@ namespace akarnokd.reactive_extensions
             {
                 if (foundRaw != 0)
                 {
-                    throw Fail("Exception type present but not with the specified message" + (messageContains ? " part:" : ":") + message);
+                    throw Fail("Exception type present but not with the specified message" + (messageContains ? " part: " : ": ") + message);
                 }
                 throw Fail("Exception not present");
             }
@@ -631,5 +637,24 @@ namespace akarnokd.reactive_extensions
             }
             return this;
         }
+
+        /// <summary>
+        /// Tags this TestObserver which shows up in the
+        /// failure message.
+        /// </summary>
+        /// <param name="tag">The tag to use, null clears any tag</param>
+        /// <returns>this</returns>
+        /// <remarks>Since 0.0.8</remarks>
+        public TestObserver<T> WithTag(string tag)
+        {
+            this.tag = tag;
+            return this;
+        }
+
+        /// <summary>
+        /// The current tag string or null if not set.
+        /// </summary>
+        /// <remarks>Since 0.0.8</remarks>
+        public string Tag { get { return tag; } }
     }
 }

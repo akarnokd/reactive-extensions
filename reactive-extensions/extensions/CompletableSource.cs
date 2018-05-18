@@ -493,18 +493,39 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Repeatedly subscribes to the completable source after the
+        /// pervious subscription completes.
+        /// </summary>
+        /// <param name="source">The completable source to repeat.</param>
+        /// <param name="times">The maximum number of repeats. <code>times=1</code>
+        /// will repeat the source once, thus the source is subscribed to twice.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.8</remarks>
         public static ICompletableSource Repeat(this ICompletableSource source, long times = long.MaxValue)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNegative(times, nameof(times));
 
-            throw new NotImplementedException();
+            return new CompletableRepeat(source, times);
         }
 
-        public static ICompletableSource Repeat(this ICompletableSource source, Func<bool> handler)
+        /// <summary>
+        /// Repeatedly subscribes to the completable source after the
+        /// pervious subscription completes and if the <paramref name="predicate"/>
+        /// returns true.
+        /// </summary>
+        /// <param name="source">The completable source to repeat.</param>
+        /// <param name="predicate">The function receiving the current repeat count (1-based)
+        /// and should return true if the resubscription should happen.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.8</remarks>
+        public static ICompletableSource Repeat(this ICompletableSource source, Func<long, bool> predicate)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNull(predicate, nameof(predicate));
 
-            throw new NotImplementedException();
+            return new CompletableRepeatPredicate(source, predicate);
         }
 
         public static ICompletableSource RepeatWhen<U>(this ICompletableSource source, Func<IObservable<object>, IObservable<U>> handler)
@@ -514,18 +535,38 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Repeatedly subscribes to the completable source after the
+        /// pervious subscription fails.
+        /// </summary>
+        /// <param name="source">The completable source to repeat.</param>
+        /// <param name="times">The maximum number of repeats. <code>times=1</code>
+        /// will repeat the source once, thus the source is subscribed to twice.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.8</remarks>
         public static ICompletableSource Retry(this ICompletableSource source, long times = long.MaxValue)
         {
             RequireNonNull(source, nameof(source));
 
-            throw new NotImplementedException();
+            return new CompletableRetry(source, times);
         }
 
-        public static ICompletableSource Retry(this ICompletableSource source, Func<Exception, long, bool> handler)
+        /// <summary>
+        /// Repeatedly subscribes to the completable source after the
+        /// pervious subscription fails and if the <paramref name="predicate"/>
+        /// returns true.
+        /// </summary>
+        /// <param name="source">The completable source to repeat.</param>
+        /// <param name="predicate">The function receiving the current repeat count (1-based)
+        /// and should return true if the resubscription should happen.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.8</remarks>
+        public static ICompletableSource Retry(this ICompletableSource source, Func<Exception, long, bool> predicate)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNull(predicate, nameof(predicate));
 
-            throw new NotImplementedException();
+            return new CompletableRetryPredicate(source, predicate);
         }
 
         public static ICompletableSource RetryWhen<U>(this ICompletableSource source, Func<IObservable<Exception>, IObservable<U>> handler)

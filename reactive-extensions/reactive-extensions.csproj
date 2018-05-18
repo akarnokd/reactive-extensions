@@ -14,7 +14,9 @@
     <PackageReleaseNotes>New operators:
 + ICompletableSource
   - Using
-  - OnErrorComplete</PackageReleaseNotes>
+  - OnErrorComplete
+  - Repeat
+  - Retry</PackageReleaseNotes>
     <PackageTags>reactive, extensions</PackageTags>
   </PropertyGroup>
 

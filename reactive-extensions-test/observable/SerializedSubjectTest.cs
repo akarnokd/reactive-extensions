@@ -1,6 +1,9 @@
 ﻿using System;
 using NUnit.Framework;
 using akarnokd.reactive_extensions;
+using System.Collections.Generic;
+using System.Reactive.Subjects;
+using System.Reactive.Linq;
 
 namespace akarnokd.reactive_extensions_test.observable
 {
@@ -51,6 +54,40 @@ namespace akarnokd.reactive_extensions_test.observable
 
                 to.AssertValueCount(1000);
             }
+        }
+
+        [Test]
+        public void Reentrance()
+        {
+            var serialized = new Subject<IEnumerable<int>>()
+                .ToSerialized();
+
+            var to = serialized
+                .SelectMany(items =>
+                {
+                    bool empty = true;
+                    foreach (var item in items)
+                    {
+                        if (item == 0)
+                        {
+                            empty = true;
+                            break;
+                        }
+                        empty = false;
+                        serialized.OnNext(new List<int>() { item - 1 });
+                    }
+                    if (empty)
+                    {
+                        serialized.OnCompleted();
+                    }
+                    return items;
+                })
+                .Test();
+
+            serialized.OnNext(new List<int>() { 10 });
+
+            to
+                .AssertResult(10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0);
         }
     }
 }
