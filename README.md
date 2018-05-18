@@ -20,7 +20,7 @@ Due to some versioning shenanigans, this library requires at least the
 
 - `IObservable` support
   - [Operators](#operators)
-  - [Other classes](#otherclasses) 
+  - [Other classes](#other-classes) 
 - New reactive types
   - [ICompletableSource](#icompletablesource)
   - [ISingleSource](#isinglesource)
