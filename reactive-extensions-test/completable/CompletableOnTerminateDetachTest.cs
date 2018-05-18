@@ -59,10 +59,19 @@ namespace akarnokd.reactive_extensions_test.completable
 
             tso = null;
 
-            GC.Collect();
+            for (int i = 0; i < 10; i++)
+            {
+                Thread.Sleep(100);
 
-            Thread.Sleep(200);
+                GC.Collect();
 
+                Thread.Sleep(100);
+
+                if (wt.Target == null)
+                {
+                    return;
+                }
+            }
             Assert.IsNull(wt.Target);
         }
 
@@ -80,10 +89,19 @@ namespace akarnokd.reactive_extensions_test.completable
 
             tso = null;
 
-            GC.Collect();
+            for (int i = 0; i < 10; i++)
+            {
+                Thread.Sleep(100);
 
-            Thread.Sleep(200);
+                GC.Collect();
 
+                Thread.Sleep(100);
+
+                if (wt.Target == null)
+                {
+                    return;
+                }
+            }
             Assert.IsNull(wt.Target);
         }
 
@@ -101,10 +119,19 @@ namespace akarnokd.reactive_extensions_test.completable
 
             tso = null;
 
-            GC.Collect();
+            for (int i = 0; i < 10; i++)
+            {
+                Thread.Sleep(100);
 
-            Thread.Sleep(200);
+                GC.Collect();
 
+                Thread.Sleep(100);
+
+                if (wt.Target == null)
+                {
+                    return;
+                }
+            }
             Assert.IsNull(wt.Target);
         }
 
@@ -122,10 +149,19 @@ namespace akarnokd.reactive_extensions_test.completable
 
             subj = null;
 
-            GC.Collect();
+            for (int i = 0; i < 10; i++)
+            {
+                Thread.Sleep(100);
 
-            Thread.Sleep(200);
+                GC.Collect();
 
+                Thread.Sleep(100);
+
+                if (wt.Target == null)
+                {
+                    return;
+                }
+            }
             Assert.IsNull(wt.Target);
         }
 
@@ -143,10 +179,19 @@ namespace akarnokd.reactive_extensions_test.completable
 
             subj = null;
 
-            GC.Collect();
+            for (int i = 0; i < 10; i++)
+            {
+                Thread.Sleep(100);
 
-            Thread.Sleep(200);
+                GC.Collect();
 
+                Thread.Sleep(100);
+
+                if (wt.Target == null)
+                {
+                    return;
+                }
+            }
             Assert.IsNull(wt.Target);
         }
 
@@ -164,10 +209,19 @@ namespace akarnokd.reactive_extensions_test.completable
 
             subj = null;
 
-            GC.Collect();
+            for (int i = 0; i < 10; i++)
+            {
+                Thread.Sleep(100);
 
-            Thread.Sleep(200);
+                GC.Collect();
 
+                Thread.Sleep(100);
+
+                if (wt.Target == null)
+                {
+                    return;
+                }
+            }
             Assert.IsNull(wt.Target);
         }
     }
