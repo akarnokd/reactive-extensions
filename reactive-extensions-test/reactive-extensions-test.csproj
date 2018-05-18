@@ -79,6 +79,7 @@
     <Compile Include="completable\CompletableSubscribeOnTest.cs" />
     <Compile Include="completable\CompletableObserveOnTest.cs" />
     <Compile Include="completable\CompletableUnsubscribeOnTest.cs" />
+    <Compile Include="completable\CompletableTimeoutTest.cs" />
     <Compile Include="completable\UnitTest1.cs" />
     <Compile Include="maybe\MaybeCreateTest.cs" />
     <Compile Include="maybe\MaybeEmptyTest.cs" />

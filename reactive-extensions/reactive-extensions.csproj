@@ -18,6 +18,7 @@
   - Repeat
   - Retry
   - SubscribeOn
+  - Timeout
   - UnsubscribeOn
   - Using
 

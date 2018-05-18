@@ -566,6 +566,7 @@ Extension methods host: `CompletableSource`
 - `Repeat`
 - `Retry`
 - `SubscribeOn`
+- `Timeout`
 - `UnsubscribeOn`
 
 ### Consumer methods

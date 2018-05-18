@@ -458,11 +458,24 @@ namespace akarnokd.reactive_extensions
             return CompletablePeek.Create(source, doFinally: handler);
         }
 
-        public static ICompletableSource Timeout(this ICompletableSource source, TimeSpan time, IScheduler scheduler, ICompletableSource fallback = null)
+        /// <summary>
+        /// If the upstream doesn't terminate within the specified
+        /// timeout, the completable observer is terminated with
+        /// a TimeoutException or is switched to the optional
+        /// fallback completable source.
+        /// </summary>
+        /// <param name="source">The completable source to timeout.</param>
+        /// <param name="timeout">The time to wait before cancelling the source.</param>
+        /// <param name="scheduler">The scheduler to use wait for the termination of the upstream.</param>
+        /// <param name="fallback">The optional comletable source to switch to if the upstream times out.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.8</remarks>
+        public static ICompletableSource Timeout(this ICompletableSource source, TimeSpan timeout, IScheduler scheduler, ICompletableSource fallback = null)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNull(scheduler, nameof(scheduler));
 
-            throw new NotImplementedException();
+            return new CompletableTimeout(source, timeout, scheduler, fallback);
         }
 
         /// <summary>
