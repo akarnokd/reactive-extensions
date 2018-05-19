@@ -13,7 +13,11 @@
     <Copyright>Copyright 2018, David Karnok</Copyright>
     <PackageReleaseNotes>New operators:
 + ICompletableSource
+  - Merge
+  - MergeAll
+  - SubscribeSafe
   - TakeUntil
+  - Wait
 + IMaybeSource
 + ISingleSource
 

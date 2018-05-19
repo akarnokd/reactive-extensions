@@ -551,6 +551,8 @@ Extension methods host: `CompletableSource`
 - `Error`
 - `FromAction`
 - `FromTask`
+- `Merge`
+- `MergeAll`
 - `Never`
 - `Timer`
 - `Using`
@@ -582,8 +584,10 @@ Extension methods host: `CompletableSource`
 ### Consumer methods
 
 - `Subscribe`
+- `SubscribeSafe`
 - `SubscribeWith`
 - `Test`
+- `Wait`
 
 ### Interoperation
 

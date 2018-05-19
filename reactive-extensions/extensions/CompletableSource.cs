@@ -253,34 +253,105 @@ namespace akarnokd.reactive_extensions
             return new CompletableDefer(supplier);
         }
 
+        /// <summary>
+        /// Merges an array of completable sources and completes if
+        /// all of the sources complete or terminate.
+        /// </summary>
+        /// <param name="sources">The array of inner completable sources.</param>
+        /// <param name="delayErrors">If true, all errors are delayed until all sources terminate.</param>
+        /// <param name="maxConcurrency">The maximum number of inner completable sources to run at once.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.10</remarks>
         public static ICompletableSource MergeAll(this ICompletableSource[] sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
         {
-            throw new NotImplementedException();
+            RequireNonNull(sources, nameof(sources));
+            RequirePositive(maxConcurrency, nameof(maxConcurrency));
+
+            return new CompletableMerge(sources, delayErrors, maxConcurrency);
         }
 
+        /// <summary>
+        /// Merges an array of completable sources and completes if
+        /// all of the sources complete.
+        /// </summary>
+        /// <param name="sources">The array of inner completable sources.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.10</remarks>
         public static ICompletableSource Merge(params ICompletableSource[] sources)
         {
-            throw new NotImplementedException();
+            return MergeAll(sources);
         }
 
-        public static ICompletableSource Merge(IEnumerable<ICompletableSource> sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
+        /// <summary>
+        /// Merges an enumerable of completable sources and completes if
+        /// all of the sources complete or terminate.
+        /// </summary>
+        /// <param name="sources">The enumerable sequence of inner completable sources.</param>
+        /// <param name="delayErrors">If true, all errors are delayed until all sources terminate.</param>
+        /// <param name="maxConcurrency">The maximum number of inner completable sources to run at once.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.10</remarks>
+        public static ICompletableSource Merge(this IEnumerable<ICompletableSource> sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
         {
-            throw new NotImplementedException();
+            RequireNonNull(sources, nameof(sources));
+
+            return new CompletableMergeEnumerable(sources, delayErrors, maxConcurrency);
         }
 
+        /// <summary>
+        /// Merges an array of completable sources, running some at a time, and completes if
+        /// all of the sources complete.
+        /// </summary>
+        /// <param name="sources">The array of inner completable sources.</param>
+        /// <param name="maxConcurrency">The maximum number of inner completable sources to run at once.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.10</remarks>
         public static ICompletableSource Merge(int maxConcurrency, params ICompletableSource[] sources)
         {
-            throw new NotImplementedException();
+            return MergeAll(sources, maxConcurrency: maxConcurrency);
         }
 
-        public static ICompletableSource Merge(int maxConcurrency, bool delayErrors, params ICompletableSource[] sources)
+        /// <summary>
+        /// Merges an array of completable sources and completes if
+        /// all of the sources complete or terminate.
+        /// </summary>
+        /// <param name="sources">The array of inner completable sources.</param>
+        /// <param name="delayErrors">If true, all errors are delayed until all sources terminate.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.10</remarks>
+        public static ICompletableSource Merge(bool delayErrors, params ICompletableSource[] sources)
         {
-            throw new NotImplementedException();
+            return MergeAll(sources, delayErrors);
         }
 
+        /// <summary>
+        /// Merges an array of completable sources and completes if
+        /// all of the sources complete or terminate.
+        /// </summary>
+        /// <param name="sources">The array of inner completable sources.</param>
+        /// <param name="delayErrors">If true, all errors are delayed until all sources terminate.</param>
+        /// <param name="maxConcurrency">The maximum number of inner completable sources to run at once.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.10</remarks>
+        public static ICompletableSource Merge(bool delayErrors, int maxConcurrency, params ICompletableSource[] sources)
+        {
+            return MergeAll(sources, delayErrors, maxConcurrency);
+        }
+
+        /// <summary>
+        /// Merges an observable sequence of completable sources and completes if
+        /// all of the sources complete or terminate.
+        /// </summary>
+        /// <param name="sources">The observable sequence of inner completable sources.</param>
+        /// <param name="delayErrors">If true, all errors are delayed until all sources terminate.</param>
+        /// <param name="maxConcurrency">The maximum number of inner completable sources to run at once.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.10</remarks>
         public static ICompletableSource Merge(this IObservable<ICompletableSource> sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
         {
-            throw new NotImplementedException();
+            RequireNonNull(sources, nameof(sources));
+
+            return sources.FlatMap(v => v, delayErrors, maxConcurrency);
         }
 
         /// <summary>
@@ -780,11 +851,18 @@ namespace akarnokd.reactive_extensions
         // Leaving the reactive world
         // ------------------------------------------------
 
+        /// <summary>
+        /// Subscribes to this completable source and suppresses exceptions
+        /// throw by the OnXXX methods of the <paramref name="observer"/>.
+        /// </summary>
+        /// <param name="source">The completable source to subscribe to safely.</param>
+        /// <param name="observer">The unreliable observer.</param>
+        /// <remarks>Since 0.0.10</remarks>
         public static void SubscribeSafe(this ICompletableSource source, ICompletableObserver observer)
         {
             RequireNonNull(source, nameof(source));
 
-            throw new NotImplementedException();
+            source.Subscribe(new CompletableSafeObserver(observer));
         }
 
         /// <summary>
@@ -819,11 +897,23 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
-        public static void Wait(this ICompletableSource source, long timeoutMillis = long.MinValue, CancellationTokenSource cts = null)
+        /// <summary>
+        /// Wait until the upstream terminates and rethrow any exception it
+        /// signaled.
+        /// </summary>
+        /// <param name="source">The completable source to wait for.</param>
+        /// <param name="timeoutMillis">The maximum time to wait for termination.</param>
+        /// <param name="cts">The means to cancel the wait from outside.</param>
+        /// <exception cref="TimeoutException">If a timeout happens, which also cancels the upstream.</exception>
+        /// <remarks>Since 0.0.10</remarks>
+        public static void Wait(this ICompletableSource source, int timeoutMillis = int.MaxValue, CancellationTokenSource cts = null)
         {
             RequireNonNull(source, nameof(source));
 
-            throw new NotImplementedException();
+            var parent = new CompletableWait();
+            source.Subscribe(parent);
+
+            parent.Wait(timeoutMillis, cts);
         }
 
         /// <summary>
