@@ -481,14 +481,6 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
-        public static ICompletableSource FlatMap<T>(this ISingleSource<T> source, Func<T, ICompletableSource> mapper)
-        {
-            RequireNonNull(source, nameof(source));
-            RequireNonNull(mapper, nameof(mapper));
-
-            throw new NotImplementedException();
-        }
-
         public static Task<T> ToTask<T>(this ISingleSource<T> source, CancellationTokenSource cts = null)
         {
             RequireNonNull(source, nameof(source));
@@ -529,7 +521,6 @@ namespace akarnokd.reactive_extensions
         /// <param name="source">The maybee source to observe.</param>
         /// <param name="onSuccess">Called with the success item when the maybe source succeeds.</param>
         /// <param name="onError">Called with the exception when the maybe source terminates with an error.</param>
-        /// <param name="onCompleted">Called when the maybe source completes normally.</param>
         /// <returns>The disposable that allows cancelling the source.</returns>
         /// <remarks>Since 0.0.9</remarks>
         public static IDisposable Subscribe<T>(this ISingleSource<T> source, Action<T> onSuccess = null, Action<Exception> onError = null)

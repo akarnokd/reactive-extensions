@@ -1263,20 +1263,42 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Maps the success value of the upstream single source
+        /// into a completable source and signals its terminal
+        /// events to the downstream.
+        /// </summary>
+        /// <typeparam name="T">The element type of the single source.</typeparam>
+        /// <param name="source">The single source to map into a completable source.</param>
+        /// <param name="mapper">The function that takes the success value from the upstream
+        /// and returns a completable source to subscribe to and relay terminal events of.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.10</remarks>
         public static ICompletableSource FlatMap<T>(this ISingleSource<T> source, Func<T, ICompletableSource> mapper)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(mapper, nameof(mapper));
 
-            throw new NotImplementedException();
+            return new CompletableFlatMapSingle<T>(source, mapper);
         }
 
+        /// <summary>
+        /// Maps the success value of the upstream maybe source
+        /// into a completable source and signals its terminal
+        /// events to the downstream.
+        /// </summary>
+        /// <typeparam name="T">The element type of the maybe source.</typeparam>
+        /// <param name="source">The maybe source to map into a completable source.</param>
+        /// <param name="mapper">The function that takes the success value from the upstream
+        /// and returns a completable source to subscribe to and relay terminal events of.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.10</remarks>
         public static ICompletableSource FlatMap<T>(this IMaybeSource<T> source, Func<T, ICompletableSource> mapper)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(mapper, nameof(mapper));
 
-            throw new NotImplementedException();
+            return new CompletableFlatMapMaybe<T>(source, mapper);
         }
 
         public static ICompletableSource SwitchMap<T>(this IObservable<T> source, Func<T, ICompletableSource> mapper, bool delayErrors = false)

@@ -515,14 +515,6 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
-        public static ICompletableSource FlatMap<T>(this IMaybeSource<T> source, Func<T, ICompletableSource> mapper)
-        {
-            RequireNonNull(source, nameof(source));
-            RequireNonNull(mapper, nameof(mapper));
-
-            throw new NotImplementedException();
-        }
-
         public static ISingleSource<T> DefaultIfEmpty<T>(this IMaybeSource<T> source, T defaultItem)
         {
             RequireNonNull(source, nameof(source));
