@@ -575,7 +575,9 @@ Extension methods host: `CompletableSource`
 - `OnErrorResumeNext`
 - `OnTerminateDetach`
 - `Repeat`
+- `RepeatWhen`
 - `Retry`
+- `RetryWhen`
 - `SubscribeOn`
 - `TakeUntil`
 - `Timeout`

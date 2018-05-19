@@ -631,11 +631,26 @@ namespace akarnokd.reactive_extensions
             return new CompletableRepeatPredicate(source, predicate);
         }
 
+        /// <summary>
+        /// Repeats (resubscribes to) the completable source after a completion and when the observable
+        /// returned by a handler produces an arbitrary item.
+        /// </summary>
+        /// <typeparam name="U">The arbitrary element type signaled by the handler observable.</typeparam>
+        /// <param name="source">The completable source to repeat while it successfully terminates.</param>
+        /// <param name="handler">The function that is called for each observer and takes an observable sequence of
+        /// errors. It should return an observable of arbitrary items that should signal that arbitrary item in
+        /// response to receiving the completion signal from the source observable. If this observable signals
+        /// a terminal event, the sequence is terminated with that signal instead.</param>
+        /// <returns>An observable sequence producing the elements of the given sequence repeatedly while it terminates successfully.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="handler"/> is null.</exception>
+        /// <remarks>Since 0.0.10</remarks>
         public static ICompletableSource RepeatWhen<U>(this ICompletableSource source, Func<IObservable<object>, IObservable<U>> handler)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
 
-            throw new NotImplementedException();
+            return new CompletableRepeatWhen<U>(source, handler);
         }
 
         /// <summary>
@@ -672,11 +687,26 @@ namespace akarnokd.reactive_extensions
             return new CompletableRetryPredicate(source, predicate);
         }
 
+        /// <summary>
+        /// Retries (resubscribes to) the completable source after a failure and when the observable
+        /// returned by a handler produces an arbitrary item.
+        /// </summary>
+        /// <typeparam name="U">The arbitrary element type signaled by the handler observable.</typeparam>
+        /// <param name="source">The completable source to repeat until it successfully terminates.</param>
+        /// <param name="handler">The function that is called for each observer and takes an observable sequence of
+        /// errors. It should return an observable of arbitrary items that should signal that arbitrary item in
+        /// response to receiving the failure Exception from the source observable. If this observable signals
+        /// a terminal event, the sequence is terminated with that signal instead.</param>
+        /// <returns>An observable sequence producing the elements of the given sequence repeatedly until it terminates successfully.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="handler"/> is null.</exception>
+        /// <remarks>Since 0.0.10</remarks>
         public static ICompletableSource RetryWhen<U>(this ICompletableSource source, Func<IObservable<Exception>, IObservable<U>> handler)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
 
-            throw new NotImplementedException();
+            return new CompletableRetryWhen<U>(source, handler);
         }
 
         /// <summary>
