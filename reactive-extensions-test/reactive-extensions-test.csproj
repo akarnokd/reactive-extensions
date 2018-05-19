@@ -89,6 +89,7 @@
     <Compile Include="completable\CompletableDelayTest.cs" />
     <Compile Include="completable\CompletableDelaySubscriptionTest.cs" />
     <Compile Include="completable\CompletableHideTest.cs" />
+    <Compile Include="completable\CompletableTakeUntilTest.cs" />
     <Compile Include="completable\UnitTest1.cs" />
     <Compile Include="maybe\MaybeHideTest.cs" />
     <Compile Include="SingleSubjectTest.cs" />

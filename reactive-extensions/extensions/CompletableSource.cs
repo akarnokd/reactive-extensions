@@ -729,18 +729,37 @@ namespace akarnokd.reactive_extensions
             return new CompletableDelaySubscription(source, other);
         }
 
+        /// <summary>
+        /// Terminates when either the main or the other source terminates,
+        /// disposing the other sequence.
+        /// </summary>
+        /// <param name="source">The main completable source to consume.</param>
+        /// <param name="other">The other completable source that could stop the <paramref name="source"/>.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.10</remarks>
         public static ICompletableSource TakeUntil(this ICompletableSource source, ICompletableSource other)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNull(other, nameof(other));
 
-            throw new NotImplementedException();
+            return new CompletableTakeUntil(source, other);
         }
 
+        /// <summary>
+        /// Terminates when either the main or the other source terminates,
+        /// disposing the other sequence.
+        /// </summary>
+        /// <param name="source">The main completable source to consume.</param>
+        /// <param name="other">The other observable that could stop the <paramref name="source"/>
+        /// by emitting an item or completing.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.10</remarks>
         public static ICompletableSource TakeUntil<U>(this ICompletableSource source, IObservable<U> other)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNull(other, nameof(other));
 
-            throw new NotImplementedException();
+            return new CompletableTakeUntilObservable<U>(source, other);
         }
 
         /// <summary>

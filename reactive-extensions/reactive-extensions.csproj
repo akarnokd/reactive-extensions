@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
-    <Version>0.0.9-alpha</Version>
+    <Version>0.0.10-alpha</Version>
     <Description>Extension methods for the dotnet/reactive library.</Description>
     <Authors>David Karnok</Authors>
     <PackageId>akarnokd.reactive_extensions</PackageId>
@@ -13,32 +13,14 @@
     <Copyright>Copyright 2018, David Karnok</Copyright>
     <PackageReleaseNotes>New operators:
 + ICompletableSource
-  - AndThen (IMaybeSource, ISingleSource)
-  - Delay
-  - DelaySubscription
-  - Hide
-  - IgnoreElement (IMaybeSource, ISingleSource)
-  - ToSingle
-  - ToMaybe
-  - ToTask
+  - TakeUntil
 + IMaybeSource
-  - Just
-  - Hide
-  - Subscribe (delegate)
-  - SubscribeWith
 + ISingleSource
-  - Just
-  - Hide
-  - Subscribe (delegate)
-  - SubscribeWith
 
 New classes:
 
-- MaybeSubject
-- SingleSubject 
-
 Bugfixes:
-- Fix ConcatMany error handling</PackageReleaseNotes>
+</PackageReleaseNotes>
     <PackageTags>reactive, extensions</PackageTags>
   </PropertyGroup>
 
