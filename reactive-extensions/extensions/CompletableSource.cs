@@ -1245,12 +1245,25 @@ namespace akarnokd.reactive_extensions
             return new CompletableFlatMapObservable<T>(source, mapper, delayErrors, maxConcurrency);
         }
 
+        /// <summary>
+        /// Maps the upstream observable sequence into a
+        /// completable source and switches to it, disposing the
+        /// previous completable source, optionally delaying
+        /// errors until all sources terminated.
+        /// </summary>
+        /// <typeparam name="T">The element type of the observable sequence.</typeparam>
+        /// <param name="source">The observable sequence to map.</param>
+        /// <param name="mapper">The function receiving the upstream item and
+        /// should return a completable source.</param>
+        /// <param name="delayErrors">If true, all errors are delayed until all sources terminate.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.10</remarks>
         public static ICompletableSource SwitchMap<T>(this IObservable<T> source, Func<T, ICompletableSource> mapper, bool delayErrors = false)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(mapper, nameof(mapper));
 
-            throw new NotImplementedException();
+            return new CompletableSwitchMap<T>(source, mapper, delayErrors);
         }
     }
 }
