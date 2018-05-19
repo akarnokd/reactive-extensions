@@ -12,6 +12,9 @@
     <RepositoryType>GitHub</RepositoryType>
     <Copyright>Copyright 2018, David Karnok</Copyright>
     <PackageReleaseNotes>New operators:
++ IObservable
+  - FlatMap (onto ICompletableSource)
+  - SwitchMap (onto ICompletableSource)
 + ICompletableSource
   - BlockingSubscribe
   - Cache
@@ -23,12 +26,9 @@
   - TakeUntil
   - Wait
 + IMaybeSource
+  - FlatMap (to ICompletableSource)
 + ISingleSource
-
-New classes:
-
-Bugfixes:
-</PackageReleaseNotes>
+  - FlatMap (to ICompletableSource)</PackageReleaseNotes>
     <PackageTags>reactive, extensions</PackageTags>
   </PropertyGroup>
 

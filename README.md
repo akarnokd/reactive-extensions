@@ -597,8 +597,9 @@ Extension methods host: `CompletableSource`
 
 - `AndThen` (with `IObservable`, `ISingleSource` & `IMaybeSource`)
 - `ConcatMap` (on `Observable`)
+- `FlatMap` (on `Observable`)
 - `IgnoreAllElements` (on `IObservable`)
-- `IgnoreElement` (on `IMaybeSource` & `ISingleSource`)
+- `SwitchMap` (on `Observable`)
 - `ToCompletable` (on `Task`)
 - `ToMaybe`
 - `ToObservable`
@@ -645,7 +646,8 @@ Extension methods host: `SingleSource`
 
 ### Interoperation
 
-
+- `FlatMap` (onto `ICompletableSource`)
+- `IgnoreElement`
 
 ### SingleSubject
 
@@ -689,9 +691,8 @@ Extension methods host: `MaybeSource`
 
 ### Interoperation
 
-- `Subscribe`
-- `SubscribeWith`
-- `Test`
+- `FlatMap` (onto `ICompletableSource`)
+- `IgnoreElement`
 
 ### MaybeSubject
 

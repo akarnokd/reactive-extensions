@@ -655,12 +655,31 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
-        public static IMaybeSource<R> FlatMap<T, R>(this ISingleSource<T> source, Func<T, IMaybeSource<T>> mapper)
+        public static ISingleSource<R> FlatMap<T, R>(this IMaybeSource<T> source, Func<T, ISingleSource<T>> mapper)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(mapper, nameof(mapper));
 
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Maps the success value of the upstream maybe source
+        /// into a completable source and signals its terminal
+        /// events to the downstream.
+        /// </summary>
+        /// <typeparam name="T">The element type of the maybe source.</typeparam>
+        /// <param name="source">The maybe source to map into a completable source.</param>
+        /// <param name="mapper">The function that takes the success value from the upstream
+        /// and returns a completable source to subscribe to and relay terminal events of.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.10</remarks>
+        public static ICompletableSource FlatMap<T>(this IMaybeSource<T> source, Func<T, ICompletableSource> mapper)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(mapper, nameof(mapper));
+
+            return new CompletableFlatMapMaybe<T>(source, mapper);
         }
 
         public static IObservable<R> SwitchMap<T, R>(this IObservable<T> source, Func<T, IMaybeSource<T>> mapper, bool delayErrors = false)
@@ -669,6 +688,21 @@ namespace akarnokd.reactive_extensions
             RequireNonNull(mapper, nameof(mapper));
 
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Ignores the success signal of the maybe source and
+        /// completes the downstream completable observer instead.
+        /// </summary>
+        /// <typeparam name="T">The success value type of the source.</typeparam>
+        /// <param name="source">The source to ignore the success value of.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.9</remarks>
+        public static ICompletableSource IgnoreElement<T>(this IMaybeSource<T> source)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return new CompletableIgnoreElementMaybe<T>(source);
         }
 
         public static IMaybeSource<T> FirstElement<T>(this IObservable<T> source)

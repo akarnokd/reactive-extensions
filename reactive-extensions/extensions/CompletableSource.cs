@@ -1093,36 +1093,6 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Ignores the success signal of the single source and
-        /// completes the downstream completable observer instead.
-        /// </summary>
-        /// <typeparam name="T">The success value type of the source.</typeparam>
-        /// <param name="source">The source to ignore the success value of.</param>
-        /// <returns>The new completable source instance.</returns>
-        /// <remarks>Since 0.0.9</remarks>
-        public static ICompletableSource IgnoreElement<T>(this ISingleSource<T> source)
-        {
-            RequireNonNull(source, nameof(source));
-
-            return new CompletableIgnoreElementSingle<T>(source);
-        }
-
-        /// <summary>
-        /// Ignores the success signal of the maybe source and
-        /// completes the downstream completable observer instead.
-        /// </summary>
-        /// <typeparam name="T">The success value type of the source.</typeparam>
-        /// <param name="source">The source to ignore the success value of.</param>
-        /// <returns>The new completable source instance.</returns>
-        /// <remarks>Since 0.0.9</remarks>
-        public static ICompletableSource IgnoreElement<T>(this IMaybeSource<T> source)
-        {
-            RequireNonNull(source, nameof(source));
-
-            return new CompletableIgnoreElementMaybe<T>(source);
-        }
-
-        /// <summary>
         /// Converts an ongoing or already terminated task to a completable source 
         /// and relays its terminal event to observers.
         /// </summary>
@@ -1255,50 +1225,24 @@ namespace akarnokd.reactive_extensions
             return new CompletableConcatMap<T>(source, mapper, delayErrors);
         }
 
+        /// <summary>
+        /// Maps the upstream items into completable sources, runs
+        /// some or all of them and terminates when all sources terminate.
+        /// </summary>
+        /// <typeparam name="T">The value type of the observable sequence.</typeparam>
+        /// <param name="source">The source observable sequence to map.</param>
+        /// <param name="mapper">The function that takes an upstream item and
+        /// should return a completable source.</param>
+        /// <param name="delayErrors">If true, errors from any source are delayed until all sources terminate.</param>
+        /// <param name="maxConcurrency">The maximum number of inner completable sources to run at once.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.10</remarks>
         public static ICompletableSource FlatMap<T>(this IObservable<T> source, Func<T, ICompletableSource> mapper, bool delayErrors = false, int maxConcurrency = int.MaxValue)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(mapper, nameof(mapper));
 
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Maps the success value of the upstream single source
-        /// into a completable source and signals its terminal
-        /// events to the downstream.
-        /// </summary>
-        /// <typeparam name="T">The element type of the single source.</typeparam>
-        /// <param name="source">The single source to map into a completable source.</param>
-        /// <param name="mapper">The function that takes the success value from the upstream
-        /// and returns a completable source to subscribe to and relay terminal events of.</param>
-        /// <returns>The new completable source instance.</returns>
-        /// <remarks>Since 0.0.10</remarks>
-        public static ICompletableSource FlatMap<T>(this ISingleSource<T> source, Func<T, ICompletableSource> mapper)
-        {
-            RequireNonNull(source, nameof(source));
-            RequireNonNull(mapper, nameof(mapper));
-
-            return new CompletableFlatMapSingle<T>(source, mapper);
-        }
-
-        /// <summary>
-        /// Maps the success value of the upstream maybe source
-        /// into a completable source and signals its terminal
-        /// events to the downstream.
-        /// </summary>
-        /// <typeparam name="T">The element type of the maybe source.</typeparam>
-        /// <param name="source">The maybe source to map into a completable source.</param>
-        /// <param name="mapper">The function that takes the success value from the upstream
-        /// and returns a completable source to subscribe to and relay terminal events of.</param>
-        /// <returns>The new completable source instance.</returns>
-        /// <remarks>Since 0.0.10</remarks>
-        public static ICompletableSource FlatMap<T>(this IMaybeSource<T> source, Func<T, ICompletableSource> mapper)
-        {
-            RequireNonNull(source, nameof(source));
-            RequireNonNull(mapper, nameof(mapper));
-
-            return new CompletableFlatMapMaybe<T>(source, mapper);
+            return new CompletableFlatMapObservable<T>(source, mapper, delayErrors, maxConcurrency);
         }
 
         public static ICompletableSource SwitchMap<T>(this IObservable<T> source, Func<T, ICompletableSource> mapper, bool delayErrors = false)

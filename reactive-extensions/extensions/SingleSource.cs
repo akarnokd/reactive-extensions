@@ -593,12 +593,31 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
-        public static ISingleSource<R> FlatMap<T, R>(this IMaybeSource<T> source, Func<T, ISingleSource<T>> mapper)
+        public static IMaybeSource<R> FlatMap<T, R>(this ISingleSource<T> source, Func<T, IMaybeSource<T>> mapper)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(mapper, nameof(mapper));
 
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Maps the success value of the upstream single source
+        /// into a completable source and signals its terminal
+        /// events to the downstream.
+        /// </summary>
+        /// <typeparam name="T">The element type of the single source.</typeparam>
+        /// <param name="source">The single source to map into a completable source.</param>
+        /// <param name="mapper">The function that takes the success value from the upstream
+        /// and returns a completable source to subscribe to and relay terminal events of.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.10</remarks>
+        public static ICompletableSource FlatMap<T>(this ISingleSource<T> source, Func<T, ICompletableSource> mapper)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(mapper, nameof(mapper));
+
+            return new CompletableFlatMapSingle<T>(source, mapper);
         }
 
         public static IObservable<R> SwitchMap<T, R>(this IObservable<T> source, Func<T, ISingleSource<T>> mapper, bool delayErrors = false)
@@ -607,6 +626,21 @@ namespace akarnokd.reactive_extensions
             RequireNonNull(mapper, nameof(mapper));
 
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Ignores the success signal of the single source and
+        /// completes the downstream completable observer instead.
+        /// </summary>
+        /// <typeparam name="T">The success value type of the source.</typeparam>
+        /// <param name="source">The source to ignore the success value of.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.9</remarks>
+        public static ICompletableSource IgnoreElement<T>(this ISingleSource<T> source)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return new CompletableIgnoreElementSingle<T>(source);
         }
 
         public static ISingleSource<T> FirstOrError<T>(this IObservable<T> source)
