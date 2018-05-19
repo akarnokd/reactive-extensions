@@ -586,6 +586,7 @@ Extension methods host: `CompletableSource`
 
 ### Consumer methods
 
+- `BlockingSubscribe`
 - `Subscribe`
 - `SubscribeSafe`
 - `SubscribeWith`

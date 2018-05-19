@@ -13,6 +13,7 @@
     <Copyright>Copyright 2018, David Karnok</Copyright>
     <PackageReleaseNotes>New operators:
 + ICompletableSource
+  - BlockingSubscribe
   - Cache
   - Merge
   - MergeAll

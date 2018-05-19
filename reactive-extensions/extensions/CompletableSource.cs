@@ -923,18 +923,48 @@ namespace akarnokd.reactive_extensions
             return parent;
         }
 
+        /// <summary>
+        /// Subscribes to the source and blocks until it terminated, then
+        /// calls the appropriate completable observer method on the current
+        /// thread.
+        /// </summary>
+        /// <param name="source">The upstream completable source to block for.</param>
+        /// <param name="observer">The completable observer to call the methods on the current thread.</param>
+        /// <remarks>Since 0.0.10</remarks>
         public static void BlockingSubscribe(this ICompletableSource source, ICompletableObserver observer)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNull(observer, nameof(observer));
 
-            throw new NotImplementedException();
+            var parent = new CompletableBlockingObserver(observer);
+            observer.OnSubscribe(parent);
+
+            source.Subscribe(parent);
+
+            parent.Run();
         }
 
+        /// <summary>
+        /// Subscribes to the source and blocks until it terminated, then
+        /// calls the appropriate completable observer method on the current
+        /// thread.
+        /// </summary>
+        /// <param name="source">The upstream completable source to block for.</param>
+        /// <param name="onCompleted">Action called when the upstream completes.</param>
+        /// <param name="onError">Action called with the exception when the upstream fails.</param>
+        /// <param name="onSubscribe">Action called with a disposable just before subscribing to the upstream
+        /// and allows disposing the sequence and unblocking this method call.</param>
+        /// <remarks>Since 0.0.10</remarks>
         public static void BlockingSubscribe(this ICompletableSource source, Action onCompleted = null, Action<Exception> onError = null, Action<IDisposable> onSubscribe = null)
         {
             RequireNonNull(source, nameof(source));
 
-            throw new NotImplementedException();
+            var parent = new CompletableBlockingConsumer(onCompleted, onError);
+            onSubscribe?.Invoke(parent);
+
+            source.Subscribe(parent);
+
+            parent.Run();
         }
 
         /// <summary>
