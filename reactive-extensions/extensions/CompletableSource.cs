@@ -773,11 +773,21 @@ namespace akarnokd.reactive_extensions
             return new CompletableOnTerminateDetach(source);
         }
 
+        /// <summary>
+        /// Subscribes to the upstream completable source when the first
+        /// completable observer subscribes to this completable source
+        /// and relays/replays the upstream terminal event to current
+        /// or late observers.
+        /// </summary>
+        /// <param name="source">The upstream completable source to subscribe to.</param>
+        /// <param name="cancel">Called before subscribing to the upstream to allow cancelling the operation.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.10</remarks>
         public static ICompletableSource Cache(this ICompletableSource source, Action<IDisposable> cancel = null)
         {
             RequireNonNull(source, nameof(source));
 
-            throw new NotImplementedException();
+            return new CompletableCache(source, cancel);
         }
 
         /// <summary>

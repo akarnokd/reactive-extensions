@@ -561,6 +561,7 @@ Extension methods host: `CompletableSource`
 
 - `AndThen`
 - `Compose`
+- `Cache`
 - `Delay`
 - `DelaySubscription`
 - `DoAfterTerminate`

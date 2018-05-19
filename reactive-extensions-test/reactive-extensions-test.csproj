@@ -95,6 +95,7 @@
     <Compile Include="completable\CompletableMergeTest.cs" />
     <Compile Include="completable\CompletableRepeatWhenTest.cs" />
     <Compile Include="completable\CompletableRetryWhenTest.cs" />
+    <Compile Include="completable\CompletableCacheTest.cs" />
     <Compile Include="completable\UnitTest1.cs" />
     <Compile Include="maybe\MaybeHideTest.cs" />
     <Compile Include="SingleSubjectTest.cs" />
