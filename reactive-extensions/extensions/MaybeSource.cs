@@ -19,7 +19,7 @@ namespace akarnokd.reactive_extensions
         /// Test an observable by creating a TestObserver and subscribing 
         /// it to the <paramref name="source"/> maybe.
         /// </summary>
-        /// <typeparam name="T">The value type of the source maybe.</typeparam>
+        /// <typeparam name="T">The success value type.</typeparam>
         /// <param name="source">The source maybe to test.</param>
         /// <param name="dispose">Dispose the TestObserver before the subscription happens</param>
         /// <returns>The new TestObserver instance.</returns>
@@ -44,6 +44,7 @@ namespace akarnokd.reactive_extensions
         /// action with a <see cref="IMaybeEmitter{T}"/> to allow
         /// bridging the callback world with the reactive world.
         /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
         /// <param name="onSubscribe">The action that is called with an emitter
         /// that can be used for signaling an item, completion or error event.</param>
         /// <returns>The new maybe instance</returns>
@@ -105,6 +106,7 @@ namespace akarnokd.reactive_extensions
         /// maybe observer then completes or fails the observer
         /// depending on the action completes normally or threw an exception.
         /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
         /// <param name="action">The action to invoke for each individual maybe observer.</param>
         /// <returns>The new maybe source instance.</returns>
         /// <remarks>Since 0.0.11</remarks>
@@ -136,6 +138,7 @@ namespace akarnokd.reactive_extensions
         /// its observers when the given (possibly still ongoing)
         /// task terminates.
         /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
         /// <param name="task">The task to wrap.</param>
         /// <returns>The new maybe source instance.</returns>
         /// <remarks>Since 0.0.11</remarks>
@@ -149,6 +152,7 @@ namespace akarnokd.reactive_extensions
         /// its observers when the given (possibly still ongoing)
         /// task terminates.
         /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
         /// <param name="task">The task to wrap.</param>
         /// <returns>The new maybe source instance.</returns>
         /// <remarks>Since 0.0.11</remarks>
@@ -311,6 +315,7 @@ namespace akarnokd.reactive_extensions
         /// Calls the given <paramref name="handler"/> whenever the
         /// upstream maybe <paramref name="source"/> signals a success item.
         /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
         /// <param name="source">The maybe source to peek into.</param>
         /// <param name="handler">The handler to call.</param>
         /// <returns>The new maybe source instance.</returns>
@@ -326,8 +331,9 @@ namespace akarnokd.reactive_extensions
         /// <summary>
         /// Calls the given <paramref name="handler"/> after the
         /// upstream maybe <paramref name="source"/>'s success
-        /// item has been signalled to the downstream.
+        /// item has been signaled to the downstream.
         /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
         /// <param name="source">The maybe source to peek into.</param>
         /// <param name="handler">The handler to call.</param>
         /// <returns>The new maybe source instance.</returns>
@@ -344,6 +350,7 @@ namespace akarnokd.reactive_extensions
         /// Calls the given <paramref name="handler"/> whenever a
         /// maybe observer subscribes to the maybe <paramref name="source"/>.
         /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
         /// <param name="source">The maybe source to peek into.</param>
         /// <param name="handler">The handler to call.</param>
         /// <returns>The new maybe source instance.</returns>
@@ -361,6 +368,7 @@ namespace akarnokd.reactive_extensions
         /// maybe observer disposes to the connection to
         /// the maybe <paramref name="source"/>.
         /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
         /// <param name="source">The maybe source to peek into.</param>
         /// <param name="handler">The handler to call.</param>
         /// <returns>The new maybe source instance.</returns>
@@ -378,6 +386,7 @@ namespace akarnokd.reactive_extensions
         /// maybe observer gets completed by
         /// the maybe <paramref name="source"/>.
         /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
         /// <param name="source">The maybe source to peek into.</param>
         /// <param name="handler">The handler to call.</param>
         /// <returns>The new maybe source instance.</returns>
@@ -395,6 +404,7 @@ namespace akarnokd.reactive_extensions
         /// maybe observer receives the error signal from
         /// the maybe <paramref name="source"/>.
         /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
         /// <param name="source">The maybe source to peek into.</param>
         /// <param name="handler">The handler to call.</param>
         /// <returns>The new maybe source instance.</returns>
@@ -412,6 +422,7 @@ namespace akarnokd.reactive_extensions
         /// maybe observer gets terminated normally or with an error by
         /// the maybe <paramref name="source"/>.
         /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
         /// <param name="source">The maybe source to peek into.</param>
         /// <param name="handler">The handler to call.</param>
         /// <returns>The new maybe source instance.</returns>
@@ -429,6 +440,7 @@ namespace akarnokd.reactive_extensions
         /// maybe observer gets terminated normally or exceptionally by
         /// the maybe <paramref name="source"/>.
         /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
         /// <param name="source">The maybe source to peek into.</param>
         /// <param name="handler">The handler to call.</param>
         /// <returns>The new maybe source instance.</returns>
@@ -447,6 +459,7 @@ namespace akarnokd.reactive_extensions
         /// or exceptionally or the observer disposes the connection to the
         /// the maybe <paramref name="source"/>.
         /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
         /// <param name="source">The maybe source to peek into.</param>
         /// <param name="handler">The handler to call.</param>
         /// <returns>The new maybe source instance.</returns>
@@ -459,32 +472,75 @@ namespace akarnokd.reactive_extensions
             return MaybePeek<T>.Create(source, doFinally: handler);
         }
 
-        public static IMaybeSource<T> Timeout<T>(this IMaybeSource<T> source, TimeSpan time, IScheduler scheduler, IMaybeSource<T> fallback = null)
+        /// <summary>
+        /// If the upstream doesn't terminate within the specified
+        /// timeout, the maybe observer is terminated with
+        /// a <see cref="TimeoutException"/> or is switched to the optional
+        /// <paramref name="fallback"/> maybe source.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <param name="source">The maybe source to timeout.</param>
+        /// <param name="timeout">The time to wait before canceling the source.</param>
+        /// <param name="scheduler">The scheduler to use wait for the termination of the upstream.</param>
+        /// <param name="fallback">The optional maybe source to switch to if the upstream times out.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
+        public static IMaybeSource<T> Timeout<T>(this IMaybeSource<T> source, TimeSpan timeout, IScheduler scheduler, IMaybeSource<T> fallback = null)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNull(scheduler, nameof(scheduler));
 
-            throw new NotImplementedException();
+            return new MaybeTimeout<T>(source, timeout, scheduler, fallback);
         }
 
+        /// <summary>
+        /// Suppresses an upstream error and completes the maybe observer
+        /// instead.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <param name="source">The maybe source to suppress the errors of.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.8</remarks>
         public static IMaybeSource<T> OnErrorComplete<T>(this IMaybeSource<T> source)
         {
             RequireNonNull(source, nameof(source));
 
-            throw new NotImplementedException();
+            return new MaybeOnErrorComplete<T>(source);
         }
 
+        /// <summary>
+        /// Switches to a <paramref name="fallback"/> maybe source if
+        /// the upstream fails.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <param name="source">The maybe source that can fail.</param>
+        /// <param name="fallback">The fallback maybe source to resume with if <paramref name="source"/> fails.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
         public static IMaybeSource<T> OnErrorResumeNext<T>(this IMaybeSource<T> source, IMaybeSource<T> fallback)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNull(fallback, nameof(fallback));
 
-            throw new NotImplementedException();
+            return new MaybeOnErrorResumeNext<T>(source, fallback);
         }
 
+        /// <summary>
+        /// Switches to a fallback maybe source provided
+        /// by a handler function if the main maybe source fails.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <param name="source">The maybe source that can fail.</param>
+        /// <param name="handler">The function that receives the exception from the main
+        /// source and should return a fallback maybe source to resume with.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
         public static IMaybeSource<T> OnErrorResumeNext<T>(this IMaybeSource<T> source, Func<Exception, IMaybeSource<T>> handler)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
 
-            throw new NotImplementedException();
+            return new MaybeOnErrorResumeNextSelector<T>(source, handler);
         }
 
         public static IObservable<T> Repeat<T>(this IMaybeSource<T> source, long times = long.MaxValue)
@@ -776,6 +832,7 @@ namespace akarnokd.reactive_extensions
         /// calls the appropriate maybe observer method on the current
         /// thread.
         /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
         /// <param name="source">The upstream maybe source to block for.</param>
         /// <param name="onSuccess">Action called with the success item.</param>
         /// <param name="onError">Action called with the exception when the upstream fails.</param>
@@ -988,6 +1045,7 @@ namespace akarnokd.reactive_extensions
         /// Converts an ongoing or already terminated task to a maybe source 
         /// and relays its terminal event to observers.
         /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
         /// <param name="task">The task to observe as a maybe source.</param>
         /// <returns>The new maybe source instance.</returns>
         /// <remarks>Since 0.0.11<br/>
@@ -1005,6 +1063,7 @@ namespace akarnokd.reactive_extensions
         /// Converts an ongoing or already terminated task to a maybe source 
         /// and relays its value or error to observers.
         /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
         /// <param name="task">The task to observe as a maybe source.</param>
         /// <returns>The new maybe source instance.</returns>
         /// <remarks>Since 0.0.11<br/>

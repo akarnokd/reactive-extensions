@@ -32,6 +32,9 @@
   - FromTask
   - LastElement (on IObservable)
   - Map
+  - OnErrorComplete
+  - OnErrorResumeNext
+  - Timeout
   - ToMaybe (on Task)
   - SingleElement (on IObservable)
   - SubscribeSafe

@@ -699,6 +699,9 @@ Extension methods host: `MaybeSource`
 - `DoOnTerminate`
 - `Filter`
 - `Map`
+- `OnErrorComplete`
+- `OnErrorResumeNext`
+- `Timeout`
 
 ### Consumer methods
 
