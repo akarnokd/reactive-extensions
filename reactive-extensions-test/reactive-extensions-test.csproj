@@ -108,6 +108,9 @@
     <Compile Include="maybe\MaybeMapTest.cs" />
     <Compile Include="maybe\MaybeFilterTest.cs" />
     <Compile Include="maybe\MaybeFlatMapTest.cs" />
+    <Compile Include="maybe\MaybeElementAtTest.cs" />
+    <Compile Include="maybe\MaybeLastElementTest.cs" />
+    <Compile Include="maybe\MaybeSingleElementTest.cs" />
     <Compile Include="SingleSubjectTest.cs" />
     <Compile Include="maybe\MaybeCreateTest.cs" />
     <Compile Include="maybe\MaybeEmptyTest.cs" />
@@ -132,6 +135,9 @@
     <Compile Include="single\SingleCreateTest.cs" />
     <Compile Include="single\SingleNeverTest.cs" />
     <Compile Include="single\SingleErrorTest.cs" />
+    <Compile Include="tools\TestHelper_VerifyDispose_Observable.cs" />
+    <Compile Include="tools\TestHelper_VerifyDispose_Single.cs" />
+    <Compile Include="tools\TestHelper_VerifyDispose_Maybe.cs" />
     <Compile Include="tools\TestHelper.cs" />
     <Compile Include="observable\ObserveOnTest.cs" />
     <Compile Include="observable\DoFinallyTest.cs" />

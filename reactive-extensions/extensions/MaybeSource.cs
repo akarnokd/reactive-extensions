@@ -792,32 +792,67 @@ namespace akarnokd.reactive_extensions
             return new CompletableIgnoreElementMaybe<T>(source);
         }
 
+        /// <summary>
+        /// Signals the first as the
+        /// success value or completes if the observable
+        /// sequence is empty.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The observable sequence to get the first element from.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
         public static IMaybeSource<T> FirstElement<T>(this IObservable<T> source)
         {
-            RequireNonNull(source, nameof(source));
-
-            throw new NotImplementedException();
+            return ElementAtIndex(source, 0L);
         }
 
+        /// <summary>
+        /// Signals the only element of the observable sequence,
+        /// completes if the sequence is empty or fails
+        /// with an error if the source contains more than one element.
+        /// </summary>
+        /// <typeparam name="T">The value type of the source observable.</typeparam>
+        /// <param name="source">The source observable sequence to get the single element from.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
         public static IMaybeSource<T> SingleElement<T>(this IObservable<T> source)
         {
             RequireNonNull(source, nameof(source));
 
-            throw new NotImplementedException();
+            return new MaybeSingleElement<T>(source);
         }
 
+        /// <summary>
+        /// Signals the last element of the observable sequence
+        /// or completes if the sequence is empty.
+        /// </summary>
+        /// <typeparam name="T">The value type of the source observable.</typeparam>
+        /// <param name="source">The source observable sequence.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
         public static IMaybeSource<T> LastElement<T>(this IObservable<T> source)
         {
             RequireNonNull(source, nameof(source));
 
-            throw new NotImplementedException();
+            return new MaybeLastElement<T>(source);
         }
 
+        /// <summary>
+        /// Signals the element at the specified index as the
+        /// success value or completes if the observable
+        /// sequence is shorter than the specified index.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The observable sequence to get an element from.</param>
+        /// <param name="index">The index of the element to get (zero based).</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
         public static IMaybeSource<T> ElementAtIndex<T>(this IObservable<T> source, long index)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNegative(index, nameof(index));
 
-            throw new NotImplementedException();
+            return new MaybeElementAt<T>(source, index);
         }
 
         /// <summary>

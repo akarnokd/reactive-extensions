@@ -15,10 +15,22 @@ namespace akarnokd.reactive_extensions_test
     /// <summary>
     /// Test helper methods.
     /// </summary>
-    internal static class TestHelper
+    internal static partial class TestHelper
     {
+        /// <summary>
+        /// Number of iterations to perform in concurrency-race tests by default.
+        /// </summary>
         internal static readonly int RACE_LOOPS = 1000;
 
+        /// <summary>
+        /// Runs two actions concurrently, synchronizing their
+        /// execution as much as possible and waiting
+        /// for them to finish. Exceptions from
+        /// either of them are re-thrown.
+        /// </summary>
+        /// <param name="a1">The first action to run (on the current thread).</param>
+        /// <param name="a2">The second action to run (on a background thread).</param>
+        /// <remarks>The race times out after 5 seconds.</remarks>
         internal static void Race(Action a1, Action a2)
         {
             var sync = new int[] { 2 };
@@ -116,159 +128,5 @@ namespace akarnokd.reactive_extensions_test
             return source.Concat(Observable.Throw<T>(ex));
         }
 
-        /// <summary>
-        /// Calls a transform function with an MaybeSubject,
-        /// subscribes to the resulting IMaybeSource, disposes
-        /// the connection and verifies if the MaybeSubject
-        /// lost its observer, verifying the Dispose() call
-        /// composes through.
-        /// </summary>
-        /// <typeparam name="T">The source value type.</typeparam>
-        /// <typeparam name="R">The result value type.</typeparam>
-        /// <param name="transform">The function to map a source into another source.</param>
-        /// <param name="waitSeconds">How many seconds to wait at most till the dispose reaches the upstream.</param>
-        /// <remarks>Since 0.0.11</remarks>
-        public static void VerifyDisposeMaybe<T, R>(Func<IMaybeSource<T>, IMaybeSource<R>> transform, int waitSeconds = 1)
-        {
-            var ms = new MaybeSubject<T>();
-
-            var source = transform(ms);
-
-            var to = source.Test();
-
-            Assert.True(ms.HasObserver());
-
-            to.Dispose();
-
-            for (int i = 0; i < waitSeconds * 10; i++)
-            {
-                if (ms.HasObserver())
-                {
-                    Thread.Sleep(100);
-                }
-                else
-                {
-                    return;
-                }
-            }
-
-            Assert.False(ms.HasObserver());
-        }
-
-        /// <summary>
-        /// Calls a transform function with an MaybeSubject,
-        /// subscribes to the resulting IMaybeSource, disposes
-        /// the connection and verifies if the MaybeSubject
-        /// lost its observer, verifying the Dispose() call
-        /// composes through.
-        /// </summary>
-        /// <typeparam name="T">The source value type.</typeparam>
-        /// <typeparam name="R">The result value type.</typeparam>
-        /// <param name="transform">The function to map a source into another source.</param>
-        /// <param name="waitSeconds">How many seconds to wait at most till the dispose reaches the upstream.</param>
-        /// <remarks>Since 0.0.11</remarks>
-        public static void VerifyDisposeMaybe<T, R>(Func<IMaybeSource<T>, ISingleSource<R>> transform, int waitSeconds = 1)
-        {
-            var ms = new MaybeSubject<T>();
-
-            var source = transform(ms);
-
-            var to = source.Test();
-
-            Assert.True(ms.HasObserver());
-
-            to.Dispose();
-
-            for (int i = 0; i < waitSeconds * 10; i++)
-            {
-                if (ms.HasObserver())
-                {
-                    Thread.Sleep(100);
-                }
-                else
-                {
-                    return;
-                }
-            }
-
-            Assert.False(ms.HasObserver());
-        }
-
-        /// <summary>
-        /// Calls a transform function with an MaybeSubject,
-        /// subscribes to the resulting IMaybeSource, disposes
-        /// the connection and verifies if the MaybeSubject
-        /// lost its observer, verifying the Dispose() call
-        /// composes through.
-        /// </summary>
-        /// <typeparam name="T">The source value type.</typeparam>
-        /// <param name="transform">The function to map a source into another source.</param>
-        /// <param name="waitSeconds">How many seconds to wait at most till the dispose reaches the upstream.</param>
-        /// <remarks>Since 0.0.11</remarks>
-        public static void VerifyDisposeMaybe<T>(Func<IMaybeSource<T>, ICompletableSource> transform, int waitSeconds = 1)
-        {
-            var ms = new MaybeSubject<T>();
-
-            var source = transform(ms);
-
-            var to = source.Test();
-
-            Assert.True(ms.HasObserver());
-
-            to.Dispose();
-
-            for (int i = 0; i < waitSeconds * 10; i++)
-            {
-                if (ms.HasObserver())
-                {
-                    Thread.Sleep(100);
-                }
-                else
-                {
-                    return;
-                }
-            }
-
-            Assert.False(ms.HasObserver());
-        }
-
-        /// <summary>
-        /// Calls a transform function with an SingleSubject,
-        /// subscribes to the resulting IMaybeSource, disposes
-        /// the connection and verifies if the SingleSubject
-        /// lost its observer, verifying the Dispose() call
-        /// composes through.
-        /// </summary>
-        /// <typeparam name="T">The source value type.</typeparam>
-        /// <typeparam name="R">The result value type.</typeparam>
-        /// <param name="transform">The function to map a source into another source.</param>
-        /// <param name="waitSeconds">How many seconds to wait at most till the dispose reaches the upstream.</param>
-        /// <remarks>Since 0.0.11</remarks>
-        public static void VerifyDisposeSingle<T, R>(Func<ISingleSource<T>, IMaybeSource<R>> transform, int waitSeconds = 1)
-        {
-            var ms = new SingleSubject<T>();
-
-            var source = transform(ms);
-
-            var to = source.Test();
-
-            Assert.True(ms.HasObserver());
-
-            to.Dispose();
-
-            for (int i = 0; i < waitSeconds * 10; i++)
-            {
-                if (ms.HasObserver())
-                {
-                    Thread.Sleep(100);
-                }
-                else
-                {
-                    return;
-                }
-            }
-
-            Assert.False(ms.HasObserver());
-        }
     }
 }

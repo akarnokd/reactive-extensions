@@ -631,6 +631,7 @@ Extension methods host: `SingleSource`
 
 - `Create`
 - `Error`
+- `FromFunc`
 - `Just`
 - `Never`
 
@@ -687,8 +688,12 @@ Extension methods host: `MaybeSource`
 ### Instance methods
 
 - `Compose`
+- `ElementAtIndex`
 - `Filter`
+- `FirstElement`
+- `LastElement`
 - `Map`
+- `SingleElement`
 
 ### Consumer methods
 

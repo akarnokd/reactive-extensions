@@ -12,16 +12,20 @@
     <RepositoryType>GitHub</RepositoryType>
     <Copyright>Copyright 2018, David Karnok</Copyright>
     <PackageReleaseNotes>New operators:
-+ IObservable
 + IMaybeSource
+  - ElementAtIndex (on IObservable)
   - Filter
+  - FirstElement (on IObservable)
   - FlatMap (to IMaybeSource, ISingleSource)
   - FromAction
   - FromFunc
   - FromTask
+  - LastElement (on IObservable)
   - Map
   - ToMaybe (on Task)
+  - SingleElement (on IObservable)
 + ISingleSource
+  - FromFunc
   - Filter
   - FlatMap (to IMaybeSource)
 </PackageReleaseNotes>
