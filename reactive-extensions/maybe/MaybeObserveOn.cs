@@ -8,35 +8,30 @@ namespace akarnokd.reactive_extensions
 {
     /// <summary>
     /// Signals the terminal events of the maybe source
-    /// through the specified scheduler after a time delay.
+    /// through the specified scheduler.
     /// </summary>
     /// <typeparam name="T">The success value type.</typeparam>
     /// <remarks>Since 0.0.11</remarks>
-    internal sealed class MaybeDelay<T> : IMaybeSource<T>
+    internal sealed class MaybeObserveOn<T> : IMaybeSource<T>
     {
         readonly IMaybeSource<T> source;
 
-        readonly TimeSpan delay;
-
         readonly IScheduler scheduler;
 
-        public MaybeDelay(IMaybeSource<T> source, TimeSpan delay, IScheduler scheduler)
+        public MaybeObserveOn(IMaybeSource<T> source, IScheduler scheduler)
         {
             this.source = source;
-            this.delay = delay;
             this.scheduler = scheduler;
         }
 
         public void Subscribe(IMaybeObserver<T> observer)
         {
-            source.Subscribe(new ObserveOnObserver(observer, delay, scheduler));
+            source.Subscribe(new ObserveOnObserver(observer, scheduler));
         }
 
         sealed class ObserveOnObserver : IMaybeObserver<T>, IDisposable
         {
             readonly IMaybeObserver<T> downstream;
-
-            readonly TimeSpan delay;
 
             readonly IScheduler scheduler;
 
@@ -52,10 +47,9 @@ namespace akarnokd.reactive_extensions
             static readonly Func<IScheduler, ObserveOnObserver, IDisposable> RUN =
                 (s, t) => { t.Run(); return DisposableHelper.EMPTY; };
 
-            public ObserveOnObserver(IMaybeObserver<T> downstream, TimeSpan delay, IScheduler scheduler)
+            public ObserveOnObserver(IMaybeObserver<T> downstream, IScheduler scheduler)
             {
                 this.downstream = downstream;
-                this.delay = delay;
                 this.scheduler = scheduler;
             }
 
@@ -78,7 +72,7 @@ namespace akarnokd.reactive_extensions
 
             public void OnSuccess(T item)
             {
-                value = item;
+                this.value = item;
                 hasValue = true;
                 Schedule();
             }
@@ -88,7 +82,7 @@ namespace akarnokd.reactive_extensions
                 var d = Volatile.Read(ref task);
                 if (d != DisposableHelper.DISPOSED)
                 {
-                    var u = scheduler.Schedule(this, delay, RUN);
+                    var u = scheduler.Schedule(this, RUN);
 
                     if (Interlocked.CompareExchange(ref task, u, d) == DisposableHelper.DISPOSED)
                     {

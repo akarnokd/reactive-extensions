@@ -277,27 +277,36 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Signals 0L after a specified time elapsed on the given scheduler.
+        /// </summary>
+        /// <param name="time">The time to wait before signaling a success value of 0L.</param>
+        /// <param name="scheduler">The scheduler to use for emitting the success value.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
         public static IMaybeSource<long> Timer(TimeSpan time, IScheduler scheduler)
         {
-            throw new NotImplementedException();
+            RequireNonNull(scheduler, nameof(scheduler));
+
+            return new MaybeTimer(time, scheduler);
         }
 
         /// <summary>
-        /// Generates a resource and a dependent completable source
-        /// for each completable observer and cleans up the resource
-        /// just before or just after the completable source terminated
+        /// Generates a resource and a dependent maybe source
+        /// for each maybe observer and cleans up the resource
+        /// just before or just after the maybe source terminated
         /// or the observer has disposed the setup.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
         /// <typeparam name="S">The resource type.</typeparam>
         /// <param name="resourceSupplier">The supplier for a per-observer resource.</param>
         /// <param name="sourceSelector">Function that receives the per-observer resource returned
-        /// by <paramref name="resourceSupplier"/> and returns a completable source.</param>
+        /// by <paramref name="resourceSupplier"/> and returns a maybe source.</param>
         /// <param name="resourceCleanup">The optional callback for cleaning up the resource supplied by
         /// the <paramref name="resourceSupplier"/>.</param>
         /// <param name="eagerCleanup">If true, the per-observer resource is cleaned up before the
         /// terminal event is signaled to the downstream. If false, the cleanup happens after.</param>
-        /// <returns>The new completable source instance.</returns>
+        /// <returns>The new maybe source instance.</returns>
         /// <remarks>Since 0.0.8</remarks>
         public static IMaybeSource<T> Using<T, S>(Func<S> resourceSupplier, Func<S, IMaybeSource<T>> sourceSelector, Action<S> resourceCleanup = null, bool eagerCleanup = true)
         {
@@ -616,32 +625,72 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Subscribes to the source on the given scheduler.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <param name="source">The target maybe source to subscribe to</param>
+        /// <param name="scheduler">The scheduler to use when subscribing to <paramref name="source"/>.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
         public static IMaybeSource<T> SubscribeOn<T>(this IMaybeSource<T> source, IScheduler scheduler)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNull(scheduler, nameof(scheduler));
 
-            throw new NotImplementedException();
+            return new MaybeSubscribeOn<T>(source, scheduler);
         }
 
+        /// <summary>
+        /// Signals the terminal events of the maybe source
+        /// through the specified <paramref name="scheduler"/>.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <param name="source">The maybe source to observe on the specified scheduler.</param>
+        /// <param name="scheduler">The scheduler to use.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
         public static IMaybeSource<T> ObserveOn<T>(this IMaybeSource<T> source, IScheduler scheduler)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNull(scheduler, nameof(scheduler));
 
-            throw new NotImplementedException();
+            return new MaybeObserveOn<T>(source, scheduler);
         }
 
+        /// <summary>
+        /// When the downstream disposes, the upstream's disposable
+        /// is called from the given scheduler.
+        /// Note that termination in general doesn't call
+        /// <code>Dispose()</code> on the upstream.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <param name="source">The maybe source to dispose.</param>
+        /// <param name="scheduler">The scheduler to use.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
         public static IMaybeSource<T> UnsubscribeOn<T>(this IMaybeSource<T> source, IScheduler scheduler)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNull(scheduler, nameof(scheduler));
 
-            throw new NotImplementedException();
+            return new MaybeUnsubscribeOn<T>(source, scheduler);
         }
 
+        /// <summary>
+        /// When the upstream terminates or the downstream disposes,
+        /// it detaches the references between the two, avoiding
+        /// leaks of one or the other.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <param name="source">The maybe source to detach from upon termination or cancellation.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
         public static IMaybeSource<T> OnTerminateDetach<T>(this IMaybeSource<T> source)
         {
             RequireNonNull(source, nameof(source));
 
-            throw new NotImplementedException();
+            return new MaybeOnTerminateDetach<T>(source);
         }
 
         public static IMaybeSource<T> Cache<T>(this IMaybeSource<T> source, Action<IDisposable> cancel = null)

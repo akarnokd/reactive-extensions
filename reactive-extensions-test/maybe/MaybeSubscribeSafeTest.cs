@@ -63,7 +63,7 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             var cs = new MaybeSubject<int>();
 
-            cs.SubscribeSafe(new FailingCompletableObserver(true, true, true, true));
+            cs.SubscribeSafe(new FailingMaybeObserver(true, true, true, true));
 
             Assert.False(cs.HasObserver());
         }
@@ -73,7 +73,7 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             var cs = new MaybeSubject<int>();
 
-            cs.SubscribeSafe(new FailingCompletableObserver(false, true, true, true));
+            cs.SubscribeSafe(new FailingMaybeObserver(false, true, true, true));
 
             Assert.True(cs.HasObserver());
 
@@ -85,7 +85,7 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             var cs = new MaybeSubject<int>();
 
-            cs.SubscribeSafe(new FailingCompletableObserver(false, true, true, true));
+            cs.SubscribeSafe(new FailingMaybeObserver(false, true, true, true));
 
             Assert.True(cs.HasObserver());
 
@@ -97,14 +97,14 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             var cs = new MaybeSubject<int>();
 
-            cs.SubscribeSafe(new FailingCompletableObserver(false, true, true, true));
+            cs.SubscribeSafe(new FailingMaybeObserver(false, true, true, true));
 
             Assert.True(cs.HasObserver());
 
             cs.OnError(new InvalidOperationException("main"));
         }
 
-        sealed class FailingCompletableObserver : IMaybeObserver<int>
+        sealed class FailingMaybeObserver : IMaybeObserver<int>
         {
             readonly bool failOnSubscribe;
 
@@ -114,7 +114,7 @@ namespace akarnokd.reactive_extensions_test.maybe
 
             readonly bool failOnCompleted;
 
-            public FailingCompletableObserver(bool failOnSubscribe, bool failOnSuccess, bool failOnError, bool failOnCompleted)
+            public FailingMaybeObserver(bool failOnSubscribe, bool failOnSuccess, bool failOnError, bool failOnCompleted)
             {
                 this.failOnSubscribe = failOnSubscribe;
                 this.failOnSuccess = failOnSuccess;

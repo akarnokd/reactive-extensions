@@ -94,18 +94,25 @@ namespace akarnokd.reactive_extensions
 
             internal void Run()
             {
-                var d = Volatile.Read(ref task);
-                if (d != DisposableHelper.DISPOSED
-                    && Interlocked.CompareExchange(ref task, DisposableHelper.EMPTY, d) == d)
+                for (; ; )
                 {
-                    var ex = error;
-                    if (ex != null)
+                    var d = Volatile.Read(ref task);
+                    if (d == DisposableHelper.DISPOSED)
                     {
-                        downstream.OnError(ex);
+                        break;
                     }
-                    else
+                    if (Interlocked.CompareExchange(ref task, DisposableHelper.EMPTY, d) == d)
                     {
-                        downstream.OnCompleted();
+                        var ex = error;
+                        if (ex != null)
+                        {
+                            downstream.OnError(ex);
+                        }
+                        else
+                        {
+                            downstream.OnCompleted();
+                        }
+                        break;
                     }
                 }
             }

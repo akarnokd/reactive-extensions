@@ -34,13 +34,18 @@
   - FromTask
   - LastElement (on IObservable)
   - Map
+  - ObserveOn
   - OnErrorComplete
   - OnErrorResumeNext
+  - OnTerminateDetach
+  - SingleElement (on IObservable)
+  - SubscribeOn
+  - SubscribeSafe
   - Timeout
+  - Timer
   - ToMaybe (on Task)
   - ToTask
-  - SingleElement (on IObservable)
-  - SubscribeSafe
+  - UnsubscribeOn
   - Using
   - Wait
 + ISingleSource

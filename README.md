@@ -685,6 +685,7 @@ Extension methods host: `MaybeSource`
 - `FromTask`
 - `Just`
 - `Never`
+- `Timer`
 - `Using`
 
 ### Instance methods
@@ -702,9 +703,13 @@ Extension methods host: `MaybeSource`
 - `DoOnTerminate`
 - `Filter`
 - `Map`
+- `ObserveOn`
 - `OnErrorComplete`
 - `OnErrorResumeNext`
+- `OnTerminateDetach`
+- `SubscribeOn`
 - `Timeout`
+- `UnsubscribeOn`
 
 ### Consumer methods
 

@@ -137,7 +137,7 @@ namespace akarnokd.reactive_extensions
 
                 try
                 {
-                    fb = RequireNonNullRef(handler(error), "The handler returned a null ICompletableSource");
+                    fb = RequireNonNullRef(handler(error), "The handler returned a null IMaybeSource");
                 }
                 catch (Exception ex)
                 {

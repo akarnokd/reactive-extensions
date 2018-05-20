@@ -156,10 +156,10 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Subscribes the given completable observer to this subject
+        /// Subscribes the given maybe observer to this subject
         /// and relays/replays the terminal events of the subject.
         /// </summary>
-        /// <param name="observer">The completable observer that wants to listen to the terminal events.</param>
+        /// <param name="observer">The maybe observer that wants to listen to the terminal events.</param>
         public void Subscribe(IMaybeObserver<T> observer)
         {
             var inner = new InnerDisposable(observer, this);
