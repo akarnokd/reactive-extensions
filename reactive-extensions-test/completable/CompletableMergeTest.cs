@@ -623,62 +623,6 @@ namespace akarnokd.reactive_extensions_test.completable
             .AssertFailure(typeof(InvalidOperationException));
         }
 
-        sealed class FailingEnumerable<T> : IEnumerable<T>, IEnumerator<T>
-        {
-            readonly bool failGetEnumerable;
-
-            readonly bool failMoveNext;
-
-            readonly bool failOnDispose;
-
-            public FailingEnumerable(bool failGetEnumerable, bool failMoveNext, bool failOnDispose)
-            {
-                this.failGetEnumerable = failGetEnumerable;
-                this.failMoveNext = failMoveNext;
-                this.failOnDispose = failOnDispose;
-            }
-
-            public T Current => default(T);
-
-            object IEnumerator.Current => null;
-
-            public void Dispose()
-            {
-                if (failOnDispose)
-                {
-                    throw new InvalidOperationException();
-                }
-            }
-
-            public IEnumerator<T> GetEnumerator()
-            {
-                if (failGetEnumerable)
-                {
-                    throw new InvalidOperationException();
-                }
-                return this;
-            }
-
-            public bool MoveNext()
-            {
-                if (failMoveNext)
-                {
-                    throw new InvalidOperationException();
-                }
-                return false;
-            }
-
-            public void Reset()
-            {
-                throw new NotSupportedException();
-            }
-
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return GetEnumerator();
-            }
-        }
-
         #endregion Enumerable-based
     }
 }

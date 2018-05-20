@@ -704,6 +704,7 @@ namespace akarnokd.reactive_extensions
         /// Delay the delivery of the terminal events from the
         /// upstream maybe source by the given time amount.
         /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
         /// <param name="source">The maybe source to delay signals of.</param>
         /// <param name="time">The time delay.</param>
         /// <param name="scheduler">The scheduler to use for the timed wait and signal emission.</param>
@@ -717,32 +718,77 @@ namespace akarnokd.reactive_extensions
             return new MaybeDelay<T>(source, time, scheduler);
         }
 
+        /// <summary>
+        /// Delay the subscription to the main maybe source
+        /// until the specified time elapsed.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <param name="source">The maybe source to delay subscribing to.</param>
+        /// <param name="time">The delay time.</param>
+        /// <param name="scheduler">The scheduler to use for the timed wait and subscription.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
         public static IMaybeSource<T> DelaySubscription<T>(this IMaybeSource<T> source, TimeSpan time, IScheduler scheduler)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNull(scheduler, nameof(scheduler));
 
-            throw new NotImplementedException();
+            return new MaybeDelaySubscriptionTime<T>(source, time, scheduler);
         }
 
+        /// <summary>
+        /// Delay the subscription to the main maybe source
+        /// until the other source completes.
+        /// </summary>
+        /// <typeparam name="T">The success value type main source.</typeparam>
+        /// <typeparam name="U">The success value type of the other source.</typeparam>
+        /// <param name="source">The maybe source to delay subscribing to.</param>
+        /// <param name="other">The source that should complete to trigger the main subscription.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
         public static IMaybeSource<T> DelaySubscription<T, U>(this IMaybeSource<T> source, IMaybeSource<U> other)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNull(other, nameof(other));
 
-            throw new NotImplementedException();
+            return new MaybeDelaySubscription<T, U>(source, other);
         }
 
+        /// <summary>
+        /// Terminates when either the main or the other source terminates,
+        /// disposing the other sequence.
+        /// </summary>
+        /// <typeparam name="T">The success value type main source.</typeparam>
+        /// <typeparam name="U">The success value type of the other source.</typeparam>
+        /// <param name="source">The main completable source to consume.</param>
+        /// <param name="other">The other completable source that could stop the <paramref name="source"/>.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
         public static IMaybeSource<T> TakeUntil<T, U>(this IMaybeSource<T> source, IMaybeSource<U> other)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNull(other, nameof(other));
 
-            throw new NotImplementedException();
+            return new MaybeTakeUntil<T, U>(source, other);
         }
 
+        /// <summary>
+        /// Terminates when either the main or the other source terminates,
+        /// disposing the other sequence.
+        /// </summary>
+        /// <typeparam name="T">The success value type main source.</typeparam>
+        /// <typeparam name="U">The success value type of the other source.</typeparam>
+        /// <param name="source">The main completable source to consume.</param>
+        /// <param name="other">The other observable that could stop the <paramref name="source"/>
+        /// by emitting an item or completing.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
         public static IMaybeSource<T> TakeUntil<T, U>(this IMaybeSource<T> source, IObservable<U> other)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNull(other, nameof(other));
 
-            throw new NotImplementedException();
+            return new MaybeTakeUntilObservable<T, U>(source, other);
         }
 
         /// <summary>
@@ -804,20 +850,44 @@ namespace akarnokd.reactive_extensions
             return new MaybeFlatMapMaybe<T, R>(source, mapper);
         }
 
+        /// <summary>
+        /// Maps the success value of the upstream
+        /// maybe source onto an enumerable sequence
+        /// and emits the items of this sequence.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <typeparam name="R">The element type of the enumerable sequence.</typeparam>
+        /// <param name="source">The maybe source to map.</param>
+        /// <param name="mapper">The function receiving the success item and
+        /// should return an enumerable sequence.</param>
+        /// <returns>The new observable sequence.</returns>
+        /// <remarks>Since 0.0.11</remarks>
         public static IObservable<R> FlatMap<T, R>(this IMaybeSource<T> source, Func<T, IEnumerable<R>> mapper)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(mapper, nameof(mapper));
 
-            throw new NotImplementedException();
+            return new MaybeFlatMapEnumerable<T, R>(source, mapper);
         }
 
+        /// <summary>
+        /// Maps the success value of the upstream
+        /// maybe source onto an observable sequence
+        /// and emits the items of this sequence.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <typeparam name="R">The element type of the enumerable sequence.</typeparam>
+        /// <param name="source">The maybe source to map.</param>
+        /// <param name="mapper">The function receiving the success item and
+        /// should return an observable sequence.</param>
+        /// <returns>The new observable sequence.</returns>
+        /// <remarks>Since 0.0.11</remarks>
         public static IObservable<R> FlatMap<T, R>(this IMaybeSource<T> source, Func<T, IObservable<R>> mapper)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(mapper, nameof(mapper));
 
-            throw new NotImplementedException();
+            return new MaybeFlatMapObservable<T, R>(source, mapper);
         }
 
         /// <summary>

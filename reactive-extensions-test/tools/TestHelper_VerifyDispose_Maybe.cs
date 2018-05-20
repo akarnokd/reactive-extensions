@@ -130,5 +130,44 @@ namespace akarnokd.reactive_extensions_test
 
             Assert.False(ms.HasObserver(), "Still subscribed to the source subject!");
         }
+
+        /// <summary>
+        /// Calls a transform function with an MaybeSubject,
+        /// subscribes to the resulting IObservable, disposes
+        /// the connection and verifies if the MaybeSubject
+        /// lost its observer, verifying the Dispose() call
+        /// composes through.
+        /// </summary>
+        /// <typeparam name="T">The source value type.</typeparam>
+        /// <typeparam name="R">The result value type.</typeparam>
+        /// <param name="transform">The function to map a source into another source.</param>
+        /// <param name="waitSeconds">How many seconds to wait at most till the dispose reaches the upstream.</param>
+        /// <remarks>Since 0.0.11</remarks>
+        public static void VerifyDisposeMaybe<T, R>(Func<IMaybeSource<T>, IObservable<R>> transform, int waitSeconds = 1)
+        {
+            var ms = new MaybeSubject<T>();
+
+            var source = transform(ms);
+
+            var to = source.Test();
+
+            Assert.True(ms.HasObserver(), "Not subscribed to the source subject!");
+
+            to.Dispose();
+
+            for (int i = 0; i < waitSeconds * 10; i++)
+            {
+                if (ms.HasObserver())
+                {
+                    Thread.Sleep(100);
+                }
+                else
+                {
+                    return;
+                }
+            }
+
+            Assert.False(ms.HasObserver(), "Still subscribed to the source subject!");
+        }
     }
 }

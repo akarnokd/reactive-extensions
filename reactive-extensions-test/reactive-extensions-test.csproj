@@ -101,6 +101,9 @@
     <Compile Include="completable\CompletableFlatMapObservableTest.cs" />
     <Compile Include="completable\CompletableSwitchMapTest.cs" />
     <Compile Include="completable\UnitTest1.cs" />
+    <Compile Include="maybe\MaybeTakeUntilTest.cs" />
+    <Compile Include="maybe\MaybeDelaySubscriptionTest.cs" />
+    <Compile Include="maybe\MaybeFlatMapObservableTest.cs" />
     <Compile Include="maybe\MaybeOnTerminateDetachTest.cs" />
     <Compile Include="maybe\MaybeObserveOnTest.cs" />
     <Compile Include="maybe\MaybeSubscribeOnTest.cs" />
@@ -129,6 +132,7 @@
     <Compile Include="maybe\MaybeSingleElementTest.cs" />
     <Compile Include="maybe\MaybeDefaultIfEmptyTest.cs" />
     <Compile Include="maybe\MaybeSwitchIfEmptyTest.cs" />
+    <Compile Include="maybe\MaybeFlatMapEnumerableTest.cs" />
     <Compile Include="SingleSubjectTest.cs" />
     <Compile Include="maybe\MaybeCreateTest.cs" />
     <Compile Include="maybe\MaybeEmptyTest.cs" />
@@ -153,6 +157,7 @@
     <Compile Include="single\SingleCreateTest.cs" />
     <Compile Include="single\SingleNeverTest.cs" />
     <Compile Include="single\SingleErrorTest.cs" />
+    <Compile Include="tools\FailingEnumerable.cs" />
     <Compile Include="tools\TestHelper_VerifyDispose_Observable.cs" />
     <Compile Include="tools\TestHelper_VerifyDispose_Single.cs" />
     <Compile Include="tools\TestHelper_VerifyDispose_Maybe.cs" />

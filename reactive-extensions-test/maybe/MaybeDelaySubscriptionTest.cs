@@ -3,15 +3,15 @@ using System;
 using akarnokd.reactive_extensions;
 using System.Reactive.Concurrency;
 
-namespace akarnokd.reactive_extensions_test.completable
+namespace akarnokd.reactive_extensions_test.maybe
 {
     [TestFixture]
-    public class CompletableDelaySubscriptionTest
+    public class MaybeDelaySubscriptionTest
     {
         [Test]
         public void Time_Basic()
         {
-            CompletableSource.Empty()
+            MaybeSource.Empty<int>()
                 .DelaySubscription(TimeSpan.FromMilliseconds(100), NewThreadScheduler.Default)
                 .Test()
                 .AwaitDone(TimeSpan.FromSeconds(5))
@@ -19,9 +19,19 @@ namespace akarnokd.reactive_extensions_test.completable
         }
 
         [Test]
+        public void Time_Success()
+        {
+            MaybeSource.Just(1)
+                .DelaySubscription(TimeSpan.FromMilliseconds(100), NewThreadScheduler.Default)
+                .Test()
+                .AwaitDone(TimeSpan.FromSeconds(5))
+                .AssertResult(1);
+        }
+
+        [Test]
         public void Time_Error()
         {
-            CompletableSource.Error(new InvalidOperationException())
+            MaybeSource.Error<int>(new InvalidOperationException())
                 .DelaySubscription(TimeSpan.FromMilliseconds(100), NewThreadScheduler.Default)
                 .Test()
                 .AwaitDone(TimeSpan.FromSeconds(5))
@@ -33,7 +43,7 @@ namespace akarnokd.reactive_extensions_test.completable
         {
             var ts = new TestScheduler();
 
-            var to = CompletableSource.Empty()
+            var to = MaybeSource.Empty<int>()
                 .DelaySubscription(TimeSpan.FromSeconds(1), ts)
                 .Test();
 
@@ -51,7 +61,7 @@ namespace akarnokd.reactive_extensions_test.completable
         {
             var ts = new TestScheduler();
 
-            var cs = new CompletableSubject();
+            var cs = new MaybeSubject<int>();
 
             var to = cs
                 .DelaySubscription(TimeSpan.FromSeconds(1), ts)
@@ -77,18 +87,48 @@ namespace akarnokd.reactive_extensions_test.completable
         [Test]
         public void Other_Basic()
         {
-            CompletableSource.Empty()
-                .DelaySubscription(CompletableSource.Timer(TimeSpan.FromMilliseconds(100), NewThreadScheduler.Default))
+            MaybeSource.Empty<int>()
+                .DelaySubscription(MaybeSource.Timer(TimeSpan.FromMilliseconds(100), NewThreadScheduler.Default))
                 .Test()
                 .AwaitDone(TimeSpan.FromSeconds(5))
                 .AssertResult();
         }
 
         [Test]
+        public void Other_Empty_Empty()
+        {
+            MaybeSource.Empty<int>()
+                .DelaySubscription(MaybeSource.Empty<string>())
+                .Test()
+                .AwaitDone(TimeSpan.FromSeconds(5))
+                .AssertResult();
+        }
+
+        [Test]
+        public void Other_Success_Empty()
+        {
+            MaybeSource.Just(1)
+                .DelaySubscription(MaybeSource.Empty<string>())
+                .Test()
+                .AwaitDone(TimeSpan.FromSeconds(5))
+                .AssertResult(1);
+        }
+
+        [Test]
+        public void Other_Success()
+        {
+            MaybeSource.Just(1)
+                .DelaySubscription(MaybeSource.Timer(TimeSpan.FromMilliseconds(100), NewThreadScheduler.Default))
+                .Test()
+                .AwaitDone(TimeSpan.FromSeconds(5))
+                .AssertResult(1);
+        }
+
+        [Test]
         public void Other_Error()
         {
-            CompletableSource.Error(new InvalidOperationException())
-                .DelaySubscription(CompletableSource.Timer(TimeSpan.FromMilliseconds(100), NewThreadScheduler.Default))
+            MaybeSource.Error<int>(new InvalidOperationException())
+                .DelaySubscription(MaybeSource.Timer(TimeSpan.FromMilliseconds(100), NewThreadScheduler.Default))
                 .Test()
                 .AwaitDone(TimeSpan.FromSeconds(5))
                 .AssertFailure(typeof(InvalidOperationException));
@@ -97,8 +137,8 @@ namespace akarnokd.reactive_extensions_test.completable
         [Test]
         public void Other_Delay_Error()
         {
-            CompletableSource.Error(new NullReferenceException())
-                .DelaySubscription(CompletableSource.Error(new InvalidOperationException()))
+            MaybeSource.Error<int>(new NullReferenceException())
+                .DelaySubscription(MaybeSource.Error<int>(new InvalidOperationException()))
                 .Test()
                 .AwaitDone(TimeSpan.FromSeconds(5))
                 .AssertFailure(typeof(InvalidOperationException));
@@ -107,9 +147,9 @@ namespace akarnokd.reactive_extensions_test.completable
         [Test]
         public void Other_Dispose()
         {
-            var ts = new CompletableSubject();
+            var ts = new MaybeSubject<int>();
 
-            var to = CompletableSource.Empty()
+            var to = MaybeSource.Empty<int>()
                 .DelaySubscription(ts)
                 .Test();
 
@@ -125,9 +165,9 @@ namespace akarnokd.reactive_extensions_test.completable
         [Test]
         public void Other_Dispose_Other()
         {
-            var ts = new CompletableSubject();
+            var ts = new MaybeSubject<int>();
 
-            var cs = new CompletableSubject();
+            var cs = new MaybeSubject<int>();
 
             var to = cs
                 .DelaySubscription(ts)

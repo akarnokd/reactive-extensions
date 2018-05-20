@@ -9,20 +9,22 @@ namespace akarnokd.reactive_extensions
     /// Terminates when either the main or the other source terminates,
     /// disposing the other sequence.
     /// </summary>
-    /// <remarks>Since 0.0.10</remarks>
-    internal sealed class CompletableTakeUntil : ICompletableSource
+    /// <typeparam name="T">The success type of the main source.</typeparam>
+    /// <typeparam name="U">The success value of the other source.</typeparam>
+    /// <remarks>Since 0.0.11</remarks>
+    internal sealed class MaybeTakeUntil<T, U> : IMaybeSource<T>
     {
-        readonly ICompletableSource source;
+        readonly IMaybeSource<T> source;
 
-        readonly ICompletableSource other;
+        readonly IMaybeSource<U> other;
 
-        public CompletableTakeUntil(ICompletableSource source, ICompletableSource other)
+        public MaybeTakeUntil(IMaybeSource<T> source, IMaybeSource<U> other)
         {
             this.source = source;
             this.other = other;
         }
 
-        public void Subscribe(ICompletableObserver observer)
+        public void Subscribe(IMaybeObserver<T> observer)
         {
             var parent = new TakeUntilObserver(observer);
             observer.OnSubscribe(parent);
@@ -31,9 +33,9 @@ namespace akarnokd.reactive_extensions
             source.Subscribe(parent);
         }
 
-        sealed class TakeUntilObserver : ICompletableObserver, IDisposable
+        sealed class TakeUntilObserver : IMaybeObserver<T>, IDisposable
         {
-            readonly ICompletableObserver downstream;
+            readonly IMaybeObserver<T> downstream;
 
             internal readonly OtherObserver other;
 
@@ -41,7 +43,7 @@ namespace akarnokd.reactive_extensions
 
             int once;
 
-            public TakeUntilObserver(ICompletableObserver downstream)
+            public TakeUntilObserver(IMaybeObserver<T> downstream)
             {
                 this.downstream = downstream;
                 this.other = new OtherObserver(this);
@@ -68,6 +70,15 @@ namespace akarnokd.reactive_extensions
                 {
                     other.Dispose();
                     downstream.OnError(error);
+                }
+            }
+
+            public void OnSuccess(T item)
+            {
+                if (Interlocked.CompareExchange(ref once, 1, 0) == 0)
+                {
+                    other.Dispose();
+                    downstream.OnSuccess(item);
                 }
             }
 
@@ -94,7 +105,7 @@ namespace akarnokd.reactive_extensions
                 DisposableHelper.SetOnce(ref upstream, d);
             }
 
-            internal sealed class OtherObserver : ICompletableObserver, IDisposable
+            internal sealed class OtherObserver : IMaybeObserver<U>, IDisposable
             {
                 readonly TakeUntilObserver parent;
 
@@ -120,6 +131,11 @@ namespace akarnokd.reactive_extensions
                     parent.OtherError(error);
                 }
 
+                public void OnSuccess(U item)
+                {
+                    parent.OtherCompleted();
+                }
+
                 public void OnSubscribe(IDisposable d)
                 {
                     DisposableHelper.SetOnce(ref upstream, d);
@@ -132,20 +148,22 @@ namespace akarnokd.reactive_extensions
     /// Terminates when either the main or the other source terminates,
     /// disposing the other sequence.
     /// </summary>
-    /// <remarks>Since 0.0.10</remarks>
-    internal sealed class CompletableTakeUntilObservable<U> : ICompletableSource
+    /// <typeparam name="T">The success type of the main source.</typeparam>
+    /// <typeparam name="U">The success value of the other source.</typeparam>
+    /// <remarks>Since 0.0.11</remarks>
+    internal sealed class MaybeTakeUntilObservable<T, U> : IMaybeSource<T>
     {
-        readonly ICompletableSource source;
+        readonly IMaybeSource<T> source;
 
         readonly IObservable<U> other;
 
-        public CompletableTakeUntilObservable(ICompletableSource source, IObservable<U> other)
+        public MaybeTakeUntilObservable(IMaybeSource<T> source, IObservable<U> other)
         {
             this.source = source;
             this.other = other;
         }
 
-        public void Subscribe(ICompletableObserver observer)
+        public void Subscribe(IMaybeObserver<T> observer)
         {
             var parent = new TakeUntilObserver(observer);
             observer.OnSubscribe(parent);
@@ -154,9 +172,9 @@ namespace akarnokd.reactive_extensions
             source.Subscribe(parent);
         }
 
-        sealed class TakeUntilObserver : ICompletableObserver, IDisposable
+        sealed class TakeUntilObserver : IMaybeObserver<T>, IDisposable
         {
-            readonly ICompletableObserver downstream;
+            readonly IMaybeObserver<T> downstream;
 
             internal readonly OtherObserver other;
 
@@ -164,7 +182,7 @@ namespace akarnokd.reactive_extensions
 
             int once;
 
-            public TakeUntilObserver(ICompletableObserver downstream)
+            public TakeUntilObserver(IMaybeObserver<T> downstream)
             {
                 this.downstream = downstream;
                 this.other = new OtherObserver(this);
@@ -191,6 +209,15 @@ namespace akarnokd.reactive_extensions
                 {
                     other.Dispose();
                     downstream.OnError(error);
+                }
+            }
+
+            public void OnSuccess(T item)
+            {
+                if (Interlocked.CompareExchange(ref once, 1, 0) == 0)
+                {
+                    other.Dispose();
+                    downstream.OnSuccess(item);
                 }
             }
 

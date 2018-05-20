@@ -693,6 +693,7 @@ Extension methods host: `MaybeSource`
 - `Compose`
 - `DefaultIfEmpty`
 - `Delay`
+- `DelaySubscription`
 - `DoAfterSuccess`
 - `DoAfterTerminate`
 - `DoFinally`
@@ -710,6 +711,7 @@ Extension methods host: `MaybeSource`
 - `OnTerminateDetach`
 - `SubscribeOn`
 - `SwitchIfEmpty`
+- `TakeUntil`
 - `Timeout`
 - `UnsubscribeOn`
 
@@ -726,7 +728,7 @@ Extension methods host: `MaybeSource`
 
 - `ElementAtIndex` (on `IObservable`)
 - `FirstElement` (on `IObservable`)
-- `FlatMap` (onto `ICompletableSource`, `ISingleSource`)
+- `FlatMap` (onto `ICompletableSource`, `ISingleSource`, `IObservable`, `IEnumerable`)
 - `IgnoreElement`
 - `LastElement` (on `IObservable`)
 - `SingleElement` (on `IObservable`)

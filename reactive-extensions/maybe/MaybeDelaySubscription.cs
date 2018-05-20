@@ -10,10 +10,11 @@ namespace akarnokd.reactive_extensions
     /// Delay the subscription to the actual source until
     /// the specified time elapses.
     /// </summary>
-    /// <remarks>Since 0.0.9</remarks>
-    internal sealed class CompletableDelaySubscriptionTime : ICompletableSource
+    /// <typeparam name="T">The success value type.</typeparam>
+    /// <remarks>Since 0.0.11</remarks>
+    internal sealed class MaybeDelaySubscriptionTime<T> : IMaybeSource<T>
     {
-        readonly ICompletableSource source;
+        readonly IMaybeSource<T> source;
 
         readonly TimeSpan delay;
 
@@ -22,14 +23,14 @@ namespace akarnokd.reactive_extensions
         static readonly Func<IScheduler, DelaySubscriptionObserver, IDisposable> RUN =
             (s, t) => { t.Run(); return DisposableHelper.EMPTY; };
 
-        public CompletableDelaySubscriptionTime(ICompletableSource source, TimeSpan delay, IScheduler scheduler)
+        public MaybeDelaySubscriptionTime(IMaybeSource<T> source, TimeSpan delay, IScheduler scheduler)
         {
             this.source = source;
             this.delay = delay;
             this.scheduler = scheduler;
         }
 
-        public void Subscribe(ICompletableObserver observer)
+        public void Subscribe(IMaybeObserver<T> observer)
         {
             var parent = new DelaySubscriptionObserver(observer, source);
             observer.OnSubscribe(parent);
@@ -37,15 +38,15 @@ namespace akarnokd.reactive_extensions
             parent.SetTask(scheduler.Schedule(parent, delay, RUN));
         }
 
-        sealed class DelaySubscriptionObserver : ICompletableObserver, IDisposable
+        sealed class DelaySubscriptionObserver : IMaybeObserver<T>, IDisposable
         {
-            readonly ICompletableObserver downstream;
+            readonly IMaybeObserver<T> downstream;
 
-            ICompletableSource other;
+            IMaybeSource<T> other;
 
             IDisposable upstream;
 
-            public DelaySubscriptionObserver(ICompletableObserver downstream, ICompletableSource other)
+            public DelaySubscriptionObserver(IMaybeObserver<T> downstream, IMaybeSource<T> other)
             {
                 this.downstream = downstream;
                 this.other = other;
@@ -63,8 +64,12 @@ namespace akarnokd.reactive_extensions
 
             public void OnError(Exception error)
             {
-                other = null;
                 downstream.OnError(error);
+            }
+
+            public void OnSuccess(T item)
+            {
+                downstream.OnSuccess(item);
             }
 
             public void OnSubscribe(IDisposable d)
@@ -90,38 +95,41 @@ namespace akarnokd.reactive_extensions
     /// Delay the subscription to the actual source until
     /// the other source completes.
     /// </summary>
-    /// <remarks>Since 0.0.9</remarks>
-    internal sealed class CompletableDelaySubscription : ICompletableSource
+    /// <typeparam name="T">The success value type.</typeparam>
+    /// <typeparam name="U">The value type of the other source triggering the
+    /// subscription to the main source.</typeparam>
+    /// <remarks>Since 0.0.11</remarks>
+    internal sealed class MaybeDelaySubscription<T, U> : IMaybeSource<T>
     {
-        readonly ICompletableSource source;
+        readonly IMaybeSource<T> source;
 
-        readonly ICompletableSource other;
+        readonly IMaybeSource<U> other;
 
-        public CompletableDelaySubscription(ICompletableSource source, ICompletableSource other)
+        public MaybeDelaySubscription(IMaybeSource<T> source, IMaybeSource<U> other)
         {
             this.source = source;
             this.other = other;
         }
 
-        public void Subscribe(ICompletableObserver observer)
+        public void Subscribe(IMaybeObserver<T> observer)
         {
             var parent = new DelaySubscriptionObserver(observer, source);
             observer.OnSubscribe(parent);
             other.Subscribe(parent);
         }
 
-        sealed class DelaySubscriptionObserver : ICompletableObserver, IDisposable
+        sealed class DelaySubscriptionObserver : IMaybeObserver<U>, IDisposable
         {
-            readonly ICompletableObserver downstream;
+            readonly IMaybeObserver<T> downstream;
 
-            ICompletableSource other;
+            IMaybeSource<T> main;
 
             IDisposable upstream;
 
-            public DelaySubscriptionObserver(ICompletableObserver downstream, ICompletableSource other)
+            public DelaySubscriptionObserver(IMaybeObserver<T> downstream, IMaybeSource<T> main)
             {
                 this.downstream = downstream;
-                this.other = other;
+                this.main = main;
             }
 
             public void Dispose()
@@ -131,27 +139,40 @@ namespace akarnokd.reactive_extensions
 
             public void OnCompleted()
             {
-                if (other == null)
-                {
-                    downstream.OnCompleted();
-                }
-                else
-                {
-                    var o = other;
-                    other = null;
-                    o.Subscribe(this);
-                }
+                Next();
             }
 
             public void OnError(Exception error)
             {
-                other = null;
+                main = null;
                 downstream.OnError(error);
+            }
+
+            public void OnSuccess(U item)
+            {
+                Next();
+            }
+
+            void Next()
+            {
+                var o = main;
+                main = null;
+
+                var inner = new MaybeInnerObserver<T>(downstream);
+                if (DisposableHelper.Replace(ref upstream, inner))
+                {
+                    o.Subscribe(inner);
+                }
             }
 
             public void OnSubscribe(IDisposable d)
             {
-                DisposableHelper.Replace(ref upstream, d);
+                DisposableHelper.SetOnce(ref upstream, d);
+            }
+
+            internal void SetTask(IDisposable d)
+            {
+                DisposableHelper.ReplaceIfNull(ref upstream, d);
             }
         }
     }
