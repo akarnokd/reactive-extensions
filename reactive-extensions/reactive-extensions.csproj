@@ -13,49 +13,9 @@
     <Copyright>Copyright 2018, David Karnok</Copyright>
     <PackageReleaseNotes>New operators:
 + IMaybeSource
-  - BlockingSubscribe
-  - DefaultIfEmpty
-  - Defer
-  - Delay
-  - DelaySubscription
-  - DoAfterSuccess
-  - DoAfterTerminate
-  - DoFinally
-  - DoOnCompleted
-  - DoOnDispose
-  - DoOnError
-  - DoOnSubscribe
-  - DoOnSuccess
-  - DoOnTerminate
-  - ElementAtIndex (on IObservable)
-  - Filter
-  - FirstElement (on IObservable)
-  - FlatMap (to IMaybeSource, ISingleSource, IObservable)
-  - FromAction
-  - FromFunc
-  - FromTask
-  - LastElement (on IObservable)
-  - Map
-  - ObserveOn
-  - OnErrorComplete
-  - OnErrorResumeNext
-  - OnTerminateDetach
-  - SingleElement (on IObservable)
-  - SubscribeOn
-  - SubscribeSafe
-  - SwitchIfEmpty
-  - TakeUntil
-  - Timeout
-  - Timer
-  - ToMaybe (on Task)
-  - ToTask
-  - UnsubscribeOn
-  - Using
-  - Wait
+  - ToObservable
+  - ToSingle
 + ISingleSource
-  - FromFunc
-  - Filter
-  - FlatMap (to IMaybeSource)
 </PackageReleaseNotes>
     <PackageTags>reactive, extensions</PackageTags>
   </PropertyGroup>

@@ -733,6 +733,8 @@ Extension methods host: `MaybeSource`
 - `LastElement` (on `IObservable`)
 - `SingleElement` (on `IObservable`)
 - `ToTask`
+- `ToObservable`
+- `ToSingle`
 
 ### MaybeSubject
 

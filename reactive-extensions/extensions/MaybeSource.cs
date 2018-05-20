@@ -1303,5 +1303,35 @@ namespace akarnokd.reactive_extensions
 
             return new MaybeFromTask<T>(task);
         }
+
+        /// <summary>
+        /// Converts a maybe source into a single source,
+        /// failing with an index out-of-range exception
+        /// if the maybe source is empty
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <param name="source">The maybe source to expose as a single source.</param>
+        /// <returns>The new single source instance.</returns>
+        /// <remarks>Since 0.0.12</remarks>
+        public static ISingleSource<T> ToSingle<T>(this IMaybeSource<T> source)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return new MaybeToSingle<T>(source);
+        }
+
+        /// <summary>
+        /// Exposes a maybe source as a legacy observable.
+        /// </summary>
+        /// <typeparam name="T">The element type of the maybe and observable sequence.</typeparam>
+        /// <param name="source">The maybe source to expose as an <see cref="IObservable{T}"/></param>
+        /// <returns>The new observable instance.</returns>
+        /// <remarks>Since 0.0.12</remarks>
+        public static IObservable<T> ToObservable<T>(this IMaybeSource<T> source)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return new MaybeToObservable<T>(source);
+        }
     }
 }
