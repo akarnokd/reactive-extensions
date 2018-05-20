@@ -901,6 +901,7 @@ namespace akarnokd.reactive_extensions
         public static void SubscribeSafe(this ICompletableSource source, ICompletableObserver observer)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNull(observer, nameof(observer));
 
             source.Subscribe(new CompletableSafeObserver(observer));
         }

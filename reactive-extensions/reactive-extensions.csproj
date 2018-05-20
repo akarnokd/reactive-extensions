@@ -13,6 +13,7 @@
     <Copyright>Copyright 2018, David Karnok</Copyright>
     <PackageReleaseNotes>New operators:
 + IMaybeSource
+  - BlockingSubscribe
   - ElementAtIndex (on IObservable)
   - Filter
   - FirstElement (on IObservable)
@@ -24,6 +25,7 @@
   - Map
   - ToMaybe (on Task)
   - SingleElement (on IObservable)
+  - SubscribeSafe
 + ISingleSource
   - FromFunc
   - Filter

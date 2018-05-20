@@ -626,11 +626,19 @@ namespace akarnokd.reactive_extensions
         // Leaving the reactive world
         // ------------------------------------------------
 
+        /// <summary>
+        /// Subscribes to this maybe source and suppresses exceptions
+        /// throw by the OnXXX methods of the <paramref name="observer"/>.
+        /// </summary>
+        /// <param name="source">The maybe source to subscribe to safely.</param>
+        /// <param name="observer">The unreliable observer.</param>
+        /// <remarks>Since 0.0.11</remarks>
         public static void SubscribeSafe<T>(this IMaybeSource<T> source, IMaybeObserver<T> observer)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNull(observer, nameof(observer));
 
-            throw new NotImplementedException();
+            source.Subscribe(new MaybeSafeObserver<T>(observer));
         }
 
         /// <summary>
@@ -652,18 +660,51 @@ namespace akarnokd.reactive_extensions
             return parent;
         }
 
+        /// <summary>
+        /// Subscribes to the source and blocks until it terminated, then
+        /// calls the appropriate completable observer method on the current
+        /// thread.
+        /// </summary>
+        /// <param name="source">The upstream maybe source to block for.</param>
+        /// <param name="observer">The maybe observer to call the methods on the current thread.</param>
+        /// <remarks>Since 0.0.11</remarks>
         public static void BlockingSubscribe<T>(this IMaybeSource<T> source, IMaybeObserver<T> observer)
         {
             RequireNonNull(source, nameof(source));
 
-            throw new NotImplementedException();
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(observer, nameof(observer));
+
+            var parent = new MaybeBlockingObserver<T>(observer);
+            observer.OnSubscribe(parent);
+
+            source.Subscribe(parent);
+
+            parent.Run();
         }
 
-        public static void BlockingSubscribe<T>(this IMaybeSource<T> source, Action<T> onSuccess, Action<Exception> onError = null, Action onCompleted = null, Action <IDisposable> onSubscribe = null)
+        /// <summary>
+        /// Subscribes to the source and blocks until it terminated, then
+        /// calls the appropriate completable observer method on the current
+        /// thread.
+        /// </summary>
+        /// <param name="source">The upstream completable source to block for.</param>
+        /// <param name="onSuccess">Action called with the success item.</param>
+        /// <param name="onError">Action called with the exception when the upstream fails.</param>
+        /// <param name="onCompleted">Action called when the upstream completes.</param>
+        /// <param name="onSubscribe">Action called with a disposable just before subscribing to the upstream
+        /// and allows disposing the sequence and unblocking this method call.</param>
+        /// <remarks>Since 0.0.11</remarks>
+        public static void BlockingSubscribe<T>(this IMaybeSource<T> source, Action<T> onSuccess = null, Action<Exception> onError = null, Action onCompleted = null, Action <IDisposable> onSubscribe = null)
         {
             RequireNonNull(source, nameof(source));
 
-            throw new NotImplementedException();
+            var parent = new MaybeBlockingConsumer<T>(onSuccess, onError, onCompleted);
+            onSubscribe?.Invoke(parent);
+
+            source.Subscribe(parent);
+
+            parent.Run();
         }
 
         public static void Wait<T>(this IMaybeSource<T> source, long timeoutMillis = long.MinValue, CancellationTokenSource cts = null)

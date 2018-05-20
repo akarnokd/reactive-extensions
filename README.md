@@ -688,23 +688,25 @@ Extension methods host: `MaybeSource`
 ### Instance methods
 
 - `Compose`
-- `ElementAtIndex`
 - `Filter`
-- `FirstElement`
-- `LastElement`
 - `Map`
-- `SingleElement`
 
 ### Consumer methods
 
+- `BlockingSubscribe`
 - `Subscribe`
+- `SubscribeSafe`
 - `SubscribeWith`
 - `Test`
 
 ### Interoperation
 
+- `ElementAtIndex` (on `IObservable`)
+- `FirstElement` (on `IObservable`)
 - `FlatMap` (onto `ICompletableSource`, `ISingleSource`)
 - `IgnoreElement`
+- `LastElement` (on `IObservable`)
+- `SingleElement` (on `IObservable`)
 
 ### MaybeSubject
 
