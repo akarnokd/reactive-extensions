@@ -71,7 +71,7 @@ namespace akarnokd.reactive_extensions
 
     /// <summary>
     /// Abstraction over a maybe observer that
-    /// allows signalling the terminal state via safe
+    /// allows signaling the terminal state via safe
     /// method calls.
     /// </summary>
     /// <remarks>Since 0.0.5</remarks>

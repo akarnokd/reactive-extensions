@@ -5,7 +5,7 @@ using System.Text;
 namespace akarnokd.reactive_extensions
 {
     /// <summary>
-    /// Ingores the success element of the source maybe and completes
+    /// Ignores the success element of the source maybe and completes
     /// the completable observer.
     /// </summary>
     /// <typeparam name="T">The success type of the source maybe.</typeparam>
@@ -26,7 +26,7 @@ namespace akarnokd.reactive_extensions
     }
 
     /// <summary>
-    /// Ingores the success element of the source single and completes
+    /// Ignores the success element of the source single and completes
     /// the completable observer.
     /// </summary>
     /// <typeparam name="T">The success type of the source maybe.</typeparam>

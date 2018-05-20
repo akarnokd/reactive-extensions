@@ -165,7 +165,7 @@ namespace akarnokd.reactive_extensions
         /// Compose a failure Exception with all relevant state information
         /// and any Exception(s) received.
         /// </summary>
-        /// <param name="message">The message to use as perfix to the state</param>
+        /// <param name="message">The message to use as prefix to the state</param>
         /// <returns>The exception to be thrown.</returns>
         Exception Fail(String message)
         {
@@ -372,7 +372,7 @@ namespace akarnokd.reactive_extensions
 
         /// <summary>
         /// Assert that the upstream terminated with a (subtype) of the
-        /// specified exception type and via exaclty one <see cref="OnError(Exception)"/>
+        /// specified exception type and via exactly one <see cref="OnError(Exception)"/>
         /// call.
         /// </summary>
         /// <param name="expectedType">The expected exception type, 
@@ -458,7 +458,7 @@ namespace akarnokd.reactive_extensions
         /// and in the given order, followed by an error of the specified type.
         /// </summary>
         /// <param name="expected">The expected values that has been received.</param>
-        /// <param name="expectedError">The expected error tyoe</param>
+        /// <param name="expectedError">The expected error type</param>
         /// <returns>this</returns>
         public TestObserver<T> AssertFailure(Type expectedError, params T[] expected)
         {
@@ -469,7 +469,7 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Assert that there were no events signalled to this TestObserver.
+        /// Assert that there were no events signaled to this TestObserver.
         /// </summary>
         /// <returns>this</returns>
         public TestObserver<T> AssertEmpty()

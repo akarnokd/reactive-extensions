@@ -46,21 +46,21 @@ namespace akarnokd.reactive_extensions_test.completable
          * These do not work on Travis-CI, perhaps different GC than locally?
          
         ICompletableEmitter subj;
-        TestObserver<object> tso;
+        TestObserver<object> testObserver;
 
         [Test]
         public void No_Leak_Consumer()
         {
-            var src = CompletableSource.Create(emitter => subj = emitter);
-            tso = new TestObserver<object>();
+            var source = CompletableSource.Create(emitter => subj = emitter);
+            testObserver = new TestObserver<object>();
 
-            src.OnTerminateDetach().Subscribe(tso);
+            source.OnTerminateDetach().Subscribe(testObserver);
 
-            var wt = new WeakReference(tso);
+            var wt = new WeakReference(testObserver);
 
             subj.OnCompleted();
 
-            tso = null;
+            testObserver = null;
 
             for (int i = 0; i < 10; i++)
             {
@@ -81,16 +81,16 @@ namespace akarnokd.reactive_extensions_test.completable
         [Test]
         public void No_Leak_Dispose_Consumer()
         {
-            var src = CompletableSource.Create(emitter => subj = emitter);
-            tso = new TestObserver<object>();
+            var source = CompletableSource.Create(emitter => subj = emitter);
+            testObserver = new TestObserver<object>();
 
-            src.OnTerminateDetach().Subscribe(tso);
+            source.OnTerminateDetach().Subscribe(testObserver);
 
-            var wt = new WeakReference(tso);
+            var wt = new WeakReference(testObserver);
 
-            tso.Dispose();
+            testObserver.Dispose();
 
-            tso = null;
+            testObserver = null;
 
             for (int i = 0; i < 10; i++)
             {
@@ -111,16 +111,16 @@ namespace akarnokd.reactive_extensions_test.completable
         [Test]
         public void No_Leak_Consumer_Error()
         {
-            var src = CompletableSource.Create(emitter => subj = emitter);
-            tso = new TestObserver<object>();
+            var source = CompletableSource.Create(emitter => subj = emitter);
+            testObserver = new TestObserver<object>();
 
-            src.OnTerminateDetach().Subscribe(tso);
+            source.OnTerminateDetach().Subscribe(testObserver);
 
-            var wt = new WeakReference(tso);
+            var wt = new WeakReference(testObserver);
 
             subj.OnCompleted();
 
-            tso = null;
+            testObserver = null;
 
             for (int i = 0; i < 10; i++)
             {
@@ -141,10 +141,10 @@ namespace akarnokd.reactive_extensions_test.completable
         [Test]
         public void No_Leak_Producer()
         {
-            var src = CompletableSource.Create(emitter => subj = emitter);
-            tso = new TestObserver<object>();
+            var source = CompletableSource.Create(emitter => subj = emitter);
+            testObserver = new TestObserver<object>();
 
-            src.OnTerminateDetach().Subscribe(tso);
+            source.OnTerminateDetach().Subscribe(testObserver);
 
             var wt = new WeakReference(subj);
 
@@ -171,11 +171,11 @@ namespace akarnokd.reactive_extensions_test.completable
         [Test]
         public void No_Leak_Producer_Error()
         {
-            var src = CompletableSource.Create(emitter => subj = emitter);
-            tso = new TestObserver<object>();
+            var source = CompletableSource.Create(emitter => subj = emitter);
+            testObserver = new TestObserver<object>();
 
 
-            src.OnTerminateDetach().Subscribe(tso);
+            source.OnTerminateDetach().Subscribe(testObserver);
 
             var wt = new WeakReference(subj);
 
@@ -202,14 +202,14 @@ namespace akarnokd.reactive_extensions_test.completable
         [Test]
         public void No_Leak_Dispose_Producer()
         {
-            var src = CompletableSource.Create(emitter => subj = emitter);
-            tso = new TestObserver<object>();
+            var source = CompletableSource.Create(emitter => subj = emitter);
+            testObserver = new TestObserver<object>();
 
-            src.OnTerminateDetach().Subscribe(tso);
+            source.OnTerminateDetach().Subscribe(testObserver);
 
             var wt = new WeakReference(subj);
 
-            tso.Dispose();
+            testObserver.Dispose();
 
             subj = null;
 

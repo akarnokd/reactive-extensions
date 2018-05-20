@@ -44,7 +44,7 @@ namespace akarnokd.reactive_extensions
         /// <typeparam name="TState">The type state information to provide to the action.</typeparam>
         /// <param name="state">The state information provided to the action when it is executed.</param>
         /// <param name="action">The action to invoke with the current scheduler and the state.</param>
-        /// <returns>The disposable that allows cancelling this particular scheduled action.</returns>
+        /// <returns>The disposable that allows canceling this particular scheduled action.</returns>
         public IDisposable Schedule<TState>(TState state, Func<IScheduler, TState, IDisposable> action)
         {
             ValidationHelper.RequireNonNull(action, nameof(action));
@@ -59,7 +59,7 @@ namespace akarnokd.reactive_extensions
         /// <param name="state">The state information provided to the action when it is executed.</param>
         /// <param name="dueTime">The relative time delay when the action should be invoked.</param>
         /// <param name="action">The action to invoke with the current scheduler and the state.</param>
-        /// <returns>The disposable that allows cancelling this particular scheduled action.</returns>
+        /// <returns>The disposable that allows canceling this particular scheduled action.</returns>
         public IDisposable Schedule<TState>(TState state, TimeSpan dueTime, Func<IScheduler, TState, IDisposable> action)
         {
             ValidationHelper.RequireNonNull(action, nameof(action));
@@ -78,7 +78,7 @@ namespace akarnokd.reactive_extensions
         /// <param name="state">The state information provided to the action when it is executed.</param>
         /// <param name="dueTime">The absolute time delay when the action should be invoked.</param>
         /// <param name="action">The action to invoke with the current scheduler and the state.</param>
-        /// <returns>The disposable that allows cancelling this particular scheduled action.</returns>
+        /// <returns>The disposable that allows canceling this particular scheduled action.</returns>
         public IDisposable Schedule<TState>(TState state, DateTimeOffset dueTime, Func<IScheduler, TState, IDisposable> action)
         {
             var now = Now;

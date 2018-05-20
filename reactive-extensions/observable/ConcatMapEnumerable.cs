@@ -6,7 +6,7 @@ using System.Threading;
 namespace akarnokd.reactive_extensions
 {
     /// <summary>
-    /// Maps the upstream items to enumerables and emits their items in order.
+    /// Maps the upstream items to <see cref="IEnumerable{T}"/>s and emits their items in order.
     /// </summary>
     /// <typeparam name="T">The upstream value type.</typeparam>
     /// <typeparam name="R">The result value type</typeparam>

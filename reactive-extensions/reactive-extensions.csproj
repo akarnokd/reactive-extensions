@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
-    <Version>0.0.10-alpha</Version>
+    <Version>0.0.11-alpha</Version>
     <Description>Extension methods for the dotnet/reactive library.</Description>
     <Authors>David Karnok</Authors>
     <PackageId>akarnokd.reactive_extensions</PackageId>
@@ -13,22 +13,9 @@
     <Copyright>Copyright 2018, David Karnok</Copyright>
     <PackageReleaseNotes>New operators:
 + IObservable
-  - FlatMap (onto ICompletableSource)
-  - SwitchMap (onto ICompletableSource)
-+ ICompletableSource
-  - BlockingSubscribe
-  - Cache
-  - Merge
-  - MergeAll
-  - RepeatWhen
-  - RetryWhen
-  - SubscribeSafe
-  - TakeUntil
-  - Wait
 + IMaybeSource
-  - FlatMap (to ICompletableSource)
 + ISingleSource
-  - FlatMap (to ICompletableSource)</PackageReleaseNotes>
+</PackageReleaseNotes>
     <PackageTags>reactive, extensions</PackageTags>
   </PropertyGroup>
 

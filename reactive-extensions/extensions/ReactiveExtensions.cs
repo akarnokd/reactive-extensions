@@ -222,7 +222,7 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Maps the upstream items to enumerables and emits their items in order.
+        /// Maps the upstream items to <see cref="IEnumerable{T}"/>s and emits their items in order.
         /// </summary>
         /// <typeparam name="T">The upstream value type.</typeparam>
         /// <typeparam name="R">The result value type</typeparam>
@@ -389,7 +389,7 @@ namespace akarnokd.reactive_extensions
         /// <typeparam name="T">The element type of the sequence.</typeparam>
         /// <param name="source"></param>
         /// <param name="capacityHint">The items are stored internally in a linked-array structure for 
-        /// which this is the capacity hint for sizing those arrays: a tradeoff between memory usage and
+        /// which this is the capacity hint for sizing those arrays: a trade-off between memory usage and
         /// locality of memory.</param>
         /// <param name="cancel">Called with the disposable when the source is subscribed on the first observer.</param>
         /// <returns>The new observable sequence.</returns>
@@ -450,7 +450,7 @@ namespace akarnokd.reactive_extensions
         /// <param name="mapper">The function that takes the upstream item and the
         /// latest values from each <paramref name="others"/> observable if any.
         /// if not all other observable has a latest value, the mapper is not invoked.</param>
-        /// <param name="others">The params array of alternate observables to use the latest values of.</param>
+        /// <param name="others">The parameter array of alternate observables to use the latest values of.</param>
         /// <returns>The new observable instance.</returns>
         /// <remarks>Since 0.0.4</remarks>
         public static IObservable<R> WithLatestFrom<T, U, R>(
@@ -473,7 +473,7 @@ namespace akarnokd.reactive_extensions
         /// latest values from each <paramref name="others"/> observable if any.
         /// if not all other observable has a latest value, the mapper is not invoked.</param>
         /// <param name="delayErrors">If true, errors from the <paramref name="others"/> will be delayed until the main sequence terminates.</param>
-        /// <param name="others">The params array of alternate observables to use the latest values of.</param>
+        /// <param name="others">The parameter array of alternate observables to use the latest values of.</param>
         /// <returns>The new observable instance.</returns>
         /// <remarks>Since 0.0.4</remarks>
         public static IObservable<R> WithLatestFrom<T, U, R>(
@@ -499,7 +499,7 @@ namespace akarnokd.reactive_extensions
         /// <param name="delayErrors">If true, errors from the <paramref name="others"/> will be delayed until the main sequence terminates.</param>
         /// <param name="sourceFirst">If true, the <paramref name="source"/> is subscribed first,
         /// if false, the <paramref name="others"/> are subscribed to first.</param>
-        /// <param name="others">The params array of alternate observables to use the latest values of.</param>
+        /// <param name="others">The parameter array of alternate observables to use the latest values of.</param>
         /// <returns>The new observable instance.</returns>
         /// <remarks>Since 0.0.4</remarks>
         public static IObservable<R> WithLatestFrom<T, U, R>(
@@ -568,7 +568,7 @@ namespace akarnokd.reactive_extensions
         /// specified number of IObservers have subscribed to this IObservable.
         /// </summary>
         /// <typeparam name="T">The type of the elements in the source sequence.</typeparam>
-        /// <param name="source">Connectable observable sequence.</param>
+        /// <param name="source">The connectable observable sequence.</param>
         /// <param name="minObservers">The number of observers required to subscribe before the connection to source happens, non-positive value will trigger an immediate subscription.</param>
         /// <param name="onConnect">If not null, the connection's IDisposable is provided to it.</param>
         /// <returns>An observable sequence that connects to the source at most once when the given number of observers have subscribed to it.</returns>

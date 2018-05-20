@@ -44,7 +44,7 @@ namespace akarnokd.reactive_extensions
         /// bridging the callback world with the reactive world.
         /// </summary>
         /// <param name="onSubscribe">The action that is called with an emitter
-        /// that can be used for signalling an item or error event.</param>
+        /// that can be used for signaling an item or error event.</param>
         /// <returns>The new single source instance</returns>
         public static ISingleSource<T> Create<T>(Action<ISingleEmitter<T>> onSubscribe)
         {
@@ -518,10 +518,10 @@ namespace akarnokd.reactive_extensions
         /// Subscribe to this maybe source and call the
         /// appropriate action depending on the success or terminal signal received.
         /// </summary>
-        /// <param name="source">The maybee source to observe.</param>
+        /// <param name="source">The maybe source to observe.</param>
         /// <param name="onSuccess">Called with the success item when the maybe source succeeds.</param>
         /// <param name="onError">Called with the exception when the maybe source terminates with an error.</param>
-        /// <returns>The disposable that allows cancelling the source.</returns>
+        /// <returns>The disposable that allows canceling the source.</returns>
         /// <remarks>Since 0.0.9</remarks>
         public static IDisposable Subscribe<T>(this ISingleSource<T> source, Action<T> onSuccess = null, Action<Exception> onError = null)
         {

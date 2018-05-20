@@ -6,7 +6,7 @@ namespace akarnokd.reactive_extensions
 {
     /// <summary>
     /// Repeatedly subscribes to the completable source after the
-    /// pervious subscription fails.
+    /// previous subscription fails.
     /// </summary>
     /// <remarks>Since 0.0.8</remarks>
     internal sealed class CompletableRetry : ICompletableSource
@@ -59,7 +59,7 @@ namespace akarnokd.reactive_extensions
 
     /// <summary>
     /// Repeatedly subscribes to the completable source after the
-    /// pervious subscription fails and the predicate returns true.
+    /// previous subscription fails and the predicate returns true.
     /// </summary>
     /// <remarks>Since 0.0.8</remarks>
     internal sealed class CompletableRetryPredicate : ICompletableSource

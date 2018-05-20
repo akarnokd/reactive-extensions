@@ -45,7 +45,7 @@ namespace akarnokd.reactive_extensions
         /// bridging the callback world with the reactive world.
         /// </summary>
         /// <param name="onSubscribe">The action that is called with an emitter
-        /// that can be used for signalling a completion or error event.</param>
+        /// that can be used for signaling a completion or error event.</param>
         /// <returns>The new completable instance</returns>
         public static ICompletableSource Create(Action<ICompletableEmitter> onSubscribe)
         {
@@ -377,7 +377,7 @@ namespace akarnokd.reactive_extensions
         /// <typeparam name="S">The resource type.</typeparam>
         /// <param name="resourceSupplier">The supplier for a per-observer resource.</param>
         /// <param name="sourceSelector">Function that receives the per-observer resource returned
-        /// by <paramref name="resourceSupplier"/> and returns a completable sourec.</param>
+        /// by <paramref name="resourceSupplier"/> and returns a completable source.</param>
         /// <param name="resourceCleanup">The optional callback for cleaning up the resource supplied by
         /// the <paramref name="resourceSupplier"/>.</param>
         /// <param name="eagerCleanup">If true, the per-observer resource is cleaned up before the
@@ -532,13 +532,13 @@ namespace akarnokd.reactive_extensions
         /// <summary>
         /// If the upstream doesn't terminate within the specified
         /// timeout, the completable observer is terminated with
-        /// a TimeoutException or is switched to the optional
-        /// fallback completable source.
+        /// a <see cref="TimeoutException"/> or is switched to the optional
+        /// <paramref name="fallback"/> completable source.
         /// </summary>
         /// <param name="source">The completable source to timeout.</param>
-        /// <param name="timeout">The time to wait before cancelling the source.</param>
+        /// <param name="timeout">The time to wait before canceling the source.</param>
         /// <param name="scheduler">The scheduler to use wait for the termination of the upstream.</param>
-        /// <param name="fallback">The optional comletable source to switch to if the upstream times out.</param>
+        /// <param name="fallback">The optional completable source to switch to if the upstream times out.</param>
         /// <returns>The new completable source instance.</returns>
         /// <remarks>Since 0.0.8</remarks>
         public static ICompletableSource Timeout(this ICompletableSource source, TimeSpan timeout, IScheduler scheduler, ICompletableSource fallback = null)
@@ -564,11 +564,11 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Switches to a fallback completable source if
+        /// Switches to a <paramref name="fallback"/> completable source if
         /// the upstream fails.
         /// </summary>
         /// <param name="source">The completable source that can fail.</param>
-        /// <param name="fallback">The fallback to resume with if <paramref name="source"/> fails.</param>
+        /// <param name="fallback">The fallback completable source to resume with if <paramref name="source"/> fails.</param>
         /// <returns>The new completable source instance.</returns>
         /// <remarks>Since 0.0.8</remarks>
         public static ICompletableSource OnErrorResumeNext(this ICompletableSource source, ICompletableSource fallback)
@@ -598,7 +598,7 @@ namespace akarnokd.reactive_extensions
 
         /// <summary>
         /// Repeatedly subscribes to the completable source after the
-        /// pervious subscription completes.
+        /// previous subscription completes.
         /// </summary>
         /// <param name="source">The completable source to repeat.</param>
         /// <param name="times">The maximum number of repeats. <code>times=1</code>
@@ -615,12 +615,12 @@ namespace akarnokd.reactive_extensions
 
         /// <summary>
         /// Repeatedly subscribes to the completable source after the
-        /// pervious subscription completes and if the <paramref name="predicate"/>
+        /// previous subscription completes and if the <paramref name="predicate"/>
         /// returns true.
         /// </summary>
         /// <param name="source">The completable source to repeat.</param>
         /// <param name="predicate">The function receiving the current repeat count (1-based)
-        /// and should return true if the resubscription should happen.</param>
+        /// and should return true if the re-subscription should happen.</param>
         /// <returns>The new completable source instance.</returns>
         /// <remarks>Since 0.0.8</remarks>
         public static ICompletableSource Repeat(this ICompletableSource source, Func<long, bool> predicate)
@@ -655,7 +655,7 @@ namespace akarnokd.reactive_extensions
 
         /// <summary>
         /// Repeatedly subscribes to the completable source after the
-        /// pervious subscription fails.
+        /// previous subscription fails.
         /// </summary>
         /// <param name="source">The completable source to repeat.</param>
         /// <param name="times">The maximum number of repeats. <code>times=1</code>
@@ -671,12 +671,12 @@ namespace akarnokd.reactive_extensions
 
         /// <summary>
         /// Repeatedly subscribes to the completable source after the
-        /// pervious subscription fails and if the <paramref name="predicate"/>
+        /// previous subscription fails and if the <paramref name="predicate"/>
         /// returns true.
         /// </summary>
         /// <param name="source">The completable source to repeat.</param>
         /// <param name="predicate">The function receiving the current repeat count (1-based)
-        /// and should return true if the resubscription should happen.</param>
+        /// and should return true if the re-subscription should happen.</param>
         /// <returns>The new completable source instance.</returns>
         /// <remarks>Since 0.0.8</remarks>
         public static ICompletableSource Retry(this ICompletableSource source, Func<Exception, long, bool> predicate)
@@ -746,7 +746,7 @@ namespace akarnokd.reactive_extensions
         /// Note that termination in general doesn't call
         /// <code>Dispose()</code> on the upstream.
         /// </summary>
-        /// <param name="source">The completable source to unsubscribe.</param>
+        /// <param name="source">The completable source to dispose.</param>
         /// <param name="scheduler">The scheduler to use.</param>
         /// <returns>The new completable source instance.</returns>
         /// <remarks>Since 0.0.8</remarks>
@@ -780,7 +780,7 @@ namespace akarnokd.reactive_extensions
         /// or late observers.
         /// </summary>
         /// <param name="source">The upstream completable source to subscribe to.</param>
-        /// <param name="cancel">Called before subscribing to the upstream to allow cancelling the operation.</param>
+        /// <param name="cancel">Called before subscribing to the upstream to allow canceling the operation.</param>
         /// <returns>The new completable source instance.</returns>
         /// <remarks>Since 0.0.10</remarks>
         public static ICompletableSource Cache(this ICompletableSource source, Action<IDisposable> cancel = null)
@@ -912,7 +912,7 @@ namespace akarnokd.reactive_extensions
         /// <param name="source">The completable source to observe.</param>
         /// <param name="onCompleted">Called when the completable source completes normally.</param>
         /// <param name="onError">Called with the exception when the completable source terminates with an error.</param>
-        /// <returns>The disposable that allows cancelling the source.</returns>
+        /// <returns>The disposable that allows canceling the source.</returns>
         /// <remarks>Since 0.0.6</remarks>
         public static IDisposable Subscribe(this ICompletableSource source, Action onCompleted = null, Action<Exception> onError = null)
         {
@@ -1082,7 +1082,7 @@ namespace akarnokd.reactive_extensions
         /// the terminal events.
         /// </summary>
         /// <typeparam name="T">The element type of the legacy observable.</typeparam>
-        /// <param name="source">The source sequence whoe elements to ignore.</param>
+        /// <param name="source">The source sequence whose elements to ignore.</param>
         /// <returns>The new completable source instance.</returns>
         /// <remarks>Since 0.0.6</remarks>
         public static ICompletableSource IgnoreAllElements<T>(this IObservable<T> source)
@@ -1211,7 +1211,7 @@ namespace akarnokd.reactive_extensions
         /// errors until all sources terminate.
         /// </summary>
         /// <typeparam name="T">The element type of the upstream observable source.</typeparam>
-        /// <param name="source">The observable source to map into completables.</param>
+        /// <param name="source">The observable source to map into inner completable sources.</param>
         /// <param name="mapper">The function receiving the upstream item and returns a completable source.</param>
         /// <param name="delayErrors">If true, all errors are delayed until the main source and all
         /// inner sources terminate.</param>

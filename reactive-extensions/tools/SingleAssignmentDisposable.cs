@@ -6,7 +6,7 @@ using System.Threading;
 namespace akarnokd.reactive_extensions
 {
     /// <summary>
-    /// A disposable contain that allows only one assignment to its <see cref="Disposable"/> propery.
+    /// A disposable contain that allows only one assignment to its <see cref="Disposable"/> property.
     /// </summary>
     internal sealed class SingleAssignmentDisposable : IDisposable
     {
