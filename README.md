@@ -676,6 +676,9 @@ Extension methods host: `MaybeSource`
 - `Create`
 - `Empty`
 - `Error`
+- `FromAction`
+- `FromFunc`
+- `FromTask`
 - `Just`
 - `Never`
 

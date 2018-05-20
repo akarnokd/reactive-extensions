@@ -100,24 +100,61 @@ namespace akarnokd.reactive_extensions
             return new MaybeJust<T>(item);
         }
 
+        /// <summary>
+        /// Wraps and calls the given action for each individual
+        /// maybe observer then completes or fails the observer
+        /// depending on the action completes normally or threw an exception.
+        /// </summary>
+        /// <param name="action">The action to invoke for each individual completable observer.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
         public static IMaybeSource<T> FromAction<T>(Action action)
         {
-            throw new NotImplementedException();
+            RequireNonNull(action, nameof(action));
+
+            return new MaybeFromAction<T>(action);
         }
 
-        public static IMaybeSource<T> FromFunc<T>(Func<T> action)
+        /// <summary>
+        /// Wraps and runs a function for each incoming
+        /// maybe observer and signals the value returned
+        /// by the function as the success event.
+        /// </summary>
+        /// <typeparam name="T">The value type.</typeparam>
+        /// <param name="func">The function to call for each observer.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
+        public static IMaybeSource<T> FromFunc<T>(Func<T> func)
         {
-            throw new NotImplementedException();
+            RequireNonNull(func, nameof(func));
+
+            return new MaybeFromFunc<T>(func);
         }
 
+        /// <summary>
+        /// Creates a maybe source that completes or fails
+        /// its observers when the given (possibly still ongoing)
+        /// task terminates.
+        /// </summary>
+        /// <param name="task">The task to wrap.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
         public static IMaybeSource<T> FromTask<T>(Task task)
         {
-            throw new NotImplementedException();
+            return task.ToMaybe<T>();
         }
 
+        /// <summary>
+        /// Creates a maybe source that succeeds or fails
+        /// its observers when the given (possibly still ongoing)
+        /// task terminates.
+        /// </summary>
+        /// <param name="task">The task to wrap.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
         public static IMaybeSource<T> FromTask<T>(Task<T> task)
         {
-            throw new NotImplementedException();
+            return task.ToMaybe();
         }
 
         public static IMaybeSource<T> AmbAll<T>(this IMaybeSource<T>[] sources)
@@ -731,6 +768,40 @@ namespace akarnokd.reactive_extensions
             RequireNonNull(source, nameof(source));
 
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Converts an ongoing or already terminated task to a maybe source 
+        /// and relays its terminal event to observers.
+        /// </summary>
+        /// <param name="task">The task to observe as a maybe source.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11<br/>
+        /// Note that the <see cref="Task"/> API uses an <see cref="AggregateException"/>
+        /// to signal there were one or more errors.
+        /// </remarks>
+        public static IMaybeSource<T> ToMaybe<T>(this Task task)
+        {
+            RequireNonNull(task, nameof(task));
+
+            return new MaybeFromTaskPlain<T>(task);
+        }
+
+        /// <summary>
+        /// Converts an ongoing or already terminated task to a maybe source 
+        /// and relays its value or error to observers.
+        /// </summary>
+        /// <param name="task">The task to observe as a maybe source.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11<br/>
+        /// Note that the <see cref="Task{TResult}"/> API uses an <see cref="AggregateException"/>
+        /// to signal there were one or more errors.
+        /// </remarks>
+        public static IMaybeSource<T> ToMaybe<T>(this Task<T> task)
+        {
+            RequireNonNull(task, nameof(task));
+
+            return new MaybeFromTask<T>(task);
         }
     }
 }

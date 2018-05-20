@@ -2,7 +2,7 @@
 using System;
 using akarnokd.reactive_extensions;
 
-namespace akarnokd.reactive_extensions_test.maybe
+namespace akarnokd.reactive_extensions_test.single
 {
     [TestFixture]
     public class SingleLambdaObserverTest

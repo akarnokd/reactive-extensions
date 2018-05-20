@@ -2,7 +2,7 @@
 using System;
 using akarnokd.reactive_extensions;
 
-namespace akarnokd.reactive_extensions_test.completable
+namespace akarnokd.reactive_extensions_test.maybe
 {
     [TestFixture]
     public class MaybeHideTest
