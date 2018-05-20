@@ -638,6 +638,7 @@ Extension methods host: `SingleSource`
 
 - `Compose`
 - `Filter`
+- `FlatMap`
 
 ### Consumer methods
 
@@ -647,7 +648,7 @@ Extension methods host: `SingleSource`
 
 ### Interoperation
 
-- `FlatMap` (onto `ICompletableSource`)
+- `FlatMap` (onto `ICompletableSource`, `IMaybeSource`)
 - `IgnoreElement`
 
 ### SingleSubject
@@ -697,7 +698,7 @@ Extension methods host: `MaybeSource`
 
 ### Interoperation
 
-- `FlatMap` (onto `ICompletableSource`)
+- `FlatMap` (onto `ICompletableSource`, `ISingleSource`)
 - `IgnoreElement`
 
 ### MaybeSubject

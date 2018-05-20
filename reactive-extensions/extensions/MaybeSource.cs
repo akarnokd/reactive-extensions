@@ -550,12 +550,24 @@ namespace akarnokd.reactive_extensions
             return new MaybeFilter<T>(source, predicate);
         }
 
+        /// <summary>
+        /// Maps the upstream success item into a maybe source,
+        /// subscribes to it and relays its success or terminal signals
+        /// to the downstream.
+        /// </summary>
+        /// <typeparam name="T">The upstream value type.</typeparam>
+        /// <typeparam name="R">The value type of the inner maybe source.</typeparam>
+        /// <param name="source">The maybe source to map onto another maybe source.</param>
+        /// <param name="mapper">The function receiving the upstream success item
+        /// and should return a maybe source to subscribe to.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
         public static IMaybeSource<R> FlatMap<T, R>(this IMaybeSource<T> source, Func<T, IMaybeSource<R>> mapper)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(mapper, nameof(mapper));
 
-            throw new NotImplementedException();
+            return new MaybeFlatMapMaybe<T, R>(source, mapper);
         }
 
         public static IObservable<R> FlatMap<T, R>(this IMaybeSource<T> source, Func<T, IEnumerable<R>> mapper)
@@ -567,14 +579,6 @@ namespace akarnokd.reactive_extensions
         }
 
         public static IObservable<R> FlatMap<T, R>(this IMaybeSource<T> source, Func<T, IObservable<R>> mapper)
-        {
-            RequireNonNull(source, nameof(source));
-            RequireNonNull(mapper, nameof(mapper));
-
-            throw new NotImplementedException();
-        }
-
-        public static ISingleSource<R> FlatMap<T, R>(this IMaybeSource<T> source, Func<T, ISingleSource<R>> mapper)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(mapper, nameof(mapper));
@@ -722,12 +726,28 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
-        public static ISingleSource<R> FlatMap<T, R>(this IMaybeSource<T> source, Func<T, ISingleSource<T>> mapper)
+        /// <summary>
+        /// Maps the upstream success item into a single source,
+        /// subscribes to it and relays its success or failure signals
+        /// to the downstream.
+        /// </summary>
+        /// <typeparam name="T">The upstream value type.</typeparam>
+        /// <typeparam name="R">The value type of the inner single source.</typeparam>
+        /// <param name="source">The maybe source to map onto another single source.</param>
+        /// <param name="mapper">The function receiving the upstream success item
+        /// and should return a single source to subscribe to.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11<br/>
+        /// Note that the result type remains IMaybeSource because the
+        /// <paramref name="source"/> may be empty and thus the resulting
+        /// sequence must be able to represent emptiness.
+        /// </remarks>
+        public static IMaybeSource<R> FlatMap<T, R>(this IMaybeSource<T> source, Func<T, ISingleSource<R>> mapper)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(mapper, nameof(mapper));
 
-            throw new NotImplementedException();
+            return new MaybeFlatMapSingle<T, R>(source, mapper);
         }
 
         /// <summary>

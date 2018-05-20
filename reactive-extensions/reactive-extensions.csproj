@@ -15,13 +15,16 @@
 + IObservable
 + IMaybeSource
   - Filter
+  - FlatMap (to IMaybeSource, ISingleSource)
   - FromAction
   - FromFunc
   - FromTask
   - Map
   - ToMaybe (on Task)
 + ISingleSource
-  - Filter</PackageReleaseNotes>
+  - Filter
+  - FlatMap (to IMaybeSource)
+</PackageReleaseNotes>
     <PackageTags>reactive, extensions</PackageTags>
   </PropertyGroup>
 

@@ -34,6 +34,7 @@ namespace akarnokd.reactive_extensions
             source.Subscribe(to);
             return to;
         }
+
         //-------------------------------------------------
         // Factory methods
         //-------------------------------------------------
@@ -89,10 +90,20 @@ namespace akarnokd.reactive_extensions
             return new SingleJust<T>(item);
         }
 
-
-        public static ISingleSource<T> FromFunc<T>(Func<T> action)
+        /// <summary>
+        /// Wraps and runs a function for each incoming
+        /// single observer and signals the value returned
+        /// by the function as the success event.
+        /// </summary>
+        /// <typeparam name="T">The value type.</typeparam>
+        /// <param name="func">The function to call for each observer.</param>
+        /// <returns>The new single source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
+        public static ISingleSource<T> FromFunc<T>(Func<T> func)
         {
-            throw new NotImplementedException();
+            RequireNonNull(func, nameof(func));
+
+            return new SingleFromFunc<T>(func);
         }
 
         public static ISingleSource<T> FromTask<T>(Task<T> task)
@@ -492,12 +503,24 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Maps the upstream success item into a maybe source,
+        /// subscribes to it and relays its success or terminal signals
+        /// to the downstream.
+        /// </summary>
+        /// <typeparam name="T">The upstream value type.</typeparam>
+        /// <typeparam name="R">The value type of the inner maybe source.</typeparam>
+        /// <param name="source">The maybe source to map onto another maybe source.</param>
+        /// <param name="mapper">The function receiving the upstream success item
+        /// and should return a maybe source to subscribe to.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
         public static IMaybeSource<R> FlatMap<T, R>(this ISingleSource<T> source, Func<T, IMaybeSource<R>> mapper)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(mapper, nameof(mapper));
 
-            throw new NotImplementedException();
+            return new SingleFlatMapMaybe<T, R>(source, mapper);
         }
 
         public static Task<T> ToTask<T>(this ISingleSource<T> source, CancellationTokenSource cts = null)
