@@ -2,17 +2,77 @@
 using System;
 using akarnokd.reactive_extensions;
 
-namespace akarnokd.reactive_extensions_test.completable
+namespace akarnokd.reactive_extensions_test.maybe
 {
     [TestFixture]
-    public class CompletableDoTest
+    public class MaybeDoTest
     {
+        [Test]
+        public void OnSuccess_Basic()
+        {
+            var count = 0;
+
+            MaybeSource.Just(1)
+                .DoOnSuccess(v => count++)
+                .Test()
+                .AssertResult(1);
+
+            Assert.AreEqual(1, count);
+        }
+
+        [Test]
+        public void OnSuccess_Basic_Twice()
+        {
+            var count = 0;
+
+            MaybeSource.Just(1)
+                .DoOnSuccess(v => count++)
+                .DoOnSuccess(v => count++)
+                .Test()
+                .AssertResult(1);
+
+            Assert.AreEqual(2, count);
+        }
+
+        [Test]
+        public void OnAfterSuccess_Basic()
+        {
+            var count = -1;
+
+            var to = new TestObserver<int>();
+
+            MaybeSource.Just(1)
+                .DoAfterSuccess(v => count = to.ItemCount)
+                .SubscribeWith(to)
+                .AssertResult(1);
+
+            Assert.AreEqual(1, count);
+        }
+
+        [Test]
+        public void OnAfterSuccess_Basic_Twice()
+        {
+            var count1 = -1;
+            var count2 = -1;
+
+            var to = new TestObserver<int>();
+
+            MaybeSource.Just(1)
+                .DoAfterSuccess(v => count1 = to.ItemCount)
+                .DoAfterSuccess(v => count2 = to.ItemCount)
+                .SubscribeWith(to)
+                .AssertResult(1);
+
+            Assert.AreEqual(1, count1);
+            Assert.AreEqual(1, count2);
+        }
+
         [Test]
         public void OnCompleted_Basic()
         {
             var count = 0;
 
-            CompletableSource.Empty()
+            MaybeSource.Empty<int>()
                 .DoOnCompleted(() => count++)
                 .Test()
                 .AssertResult();
@@ -25,7 +85,7 @@ namespace akarnokd.reactive_extensions_test.completable
         {
             var count = 0;
 
-            CompletableSource.Empty()
+            MaybeSource.Empty<int>()
                 .DoOnCompleted(() => count++)
                 .DoOnCompleted(() => count++)
                 .Test()
@@ -39,7 +99,7 @@ namespace akarnokd.reactive_extensions_test.completable
         {
             var count = 0;
 
-            CompletableSource.Empty()
+            MaybeSource.Empty<int>()
                 .DoOnCompleted(() =>
                 {
                     count++;
@@ -58,7 +118,7 @@ namespace akarnokd.reactive_extensions_test.completable
         {
             var count = 0;
 
-            CompletableSource.Error(new InvalidOperationException())
+            MaybeSource.Error<int>(new InvalidOperationException())
                 .DoOnError(e => count++)
                 .Test()
                 .AssertFailure(typeof(InvalidOperationException));
@@ -71,7 +131,7 @@ namespace akarnokd.reactive_extensions_test.completable
         {
             var count = 0;
 
-            CompletableSource.Error(new InvalidOperationException())
+            MaybeSource.Error<int>(new InvalidOperationException())
                 .DoOnError(e => count++)
                 .DoOnError(e => count++)
                 .Test()
@@ -85,7 +145,7 @@ namespace akarnokd.reactive_extensions_test.completable
         {
             var count = 0;
 
-            CompletableSource.Error(new InvalidOperationException("outer"))
+            MaybeSource.Error<int>(new InvalidOperationException("outer"))
                 .DoOnError(e =>
                 {
                     count++;
@@ -105,7 +165,7 @@ namespace akarnokd.reactive_extensions_test.completable
         {
             var count = 0;
 
-            CompletableSource.Empty()
+            MaybeSource.Empty<int>()
                 .DoOnSubscribe(s => count++)
                 .Test()
                 .AssertResult();
@@ -118,7 +178,7 @@ namespace akarnokd.reactive_extensions_test.completable
         {
             var count = 0;
 
-            CompletableSource.Empty()
+            MaybeSource.Empty<int>()
                 .DoOnSubscribe(s => count++)
                 .DoOnSubscribe(s => count++)
                 .Test()
@@ -132,7 +192,7 @@ namespace akarnokd.reactive_extensions_test.completable
         {
             var count = 0;
 
-            CompletableSource.Empty()
+            MaybeSource.Empty<int>()
                 .DoOnCompleted(() =>
                 {
                     count++;
@@ -150,7 +210,7 @@ namespace akarnokd.reactive_extensions_test.completable
         {
             var count = 0;
 
-            CompletableSource.Empty()
+            MaybeSource.Empty<int>()
                 .DoFinally(() => count++)
                 .Test()
                 .AssertResult();
@@ -163,7 +223,7 @@ namespace akarnokd.reactive_extensions_test.completable
         {
             var count = 0;
 
-            CompletableSource.Empty()
+            MaybeSource.Empty<int>()
                 .DoFinally(() => count++)
                 .DoFinally(() => count++)
                 .Test()
@@ -177,7 +237,7 @@ namespace akarnokd.reactive_extensions_test.completable
         {
             var count = 0;
 
-            CompletableSource.Empty()
+            MaybeSource.Empty<int>()
                 .DoFinally(() =>
                 {
                     count++;
@@ -196,7 +256,7 @@ namespace akarnokd.reactive_extensions_test.completable
         {
             var count = 0;
 
-            CompletableSource.Never()
+            MaybeSource.Never<int>()
                 .DoOnDispose(() => count++)
                 .Test(true)
                 .AssertEmpty();
@@ -209,7 +269,7 @@ namespace akarnokd.reactive_extensions_test.completable
         {
             var count = 0;
 
-            CompletableSource.Never()
+            MaybeSource.Never<int>()
                 .DoOnDispose(() => count++)
                 .DoOnDispose(() => count++)
                 .Test(true)
@@ -223,7 +283,7 @@ namespace akarnokd.reactive_extensions_test.completable
         {
             var count = 0;
 
-            CompletableSource.Never()
+            MaybeSource.Never<int>()
                 .DoOnDispose(() =>
                 {
                     count++;
@@ -241,7 +301,7 @@ namespace akarnokd.reactive_extensions_test.completable
         {
             var count = 0;
 
-            CompletableSource.Empty()
+            MaybeSource.Empty<int>()
                 .DoOnDispose(() =>
                 {
                     count++;
@@ -258,7 +318,7 @@ namespace akarnokd.reactive_extensions_test.completable
         {
             var count = 0;
 
-            CompletableSource.Error(new InvalidOperationException())
+            MaybeSource.Error<int>(new InvalidOperationException())
                 .DoOnDispose(() =>
                 {
                     count++;
@@ -275,7 +335,7 @@ namespace akarnokd.reactive_extensions_test.completable
         {
             var count = 0;
 
-            CompletableSource.Empty()
+            MaybeSource.Empty<int>()
                 .DoOnTerminate(() => count++)
                 .Test()
                 .AssertResult();
@@ -288,7 +348,7 @@ namespace akarnokd.reactive_extensions_test.completable
         {
             var count = 0;
 
-            CompletableSource.Error(new InvalidOperationException())
+            MaybeSource.Error<int>(new InvalidOperationException())
                 .DoOnTerminate(() => count++)
                 .Test()
                 .AssertFailure(typeof(InvalidOperationException));
@@ -301,7 +361,7 @@ namespace akarnokd.reactive_extensions_test.completable
         {
             var count = 0;
 
-            CompletableSource.Empty()
+            MaybeSource.Empty<int>()
                 .DoOnTerminate(() => count++)
                 .DoOnTerminate(() => count++)
                 .Test()
@@ -315,7 +375,7 @@ namespace akarnokd.reactive_extensions_test.completable
         {
             var count = 0;
 
-            CompletableSource.Empty()
+            MaybeSource.Empty<int>()
                 .DoOnTerminate(() =>
                 {
                     count++;
@@ -333,7 +393,7 @@ namespace akarnokd.reactive_extensions_test.completable
         {
             var count = 0;
 
-            CompletableSource.Error(new InvalidOperationException("main"))
+            MaybeSource.Error<int>(new InvalidOperationException("main"))
                 .DoOnTerminate(() =>
                 {
                     count++;
@@ -354,7 +414,7 @@ namespace akarnokd.reactive_extensions_test.completable
         {
             var count = 0;
 
-            CompletableSource.Empty()
+            MaybeSource.Empty<int>()
                 .DoAfterTerminate(() => count++)
                 .Test()
                 .AssertResult();
@@ -367,7 +427,7 @@ namespace akarnokd.reactive_extensions_test.completable
         {
             var count = 0;
 
-            CompletableSource.Error(new InvalidOperationException())
+            MaybeSource.Error<int>(new InvalidOperationException())
                 .DoAfterTerminate(() => count++)
                 .Test()
                 .AssertFailure(typeof(InvalidOperationException));
@@ -380,7 +440,7 @@ namespace akarnokd.reactive_extensions_test.completable
         {
             var count = 0;
 
-            CompletableSource.Empty()
+            MaybeSource.Empty<int>()
                 .DoAfterTerminate(() => count++)
                 .DoAfterTerminate(() => count++)
                 .Test()
@@ -394,7 +454,7 @@ namespace akarnokd.reactive_extensions_test.completable
         {
             var count = 0;
 
-            CompletableSource.Empty()
+            MaybeSource.Empty<int>()
                 .DoAfterTerminate(() =>
                 {
                     count++;
@@ -412,7 +472,7 @@ namespace akarnokd.reactive_extensions_test.completable
         {
             var count = 0;
 
-            CompletableSource.Error(new InvalidOperationException("main"))
+            MaybeSource.Error<int>(new InvalidOperationException("main"))
                 .DoAfterTerminate(() =>
                 {
                     count++;
@@ -428,8 +488,10 @@ namespace akarnokd.reactive_extensions_test.completable
         }
 
         [Test]
-        public void All_Basic()
+        public void All_Empty()
         {
+            var success = 0;
+            var afterSuccess = 0;
             var completed = 0;
             var error = 0;
             var terminate = 0;
@@ -438,7 +500,9 @@ namespace akarnokd.reactive_extensions_test.completable
             var dispose = 0;
             var final = 0;
 
-            CompletableSource.Empty()
+            MaybeSource.Empty<int>()
+                .DoOnSuccess(v => success++)
+                .DoAfterSuccess(v => afterSuccess++)
                 .DoOnCompleted(() => completed++)
                 .DoOnError(e => error++)
                 .DoOnTerminate(() => terminate++)
@@ -449,7 +513,46 @@ namespace akarnokd.reactive_extensions_test.completable
                 .Test()
                 .AssertResult();
 
+            Assert.AreEqual(0, success);
+            Assert.AreEqual(0, afterSuccess);
             Assert.AreEqual(1, completed);
+            Assert.AreEqual(0, error);
+            Assert.AreEqual(1, terminate);
+            Assert.AreEqual(1, afterterminate);
+            Assert.AreEqual(1, subscribe);
+            Assert.AreEqual(0, dispose);
+            Assert.AreEqual(1, final);
+        }
+
+        [Test]
+        public void All_Success()
+        {
+            var success = 0;
+            var afterSuccess = 0;
+            var completed = 0;
+            var error = 0;
+            var terminate = 0;
+            var afterterminate = 0;
+            var subscribe = 0;
+            var dispose = 0;
+            var final = 0;
+
+            MaybeSource.Just(1)
+                .DoOnSuccess(v => success++)
+                .DoAfterSuccess(v => afterSuccess++)
+                .DoOnCompleted(() => completed++)
+                .DoOnError(e => error++)
+                .DoOnTerminate(() => terminate++)
+                .DoAfterTerminate(() => afterterminate++)
+                .DoOnSubscribe(d => subscribe++)
+                .DoOnDispose(() => dispose++)
+                .DoFinally(() => final++)
+                .Test()
+                .AssertResult(1);
+
+            Assert.AreEqual(1, success);
+            Assert.AreEqual(1, afterSuccess);
+            Assert.AreEqual(0, completed);
             Assert.AreEqual(0, error);
             Assert.AreEqual(1, terminate);
             Assert.AreEqual(1, afterterminate);
@@ -461,6 +564,8 @@ namespace akarnokd.reactive_extensions_test.completable
         [Test]
         public void All_Error()
         {
+            var success = 0;
+            var afterSuccess = 0;
             var completed = 0;
             var error = 0;
             var terminate = 0;
@@ -469,7 +574,9 @@ namespace akarnokd.reactive_extensions_test.completable
             var dispose = 0;
             var final = 0;
 
-            CompletableSource.Error(new InvalidOperationException())
+            MaybeSource.Error<int>(new InvalidOperationException())
+                .DoOnSuccess(v => success++)
+                .DoOnSuccess(v => afterSuccess++)
                 .DoOnCompleted(() => completed++)
                 .DoOnError(e => error++)
                 .DoOnTerminate(() => terminate++)
@@ -480,6 +587,8 @@ namespace akarnokd.reactive_extensions_test.completable
                 .Test()
                 .AssertFailure(typeof(InvalidOperationException));
 
+            Assert.AreEqual(0, success);
+            Assert.AreEqual(0, afterSuccess);
             Assert.AreEqual(0, completed);
             Assert.AreEqual(1, error);
             Assert.AreEqual(1, terminate);

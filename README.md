@@ -688,6 +688,15 @@ Extension methods host: `MaybeSource`
 ### Instance methods
 
 - `Compose`
+- `DoAfterSuccess`
+- `DoAfterTerminate`
+- `DoFinally`
+- `DoOnCompleted`
+- `DoOnDispose`
+- `DoOnError`
+- `DoOnSubscribe`
+- `DoOnSuccess`
+- `DoOnTerminate`
 - `Filter`
 - `Map`
 

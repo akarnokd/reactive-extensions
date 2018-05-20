@@ -55,7 +55,7 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Creates an empty completable that completes immediately.
+        /// Creates an empty maybe that completes immediately.
         /// </summary>
         /// <typeparam name="T">The element type of the maybe.</typeparam>
         /// <returns>The shared empty maybe source instance.</returns>
@@ -65,7 +65,7 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Creates a failing completable that signals the specified error
+        /// Creates a failing maybe that signals the specified error
         /// immediately.
         /// </summary>
         /// <typeparam name="T">The element type of the maybe.</typeparam>
@@ -105,7 +105,7 @@ namespace akarnokd.reactive_extensions
         /// maybe observer then completes or fails the observer
         /// depending on the action completes normally or threw an exception.
         /// </summary>
-        /// <param name="action">The action to invoke for each individual completable observer.</param>
+        /// <param name="action">The action to invoke for each individual maybe observer.</param>
         /// <returns>The new maybe source instance.</returns>
         /// <remarks>Since 0.0.11</remarks>
         public static IMaybeSource<T> FromAction<T>(Action action)
@@ -307,68 +307,156 @@ namespace akarnokd.reactive_extensions
             return composer(source);
         }
 
-        public static IMaybeSource<T> DoOnSubscribe<T>(this IMaybeSource<T> source, Action<IDisposable> handler)
-        {
-            RequireNonNull(source, nameof(source));
-            RequireNonNull(handler, nameof(handler));
-
-            throw new NotImplementedException();
-        }
-
-        public static IMaybeSource<T> DoOnDispose<T>(this IMaybeSource<T> source, Action handler)
-        {
-            RequireNonNull(source, nameof(source));
-            RequireNonNull(handler, nameof(handler));
-
-            throw new NotImplementedException();
-        }
-
-        public static IMaybeSource<T> DoOnCompleted<T>(this IMaybeSource<T> source, Action handler)
-        {
-            RequireNonNull(source, nameof(source));
-            RequireNonNull(handler, nameof(handler));
-
-            throw new NotImplementedException();
-        }
-
+        /// <summary>
+        /// Calls the given <paramref name="handler"/> whenever the
+        /// upstream maybe <paramref name="source"/> signals a success item.
+        /// </summary>
+        /// <param name="source">The maybe source to peek into.</param>
+        /// <param name="handler">The handler to call.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
         public static IMaybeSource<T> DoOnSuccess<T>(this IMaybeSource<T> source, Action<T> handler)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(handler, nameof(handler));
 
-            throw new NotImplementedException();
+            return MaybePeek<T>.Create(source, onSuccess: handler);
         }
 
+        /// <summary>
+        /// Calls the given <paramref name="handler"/> after the
+        /// upstream maybe <paramref name="source"/>'s success
+        /// item has been signalled to the downstream.
+        /// </summary>
+        /// <param name="source">The maybe source to peek into.</param>
+        /// <param name="handler">The handler to call.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
+        public static IMaybeSource<T> DoAfterSuccess<T>(this IMaybeSource<T> source, Action<T> handler)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
+
+            return MaybePeek<T>.Create(source, onAfterSuccess: handler);
+        }
+
+        /// <summary>
+        /// Calls the given <paramref name="handler"/> whenever a
+        /// maybe observer subscribes to the maybe <paramref name="source"/>.
+        /// </summary>
+        /// <param name="source">The maybe source to peek into.</param>
+        /// <param name="handler">The handler to call.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
+        public static IMaybeSource<T> DoOnSubscribe<T>(this IMaybeSource<T> source, Action<IDisposable> handler)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
+
+            return MaybePeek<T>.Create(source, onSubscribe: handler);
+        }
+
+        /// <summary>
+        /// Calls the given <paramref name="handler"/> whenever a
+        /// maybe observer disposes to the connection to
+        /// the maybe <paramref name="source"/>.
+        /// </summary>
+        /// <param name="source">The maybe source to peek into.</param>
+        /// <param name="handler">The handler to call.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
+        public static IMaybeSource<T> DoOnDispose<T>(this IMaybeSource<T> source, Action handler)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
+
+            return MaybePeek<T>.Create(source, onDispose: handler);
+        }
+
+        /// <summary>
+        /// Calls the given <paramref name="handler"/> before a
+        /// maybe observer gets completed by
+        /// the maybe <paramref name="source"/>.
+        /// </summary>
+        /// <param name="source">The maybe source to peek into.</param>
+        /// <param name="handler">The handler to call.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
+        public static IMaybeSource<T> DoOnCompleted<T>(this IMaybeSource<T> source, Action handler)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
+
+            return MaybePeek<T>.Create(source, onCompleted: handler);
+        }
+
+        /// <summary>
+        /// Calls the given <paramref name="handler"/> before a
+        /// maybe observer receives the error signal from
+        /// the maybe <paramref name="source"/>.
+        /// </summary>
+        /// <param name="source">The maybe source to peek into.</param>
+        /// <param name="handler">The handler to call.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
         public static IMaybeSource<T> DoOnError<T>(this IMaybeSource<T> source, Action<Exception> handler)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(handler, nameof(handler));
 
-            throw new NotImplementedException();
+            return MaybePeek<T>.Create(source, onError: handler);
         }
 
+        /// <summary>
+        /// Calls the given <paramref name="handler"/> before a
+        /// maybe observer gets terminated normally or with an error by
+        /// the maybe <paramref name="source"/>.
+        /// </summary>
+        /// <param name="source">The maybe source to peek into.</param>
+        /// <param name="handler">The handler to call.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
         public static IMaybeSource<T> DoOnTerminate<T>(this IMaybeSource<T> source, Action handler)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(handler, nameof(handler));
 
-            throw new NotImplementedException();
+            return MaybePeek<T>.Create(source, onTerminate: handler);
         }
 
+        /// <summary>
+        /// Calls the given <paramref name="handler"/> after a
+        /// maybe observer gets terminated normally or exceptionally by
+        /// the maybe <paramref name="source"/>.
+        /// </summary>
+        /// <param name="source">The maybe source to peek into.</param>
+        /// <param name="handler">The handler to call.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
         public static IMaybeSource<T> DoAfterTerminate<T>(this IMaybeSource<T> source, Action handler)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(handler, nameof(handler));
 
-            throw new NotImplementedException();
+            return MaybePeek<T>.Create(source, onAfterTerminate: handler);
         }
 
+        /// <summary>
+        /// Calls the given <paramref name="handler"/> exactly once per maybe
+        /// observer and after the maybe observer gets terminated normally
+        /// or exceptionally or the observer disposes the connection to the
+        /// the maybe <paramref name="source"/>.
+        /// </summary>
+        /// <param name="source">The maybe source to peek into.</param>
+        /// <param name="handler">The handler to call.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
         public static IMaybeSource<T> DoFinally<T>(this IMaybeSource<T> source, Action handler)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(handler, nameof(handler));
 
-            throw new NotImplementedException();
+            return MaybePeek<T>.Create(source, doFinally: handler);
         }
 
         public static IMaybeSource<T> Timeout<T>(this IMaybeSource<T> source, TimeSpan time, IScheduler scheduler, IMaybeSource<T> fallback = null)
@@ -490,14 +578,14 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
-        public static IMaybeSource<T> DelaySubscription<T>(this IMaybeSource<T> source, ICompletableSource other)
+        public static IMaybeSource<T> DelaySubscription<T, U>(this IMaybeSource<T> source, IMaybeSource<U> other)
         {
             RequireNonNull(source, nameof(source));
 
             throw new NotImplementedException();
         }
 
-        public static IMaybeSource<T> TakeUntil<T>(this IMaybeSource<T> source, ICompletableSource other)
+        public static IMaybeSource<T> TakeUntil<T, U>(this IMaybeSource<T> source, IMaybeSource<U> other)
         {
             RequireNonNull(source, nameof(source));
 
@@ -662,7 +750,7 @@ namespace akarnokd.reactive_extensions
 
         /// <summary>
         /// Subscribes to the source and blocks until it terminated, then
-        /// calls the appropriate completable observer method on the current
+        /// calls the appropriate , maybe observer method on the current
         /// thread.
         /// </summary>
         /// <param name="source">The upstream maybe source to block for.</param>
@@ -685,10 +773,10 @@ namespace akarnokd.reactive_extensions
 
         /// <summary>
         /// Subscribes to the source and blocks until it terminated, then
-        /// calls the appropriate completable observer method on the current
+        /// calls the appropriate maybe observer method on the current
         /// thread.
         /// </summary>
-        /// <param name="source">The upstream completable source to block for.</param>
+        /// <param name="source">The upstream maybe source to block for.</param>
         /// <param name="onSuccess">Action called with the success item.</param>
         /// <param name="onError">Action called with the exception when the upstream fails.</param>
         /// <param name="onCompleted">Action called when the upstream completes.</param>

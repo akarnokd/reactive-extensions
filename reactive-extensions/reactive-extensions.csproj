@@ -14,6 +14,15 @@
     <PackageReleaseNotes>New operators:
 + IMaybeSource
   - BlockingSubscribe
+  - DoAfterSuccess
+  - DoAfterTerminate
+  - DoFinally
+  - DoOnCompleted
+  - DoOnDispose
+  - DoOnError
+  - DoOnSubscribe
+  - DoOnSuccess
+  - DoOnTerminate
   - ElementAtIndex (on IObservable)
   - Filter
   - FirstElement (on IObservable)
