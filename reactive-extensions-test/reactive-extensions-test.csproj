@@ -105,6 +105,8 @@
     <Compile Include="maybe\MaybeFromActionTest.cs" />
     <Compile Include="maybe\MaybeHideTest.cs" />
     <Compile Include="maybe\MaybeFromFuncTest.cs" />
+    <Compile Include="maybe\MaybeMapTest.cs" />
+    <Compile Include="maybe\MaybeFilterTest.cs" />
     <Compile Include="SingleSubjectTest.cs" />
     <Compile Include="maybe\MaybeCreateTest.cs" />
     <Compile Include="maybe\MaybeEmptyTest.cs" />
@@ -120,6 +122,7 @@
     <Compile Include="observable\IntervalRangeTest.cs" />
     <Compile Include="observable\ConcatManyTest.cs" />
     <Compile Include="observable\UnitTest1.cs" />
+    <Compile Include="single\SingleFilterTest.cs" />
     <Compile Include="single\SingleHideTest.cs" />
     <Compile Include="single\SingleLambdaObserverTest.cs" />
     <Compile Include="single\SingleJustTest.cs" />

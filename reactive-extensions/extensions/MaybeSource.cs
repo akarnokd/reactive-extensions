@@ -511,14 +511,44 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Maps the success value of the upstream maybe source
+        /// into another value.
+        /// </summary>
+        /// <typeparam name="T">The upstream value type.</typeparam>
+        /// <typeparam name="R">The result value type</typeparam>
+        /// <param name="source">The upstream maybe source to map.</param>
+        /// <param name="mapper">The function receiving the upstream success
+        /// item and returns a new success item for the downstream.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
         public static IMaybeSource<R> Map<T, R>(this IMaybeSource<T> source, Func<T, R> mapper)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(mapper, nameof(mapper));
 
-            throw new NotImplementedException();
+            return new MaybeMap<T, R>(source, mapper);
         }
 
+        /// <summary>
+        /// Tests the upstream's success value via a predicate
+        /// and relays it if the predicate returns false,
+        /// completed the downstream otherwise.
+        /// </summary>
+        /// <typeparam name="T">The upstream value type.</typeparam>
+        /// <param name="source">The upstream maybe source to map.</param>
+        /// <param name="predicate">The function that receives the upstream
+        /// success item and should return true if the success
+        /// value should be passed along.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
+        public static IMaybeSource<T> Filter<T>(this IMaybeSource<T> source, Func<T, bool> predicate)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(predicate, nameof(predicate));
+
+            return new MaybeFilter<T>(source, predicate);
+        }
 
         public static IMaybeSource<R> FlatMap<T, R>(this IMaybeSource<T> source, Func<T, IMaybeSource<R>> mapper)
         {

@@ -14,12 +14,14 @@
     <PackageReleaseNotes>New operators:
 + IObservable
 + IMaybeSource
-  - `FromAction`
-  - `FromFunc`
-  - `FromTask`
-  - `ToMaybe` (on Task)
+  - Filter
+  - FromAction
+  - FromFunc
+  - FromTask
+  - Map
+  - ToMaybe (on Task)
 + ISingleSource
-</PackageReleaseNotes>
+  - Filter</PackageReleaseNotes>
     <PackageTags>reactive, extensions</PackageTags>
   </PropertyGroup>
 

@@ -637,6 +637,7 @@ Extension methods host: `SingleSource`
 ### Instance methods
 
 - `Compose`
+- `Filter`
 
 ### Consumer methods
 
@@ -685,6 +686,8 @@ Extension methods host: `MaybeSource`
 ### Instance methods
 
 - `Compose`
+- `Filter`
+- `Map`
 
 ### Consumer methods
 
