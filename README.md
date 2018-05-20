@@ -691,6 +691,7 @@ Extension methods host: `MaybeSource`
 ### Instance methods
 
 - `Compose`
+- `DefaultIfEmpty`
 - `Delay`
 - `DoAfterSuccess`
 - `DoAfterTerminate`
@@ -708,6 +709,7 @@ Extension methods host: `MaybeSource`
 - `OnErrorResumeNext`
 - `OnTerminateDetach`
 - `SubscribeOn`
+- `SwitchIfEmpty`
 - `Timeout`
 - `UnsubscribeOn`
 

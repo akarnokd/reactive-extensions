@@ -820,25 +820,54 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// If the upstream maybe is empty, signal the default value
+        /// as the success item to the downstream single observer.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <param name="source">The upstream maybe source.</param>
+        /// <param name="defaultItem">The item to signal as the success value if the <paramref name="source"/> is empty.</param>
+        /// <returns>The new single source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
         public static ISingleSource<T> DefaultIfEmpty<T>(this IMaybeSource<T> source, T defaultItem)
         {
             RequireNonNull(source, nameof(source));
 
-            throw new NotImplementedException();
+            return new MaybeDefaultIfEmpty<T>(source, defaultItem);
         }
 
+        /// <summary>
+        /// Switches to the fallbacks if the main source or
+        /// the previous fallback is empty.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <param name="source">The upstream maybe source.</param>
+        /// <param name="fallbacks">The array of fallback maybe sources to try if the main or
+        /// the previous source is null.</param>
+        /// <returns>The new single source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
         public static IMaybeSource<T> SwitchIfEmpty<T>(this IMaybeSource<T> source, params IMaybeSource<T>[] fallbacks)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNull(fallbacks, nameof(fallbacks));
 
-            throw new NotImplementedException();
+            return new MaybeSwitchIfEmptyMany<T>(source, fallbacks);
         }
 
-        public static IMaybeSource<T> SwitchIfEmpty<T>(this IMaybeSource<T> source, ISingleSource<T> fallback)
+        /// <summary>
+        /// Switches the fallback a single source if the main source is empty.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <param name="source">The upstream maybe source.</param>
+        /// <param name="fallback">The single source to switch to if the main <paramref name="source"/> is empty.</param>
+        /// <returns>The new single source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
+        public static ISingleSource<T> SwitchIfEmpty<T>(this IMaybeSource<T> source, ISingleSource<T> fallback)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNull(fallback, nameof(fallback));
 
-            throw new NotImplementedException();
+            return new MaybeSwitchIfEmpty<T>(source, fallback);
         }
 
         /// <summary>
