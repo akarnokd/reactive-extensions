@@ -677,6 +677,7 @@ Extension methods host: `MaybeSource`
 ### Factory methods
 
 - `Create`
+- `Defer`
 - `Empty`
 - `Error`
 - `FromAction`
@@ -684,10 +685,12 @@ Extension methods host: `MaybeSource`
 - `FromTask`
 - `Just`
 - `Never`
+- `Using`
 
 ### Instance methods
 
 - `Compose`
+- `Delay`
 - `DoAfterSuccess`
 - `DoAfterTerminate`
 - `DoFinally`
@@ -710,6 +713,7 @@ Extension methods host: `MaybeSource`
 - `SubscribeSafe`
 - `SubscribeWith`
 - `Test`
+- `Wait`
 
 ### Interoperation
 
@@ -719,6 +723,7 @@ Extension methods host: `MaybeSource`
 - `IgnoreElement`
 - `LastElement` (on `IObservable`)
 - `SingleElement` (on `IObservable`)
+- `ToTask`
 
 ### MaybeSubject
 

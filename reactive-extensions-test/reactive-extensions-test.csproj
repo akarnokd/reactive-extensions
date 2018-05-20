@@ -101,6 +101,11 @@
     <Compile Include="completable\CompletableFlatMapObservableTest.cs" />
     <Compile Include="completable\CompletableSwitchMapTest.cs" />
     <Compile Include="completable\UnitTest1.cs" />
+    <Compile Include="maybe\MaybeUsingTest.cs" />
+    <Compile Include="maybe\MaybeDeferTest.cs" />
+    <Compile Include="maybe\MaybeDelayTest.cs" />
+    <Compile Include="maybe\MaybeWaitTest.cs" />
+    <Compile Include="maybe\MaybeToTaskTest.cs" />
     <Compile Include="maybe\MaybeOnErrorResumeNextTest.cs" />
     <Compile Include="maybe\MaybeOnErrorCompleteTest.cs" />
     <Compile Include="maybe\MaybeTimeoutTest.cs" />

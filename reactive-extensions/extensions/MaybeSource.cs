@@ -231,9 +231,20 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Defers the creation of the actual maybe source
+        /// provided by a supplier function until a maybe observer completes.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <param name="supplier">The function called for each individual maybe
+        /// observer and should return a maybe source to subscribe to.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
         public static IMaybeSource<T> Defer<T>(Func<IMaybeSource<T>> supplier)
         {
-            throw new NotImplementedException();
+            RequireNonNull(supplier, nameof(supplier));
+
+            return new MaybeDefer<T>(supplier);
         }
 
         public static IObservable<T> MergeAll<T>(this IMaybeSource<T>[] sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
@@ -271,9 +282,29 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
-        public static IMaybeSource<T> Using<T, S>(Func<S> stateFactory, Func<S, IMaybeSource<T>> sourceSelector, Action<S> stateCleanup = null, bool eagerCleanup = false)
+        /// <summary>
+        /// Generates a resource and a dependent completable source
+        /// for each completable observer and cleans up the resource
+        /// just before or just after the completable source terminated
+        /// or the observer has disposed the setup.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <typeparam name="S">The resource type.</typeparam>
+        /// <param name="resourceSupplier">The supplier for a per-observer resource.</param>
+        /// <param name="sourceSelector">Function that receives the per-observer resource returned
+        /// by <paramref name="resourceSupplier"/> and returns a completable source.</param>
+        /// <param name="resourceCleanup">The optional callback for cleaning up the resource supplied by
+        /// the <paramref name="resourceSupplier"/>.</param>
+        /// <param name="eagerCleanup">If true, the per-observer resource is cleaned up before the
+        /// terminal event is signaled to the downstream. If false, the cleanup happens after.</param>
+        /// <returns>The new completable source instance.</returns>
+        /// <remarks>Since 0.0.8</remarks>
+        public static IMaybeSource<T> Using<T, S>(Func<S> resourceSupplier, Func<S, IMaybeSource<T>> sourceSelector, Action<S> resourceCleanup = null, bool eagerCleanup = true)
         {
-            throw new NotImplementedException();
+            RequireNonNull(resourceSupplier, nameof(resourceSupplier));
+            RequireNonNull(sourceSelector, nameof(sourceSelector));
+
+            return new MaybeUsing<T, S>(resourceSupplier, sourceSelector, resourceCleanup, eagerCleanup);
         }
 
         public static IMaybeSource<R> Zip<T, R>(Func<T[], R> mapper, params IMaybeSource<T>[] sources)
@@ -620,11 +651,21 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Delay the delivery of the terminal events from the
+        /// upstream maybe source by the given time amount.
+        /// </summary>
+        /// <param name="source">The maybe source to delay signals of.</param>
+        /// <param name="time">The time delay.</param>
+        /// <param name="scheduler">The scheduler to use for the timed wait and signal emission.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
         public static IMaybeSource<T> Delay<T>(this IMaybeSource<T> source, TimeSpan time, IScheduler scheduler)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNull(scheduler, nameof(scheduler));
 
-            throw new NotImplementedException();
+            return new MaybeDelay<T>(source, time, scheduler);
         }
 
         public static IMaybeSource<T> DelaySubscription<T>(this IMaybeSource<T> source, TimeSpan time, IScheduler scheduler)
@@ -852,25 +893,45 @@ namespace akarnokd.reactive_extensions
             parent.Run();
         }
 
-        public static void Wait<T>(this IMaybeSource<T> source, long timeoutMillis = long.MinValue, CancellationTokenSource cts = null)
+        /// <summary>
+        /// Wait until the upstream terminates and rethrow any exception it
+        /// signaled.
+        /// </summary>
+        /// <param name="source">The maybe source to wait for.</param>
+        /// <param name="timeoutMillis">The maximum time to wait for termination.</param>
+        /// <param name="cts">The means to cancel the wait from outside.</param>
+        /// <exception cref="TimeoutException">If a timeout happens, which also cancels the upstream.</exception>
+        /// <remarks>Since 0.0.11</remarks>
+        public static void Wait<T>(this IMaybeSource<T> source, int timeoutMillis = int.MaxValue, CancellationTokenSource cts = null)
         {
             RequireNonNull(source, nameof(source));
 
-            throw new NotImplementedException();
+            var parent = new MaybeWait<T>();
+            source.Subscribe(parent);
+
+            parent.Wait(timeoutMillis, cts);
         }
 
-        public static bool Wait<T>(this IMaybeSource<T> source, out T result, long timeoutMillis = long.MinValue, CancellationTokenSource cts = null)
+        /// <summary>
+        /// Wait until the upstream terminates and
+        /// return its success value or rethrow any exception it
+        /// signaled.
+        /// </summary>
+        /// <param name="source">The maybe source to wait for.</param>
+        /// <param name="result">The success value if the method returns true</param>
+        /// <param name="timeoutMillis">The maximum time to wait for termination.</param>
+        /// <param name="cts">The means to cancel the wait from outside.</param>
+        /// <returns>True if the source succeeded.</returns>
+        /// <exception cref="TimeoutException">If a timeout happens, which also cancels the upstream.</exception>
+        /// <remarks>Since 0.0.11</remarks>
+        public static bool Wait<T>(this IMaybeSource<T> source, out T result, int timeoutMillis = int.MaxValue, CancellationTokenSource cts = null)
         {
             RequireNonNull(source, nameof(source));
 
-            throw new NotImplementedException();
-        }
+            var parent = new MaybeWaitValue<T>();
+            source.Subscribe(parent);
 
-        public static Task<T> ToTask<T>(this IMaybeSource<T> source, CancellationTokenSource cts = null)
-        {
-            RequireNonNull(source, nameof(source));
-
-            throw new NotImplementedException();
+            return parent.Wait(out result, timeoutMillis, cts);
         }
 
         /// <summary>
@@ -1039,6 +1100,24 @@ namespace akarnokd.reactive_extensions
             RequireNonNegative(index, nameof(index));
 
             return new MaybeElementAt<T>(source, index);
+        }
+
+        /// <summary>
+        /// Subscribe to a maybe source and expose the terminal
+        /// signal as a <see cref="Task"/>.
+        /// </summary>
+        /// <param name="source">The source maybe to convert.</param>
+        /// <param name="cts">The cancellation token source to watch for external cancellation.</param>
+        /// <returns>The new task instance.</returns>
+        /// <remarks>Since 0.0.11</remarks>
+        public static Task<T> ToTask<T>(this IMaybeSource<T> source, CancellationTokenSource cts = null)
+        {
+            RequireNonNull(source, nameof(source));
+
+            var parent = new MaybeToTask<T>();
+            parent.Init(cts);
+            source.Subscribe(parent);
+            return parent.Task;
         }
 
         /// <summary>
