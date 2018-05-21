@@ -171,34 +171,82 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
-        public static IObservable<T> ConcatAll<T>(this IMaybeSource<T>[] sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
+        /// <summary>
+        /// Runs each source maybe and emits their success items in order,
+        /// optionally delaying errors from all of them until
+        /// all terminate.
+        /// </summary>
+        /// <typeparam name="T">The success and result value type.</typeparam>
+        /// <param name="sources">The array of maybe sources.</param>
+        /// <param name="delayErrors">If true, errors are delayed until all sources terminate.</param>
+        /// <returns>The new observable instance.</returns>
+        /// <remarks>Since 0.0.12</remarks>
+        public static IObservable<T> ConcatAll<T>(this IMaybeSource<T>[] sources, bool delayErrors = false)
         {
-            throw new NotImplementedException();
+            RequireNonNull(sources, nameof(sources));
+
+            return new MaybeConcat<T>(sources, delayErrors);
         }
 
+        /// <summary>
+        /// Runs each source maybe and emits their success items in order.
+        /// </summary>
+        /// <typeparam name="T">The success and result value type.</typeparam>
+        /// <param name="sources">The array of maybe sources.</param>
+        /// <returns>The new observable instance.</returns>
+        /// <remarks>Since 0.0.12</remarks>
         public static IObservable<T> Concat<T>(params IMaybeSource<T>[] sources)
         {
-            throw new NotImplementedException();
+            return ConcatAll(sources, false);
         }
 
-        public static IObservable<T> Concat<T>(IEnumerable<IMaybeSource<T>> sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
+        /// <summary>
+        /// Runs each source maybe and emits their success items in order,
+        /// optionally delaying errors from all of them until
+        /// all terminate.
+        /// </summary>
+        /// <typeparam name="T">The success and result value type.</typeparam>
+        /// <param name="sources">The array of maybe sources.</param>
+        /// <param name="delayErrors">If true, errors are delayed until all sources terminate.</param>
+        /// <returns>The new observable instance.</returns>
+        /// <remarks>Since 0.0.12</remarks>
+        public static IObservable<T> Concat<T>(bool delayErrors, params IMaybeSource<T>[] sources)
         {
-            throw new NotImplementedException();
+            return ConcatAll(sources, delayErrors);
         }
 
-        public static IObservable<T> Concat<T>(int maxConcurrency, params IMaybeSource<T>[] sources)
+        /// <summary>
+        /// Runs each source maybe returned by the enumerable sequence
+        /// and emits their success items in order,
+        /// optionally delaying errors from all of them until
+        /// all terminate.
+        /// </summary>
+        /// <typeparam name="T">The success and result value type.</typeparam>
+        /// <param name="sources">The enumerable sequence of maybe sources.</param>
+        /// <param name="delayErrors">If true, errors are delayed until all sources terminate.</param>
+        /// <returns>The new observable instance.</returns>
+        /// <remarks>Since 0.0.12</remarks>
+        public static IObservable<T> Concat<T>(this IEnumerable<IMaybeSource<T>> sources, bool delayErrors = false)
         {
-            throw new NotImplementedException();
+            RequireNonNull(sources, nameof(sources));
+
+            return new MaybeConcatEnumerable<T>(sources, delayErrors);
         }
 
-        public static IObservable<T> Concat<T>(int maxConcurrency, bool delayErrors, params IMaybeSource<T>[] sources)
+        /// <summary>
+        /// Runs each inner maybe source produced by the observable sequence
+        /// and emits their success items in order,
+        /// optionally delaying errors from all of them until
+        /// all terminate.
+        /// </summary>
+        /// <typeparam name="T">The success and result value type.</typeparam>
+        /// <param name="sources">The array of maybe sources.</param>
+        /// <param name="delayErrors">If true, errors are delayed until all sources terminate.</param>
+        /// <returns>The new observable instance.</returns>
+        /// <remarks>Since 0.0.12</remarks>
+        public static IObservable<T> Concat<T>(this IObservable<IMaybeSource<T>> sources, bool delayErrors = false)
         {
-            throw new NotImplementedException();
-        }
-
-        public static IObservable<T> Concat<T>(this IObservable<IMaybeSource<T>> sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
-        {
-            throw new NotImplementedException();
+            return ConcatMap(sources, v => v, delayErrors);
         }
 
         public static IObservable<T> ConcatEagerAll<T>(this IMaybeSource<T>[] sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
@@ -668,7 +716,7 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
-        public static IObservable<T> Repeat<T>(this IMaybeSource<T> source, Func<bool> handler)
+        public static IObservable<T> Repeat<T>(this IMaybeSource<T> source, Func<long, bool> handler)
         {
             RequireNonNull(source, nameof(source));
 
@@ -1194,7 +1242,7 @@ namespace akarnokd.reactive_extensions
         // Interoperation with other reactive types
         //-------------------------------------------------
 
-        public static IObservable<R> ConcatMap<T, R>(this IObservable<T> source, Func<T, IMaybeSource<T>> mapper, bool delayErrors = false)
+        public static IObservable<R> ConcatMap<T, R>(this IObservable<T> source, Func<T, IMaybeSource<R>> mapper, bool delayErrors = false)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(mapper, nameof(mapper));

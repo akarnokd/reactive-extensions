@@ -137,6 +137,7 @@
     <Compile Include="maybe\MaybeToSingleTest.cs" />
     <Compile Include="maybe\MaybeCacheTest.cs" />
     <Compile Include="maybe\MaybeZipTest.cs" />
+    <Compile Include="maybe\MaybeConcatTest.cs" />
     <Compile Include="SingleSubjectTest.cs" />
     <Compile Include="maybe\MaybeCreateTest.cs" />
     <Compile Include="maybe\MaybeEmptyTest.cs" />
