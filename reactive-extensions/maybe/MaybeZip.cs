@@ -37,6 +37,12 @@ namespace akarnokd.reactive_extensions
         }
     }
 
+    /// <summary>
+    /// Coordinates multiple observers and their signals.
+    /// </summary>
+    /// <typeparam name="T">The element type of the sources.</typeparam>
+    /// <typeparam name="R">The result type.</typeparam>
+    /// <remarks>Since 0.0.12</remarks>
     internal sealed class MaybeZipCoordinator<T, R> : IDisposable
     {
         internal readonly IMaybeObserver<R> downstream;
@@ -121,7 +127,15 @@ namespace akarnokd.reactive_extensions
                 {
                     break;
                 }
-                sources[i].Subscribe(o[i]);
+                var src = sources[i];
+                if (src == null)
+                {
+                    InnerError(i, new NullReferenceException("The IMaybeSource at index " + i + " is null"));
+                }
+                else
+                {
+                    sources[i].Subscribe(o[i]);
+                }
             }
         }
 

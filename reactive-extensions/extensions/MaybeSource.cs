@@ -161,14 +161,49 @@ namespace akarnokd.reactive_extensions
             return task.ToMaybe();
         }
 
+        /// <summary>
+        /// Relays the signals of the first maybe source to respond
+        /// and disposes the other sources.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <param name="sources">The array of maybe sources.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.12</remarks>
         public static IMaybeSource<T> AmbAll<T>(this IMaybeSource<T>[] sources)
         {
-            throw new NotImplementedException();
+            RequireNonNull(sources, nameof(sources));
+
+            return new MaybeAmb<T>(sources);
         }
 
+        /// <summary>
+        /// Relays the signals of the first maybe source to respond
+        /// and disposes the other sources.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <param name="sources">The array of maybe sources.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.12</remarks>
         public static IMaybeSource<T> Amb<T>(params IMaybeSource<T>[] sources)
         {
-            throw new NotImplementedException();
+            RequireNonNull(sources, nameof(sources));
+
+            return AmbAll(sources);
+        }
+
+        /// <summary>
+        /// Relays the signals of the first maybe source to respond
+        /// and disposes the other sources.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <param name="sources">The enumerable sequence of maybe sources.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.12</remarks>
+        public static IMaybeSource<T> Amb<T>(this IEnumerable<IMaybeSource<T>> sources)
+        {
+            RequireNonNull(sources, nameof(sources));
+
+            return new MaybeAmbEnumerable<T>(sources);
         }
 
         /// <summary>

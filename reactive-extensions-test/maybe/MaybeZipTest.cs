@@ -365,6 +365,47 @@ namespace akarnokd.reactive_extensions_test.maybe
             Assert.AreEqual(1, count);
         }
 
+        [Test]
+        public void Array_Null_Entry()
+        {
+            var count = 0;
+
+            var src = MaybeSource.FromFunc(() => ++count);
+
+            new[]
+            {
+                src,
+                src,
+                null,
+                src,
+                src
+            }
+            .Zip(Sum)
+            .Test()
+            .AssertFailure(typeof(NullReferenceException));
+        }
+
+        [Test]
+        public void Array_Null_Entry_DelayError()
+        {
+            var count = 0;
+
+            var src = MaybeSource.FromFunc(() => ++count);
+
+            new[]
+            {
+                src,
+                src,
+                MaybeSource.Empty<int>(),
+                null,
+                src,
+                src
+            }
+            .Zip(Sum, true)
+            .Test()
+            .AssertFailure(typeof(NullReferenceException));
+        }
+
         #endregion + Array +
 
         #region + IEnumerable +
@@ -712,6 +753,62 @@ namespace akarnokd.reactive_extensions_test.maybe
             .AssertFailure(typeof(InvalidOperationException));
 
             Assert.AreEqual(1, count);
+        }
+
+        [Test]
+        public void Enumerable_Null_Entry()
+        {
+            var count = 0;
+
+            var src = MaybeSource.FromFunc(() => ++count);
+
+            new List<IMaybeSource<int>>()
+            {
+                src,
+                src,
+                null,
+                src,
+                src
+            }
+            .Zip(Sum)
+            .Test()
+            .AssertFailure(typeof(NullReferenceException));
+        }
+
+        [Test]
+        public void Enumerable_Null_Entry_DelayError()
+        {
+            var count = 0;
+
+            var src = MaybeSource.FromFunc(() => ++count);
+
+            new List<IMaybeSource<int>>()
+            {
+                src,
+                MaybeSource.Empty<int>(),
+                src,
+                null,
+                src,
+                src
+            }
+            .Zip(Sum, true)
+            .Test()
+            .AssertFailure(typeof(NullReferenceException));
+        }
+        [Test]
+        public void Enumerable_GetEnumerator_Crash()
+        {
+            MaybeSource.Zip(new FailingEnumerable<IMaybeSource<int>>(true, false, false), Sum)
+                .Test()
+                .AssertFailure(typeof(InvalidOperationException));
+        }
+
+        [Test]
+        public void Enumerable_MoveNext_Crash()
+        {
+            MaybeSource.Zip(new FailingEnumerable<IMaybeSource<int>>(false, true, false), Sum)
+                .Test()
+                .AssertFailure(typeof(InvalidOperationException));
         }
 
         #endregion + IEnumerable +

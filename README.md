@@ -676,6 +676,7 @@ Extension methods host: `MaybeSource`
 
 ### Factory methods
 
+- `Amb`
 - `Create`
 - `Concat`
 - `ConcatAll`
