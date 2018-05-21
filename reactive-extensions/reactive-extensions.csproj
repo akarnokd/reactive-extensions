@@ -20,11 +20,13 @@
   - ConcatEager
   - ConcatEagerAll
   - ConcatMapEager (on IObservable)
+  - Merge
+  - MergeAll
+  - Repeat
+  - Retry
   - ToObservable
   - ToSingle
-  - Zip
-+ ISingleSource
-</PackageReleaseNotes>
+  - Zip</PackageReleaseNotes>
     <PackageTags>reactive, extensions</PackageTags>
   </PropertyGroup>
 

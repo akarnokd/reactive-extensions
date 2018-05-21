@@ -414,34 +414,110 @@ namespace akarnokd.reactive_extensions
             return new MaybeDefer<T>(supplier);
         }
 
+        /// <summary>
+        /// Runs and merges some or all maybe sources into one observable sequence
+        /// and optionally delays all errors until all sources terminate.
+        /// </summary>
+        /// <typeparam name="T">The success element and result type.</typeparam>
+        /// <param name="sources">The array of maybe sources.</param>
+        /// <param name="delayErrors">Delays errors until all sources terminate.</param>
+        /// <param name="maxConcurrency">The maximum number of inner maybe sources to run at once.</param>
+        /// <returns>The new observable instance.</returns>
+        /// <remarks>Since 0.0.12</remarks>
         public static IObservable<T> MergeAll<T>(this IMaybeSource<T>[] sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
         {
-            throw new NotImplementedException();
+            RequireNonNull(sources, nameof(sources));
+            RequirePositive(maxConcurrency, nameof(maxConcurrency));
+
+            return new MaybeMerge<T>(sources, delayErrors, maxConcurrency);
         }
 
+        /// <summary>
+        /// Runs and merges all maybe sources into one observable sequence.
+        /// </summary>
+        /// <typeparam name="T">The success element and result type.</typeparam>
+        /// <param name="sources">The array of maybe sources.</param>
+        /// <returns>The new observable instance.</returns>
+        /// <remarks>Since 0.0.12</remarks>
         public static IObservable<T> Merge<T>(params IMaybeSource<T>[] sources)
         {
-            throw new NotImplementedException();
+            return MergeAll(sources);
         }
 
-        public static IObservable<T> Merge<T>(IEnumerable<IMaybeSource<T>> sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
+        /// <summary>
+        /// Runs and merges some or all maybe sources, provided by an enumerable sequence,
+        /// into one observable sequence and optionally delays all errors 
+        /// until all sources terminate.
+        /// </summary>
+        /// <typeparam name="T">The success element and result type.</typeparam>
+        /// <param name="sources">The enumerable sequence of maybe sources.</param>
+        /// <param name="delayErrors">Delays errors until all sources terminate.</param>
+        /// <param name="maxConcurrency">The maximum number of inner maybe sources to run at once.</param>
+        /// <returns>The new observable instance.</returns>
+        /// <remarks>Since 0.0.12</remarks>
+        public static IObservable<T> Merge<T>(this IEnumerable<IMaybeSource<T>> sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
         {
-            throw new NotImplementedException();
+            RequireNonNull(sources, nameof(sources));
+            RequirePositive(maxConcurrency, nameof(maxConcurrency));
+
+            return new MaybeMergeEnumerable<T>(sources, delayErrors, maxConcurrency);
         }
 
+        /// <summary>
+        /// Runs and merges some or all maybe sources into one observable sequence.
+        /// </summary>
+        /// <typeparam name="T">The success element and result type.</typeparam>
+        /// <param name="sources">The array of maybe sources.</param>
+        /// <param name="maxConcurrency">The maximum number of inner maybe sources to run at once.</param>
+        /// <returns>The new observable instance.</returns>
+        /// <remarks>Since 0.0.12</remarks>
         public static IObservable<T> Merge<T>(int maxConcurrency, params IMaybeSource<T>[] sources)
         {
-            throw new NotImplementedException();
+            return MergeAll(sources, maxConcurrency: maxConcurrency);
         }
 
-        public static IObservable<T> Merge<T>(int maxConcurrency, bool delayErrors, params IMaybeSource<T>[] sources)
+        /// <summary>
+        /// Runs and merges all maybe sources into one observable sequence
+        /// and optionally delays all errors until all sources terminate.
+        /// </summary>
+        /// <typeparam name="T">The success element and result type.</typeparam>
+        /// <param name="sources">The array of maybe sources.</param>
+        /// <param name="delayErrors">Delays errors until all sources terminate.</param>
+        /// <returns>The new observable instance.</returns>
+        /// <remarks>Since 0.0.12</remarks>
+        public static IObservable<T> Merge<T>(bool delayErrors, params IMaybeSource<T>[] sources)
         {
-            throw new NotImplementedException();
+            return MergeAll(sources, delayErrors);
         }
 
+        /// <summary>
+        /// Runs and merges some or all maybe sources into one observable sequence
+        /// and optionally delays all errors until all sources terminate.
+        /// </summary>
+        /// <typeparam name="T">The success element and result type.</typeparam>
+        /// <param name="sources">The array of maybe sources.</param>
+        /// <param name="delayErrors">Delays errors until all sources terminate.</param>
+        /// <param name="maxConcurrency">The maximum number of inner maybe sources to run at once.</param>
+        /// <returns>The new observable instance.</returns>
+        /// <remarks>Since 0.0.12</remarks>
+        public static IObservable<T> Merge<T>(bool delayErrors, int maxConcurrency, params IMaybeSource<T>[] sources)
+        {
+            return MergeAll(sources, delayErrors, maxConcurrency);
+        }
+
+        /// <summary>
+        /// Runs and merges some or all maybe sources, provided by an observable sequence,
+        /// into one observable sequence and optionally delays all errors until all sources terminate.
+        /// </summary>
+        /// <typeparam name="T">The success element and result type.</typeparam>
+        /// <param name="sources">The observable sequence of maybe sources.</param>
+        /// <param name="delayErrors">Delays errors until all sources terminate.</param>
+        /// <param name="maxConcurrency">The maximum number of inner maybe sources to run at once.</param>
+        /// <returns>The new observable instance.</returns>
+        /// <remarks>Since 0.0.12</remarks>
         public static IObservable<T> Merge<T>(this IObservable<IMaybeSource<T>> sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
         {
-            throw new NotImplementedException();
+            return FlatMap(sources, v => v, delayErrors, maxConcurrency);
         }
 
         /// <summary>
@@ -828,18 +904,41 @@ namespace akarnokd.reactive_extensions
             return new MaybeOnErrorResumeNextSelector<T>(source, handler);
         }
 
+        /// <summary>
+        /// Subscribe to a maybe source repeatedly if it
+        /// succeeds or completes normally and
+        /// emit its success items.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <param name="source">The maybe source to subscribe to repeatedly.</param>
+        /// <param name="times">The maximum number of times to resubscribe.</param>
+        /// <returns>The new observable instance.</returns>
+        /// <remarks>Since 0.0.12</remarks>
         public static IObservable<T> Repeat<T>(this IMaybeSource<T> source, long times = long.MaxValue)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNegative(times, nameof(times));
 
-            throw new NotImplementedException();
+            return new MaybeRepeat<T>(source, times);
         }
 
+        /// <summary>
+        /// Subscribe to a maybe source repeatedly if it
+        /// succeeds or completes normally and
+        /// the given handler returns true.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <param name="source">The maybe source to subscribe to repeatedly.</param>
+        /// <param name="handler">The predicate called with the current repeat count
+        /// and should return true to indicate repetition.</param>
+        /// <returns>The new observable instance.</returns>
+        /// <remarks>Since 0.0.12</remarks>
         public static IObservable<T> Repeat<T>(this IMaybeSource<T> source, Func<long, bool> handler)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
 
-            throw new NotImplementedException();
+            return new MaybeRepeatPredicate<T>(source, handler);
         }
 
         public static IObservable<T> RepeatWhen<T, U>(this IMaybeSource<T> source, Func<IObservable<object>, IObservable<U>> handler)
@@ -849,18 +948,37 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Subscribe to a maybe source repeatedly (or up to a maximum
+        /// number of times) if it keeps failing.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <param name="source">The maybe source to subscribe to repeatedly.</param>
+        /// <param name="times">The maximum number of times to resubscribe.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.12</remarks>
         public static IMaybeSource<T> Retry<T>(this IMaybeSource<T> source, long times = long.MaxValue)
         {
             RequireNonNull(source, nameof(source));
 
-            throw new NotImplementedException();
+            return new MaybeRetry<T>(source, times);
         }
 
+        /// <summary>
+        /// Subscribe to a maybe source repeatedly if it keeps failing
+        /// and the handler returns true upon a failure.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <param name="source">The maybe source to subscribe to repeatedly.</param>
+        /// <param name="handler">The predicate called with the current retry count
+        /// and should return true to indicate repetition.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.12</remarks>
         public static IMaybeSource<T> Retry<T>(this IMaybeSource<T> source, Func<Exception, long, bool> handler)
         {
             RequireNonNull(source, nameof(source));
 
-            throw new NotImplementedException();
+            return new MaybeRetryPredicate<T>(source, handler);
         }
 
         public static IMaybeSource<T> RetryWhen<T, U>(this IMaybeSource<T> source, Func<IObservable<Exception>, IObservable<U>> handler)

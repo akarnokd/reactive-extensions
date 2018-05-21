@@ -689,6 +689,8 @@ Extension methods host: `MaybeSource`
 - `FromFunc`
 - `FromTask`
 - `Just`
+- `Merge`
+- `MergeAll`
 - `Never`
 - `Timer`
 - `Using`
@@ -716,6 +718,8 @@ Extension methods host: `MaybeSource`
 - `OnErrorComplete`
 - `OnErrorResumeNext`
 - `OnTerminateDetach`
+- `Repeat`
+- `Retry`
 - `SubscribeOn`
 - `SwitchIfEmpty`
 - `TakeUntil`
