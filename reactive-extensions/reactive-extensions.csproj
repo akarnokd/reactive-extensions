@@ -17,6 +17,8 @@
   - Cache
   - Concat
   - ConcatAll
+  - ConcatEager
+  - ConcatEagerAll
   - ToObservable
   - ToSingle
   - Zip

@@ -680,6 +680,8 @@ Extension methods host: `MaybeSource`
 - `Create`
 - `Concat`
 - `ConcatAll`
+- `ConcatEager`
+- `ConcatEagerAll`
 - `Defer`
 - `Empty`
 - `Error`
