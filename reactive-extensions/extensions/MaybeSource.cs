@@ -307,7 +307,7 @@ namespace akarnokd.reactive_extensions
         /// <param name="eagerCleanup">If true, the per-observer resource is cleaned up before the
         /// terminal event is signaled to the downstream. If false, the cleanup happens after.</param>
         /// <returns>The new maybe source instance.</returns>
-        /// <remarks>Since 0.0.8</remarks>
+        /// <remarks>Since 0.0.11</remarks>
         public static IMaybeSource<T> Using<T, S>(Func<S> resourceSupplier, Func<S, IMaybeSource<T>> sourceSelector, Action<S> resourceCleanup = null, bool eagerCleanup = true)
         {
             RequireNonNull(resourceSupplier, nameof(resourceSupplier));
@@ -316,19 +316,97 @@ namespace akarnokd.reactive_extensions
             return new MaybeUsing<T, S>(resourceSupplier, sourceSelector, resourceCleanup, eagerCleanup);
         }
 
+        /// <summary>
+        /// Waits for all maybe sources to produce a success item and
+        /// calls the <paramref name="mapper"/> function to generate
+        /// the output success value to be signaled to the downstream.
+        /// </summary>
+        /// <typeparam name="T">The success value type of the <paramref name="sources"/>.</typeparam>
+        /// <typeparam name="R">The output success value type.</typeparam>
+        /// <param name="mapper">The function receiving the success values of all the
+        /// <paramref name="sources"/> and should return the result value to be
+        /// signaled as the success value.</param>
+        /// <param name="sources">The array of maybe sources to zip together.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.12<br/>
+        /// If any of the sources don't succeed, the other sources are disposed and
+        /// the output is the completion/exception of that source.
+        /// </remarks>
         public static IMaybeSource<R> Zip<T, R>(Func<T[], R> mapper, params IMaybeSource<T>[] sources)
         {
-            throw new NotImplementedException();
+            return Zip(sources, mapper, false);
         }
 
+        /// <summary>
+        /// Waits for all maybe sources to produce a success item and
+        /// calls the <paramref name="mapper"/> function to generate
+        /// the output success value to be signaled to the downstream.
+        /// </summary>
+        /// <typeparam name="T">The success value type of the <paramref name="sources"/>.</typeparam>
+        /// <typeparam name="R">The output success value type.</typeparam>
+        /// <param name="mapper">The function receiving the success values of all the
+        /// <paramref name="sources"/> and should return the result value to be
+        /// signaled as the success value.</param>
+        /// <param name="sources">The array of maybe sources to zip together.</param>
+        /// <param name="delayErrors">If true, the operator waits for all
+        /// sources to terminate, even if some of them didn't produce a success item
+        /// and terminates with the aggregate signal. If false, the downstream
+        /// is terminated with the terminal event of the first empty source.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.12</remarks>
         public static IMaybeSource<R> Zip<T, R>(Func<T[], R> mapper, bool delayErrors, params IMaybeSource<T>[] sources)
         {
-            throw new NotImplementedException();
+            return Zip(sources, mapper, delayErrors);
         }
 
+        /// <summary>
+        /// Waits for all maybe sources to produce a success item and
+        /// calls the <paramref name="mapper"/> function to generate
+        /// the output success value to be signaled to the downstream.
+        /// </summary>
+        /// <typeparam name="T">The success value type of the <paramref name="sources"/>.</typeparam>
+        /// <typeparam name="R">The output success value type.</typeparam>
+        /// <param name="mapper">The function receiving the success values of all the
+        /// <paramref name="sources"/> and should return the result value to be
+        /// signaled as the success value.</param>
+        /// <param name="sources">The array of maybe sources to zip together.</param>
+        /// <param name="delayErrors">If true, the operator waits for all
+        /// sources to terminate, even if some of them didn't produce a success item
+        /// and terminates with the aggregate signal. If false, the downstream
+        /// is terminated with the terminal event of the first empty source.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.12</remarks>
         public static IMaybeSource<R> Zip<T, R>(this IMaybeSource<T>[] sources, Func<T[], R> mapper, bool delayErrors = false)
         {
-            throw new NotImplementedException();
+            RequireNonNull(sources, nameof(sources));
+            RequireNonNull(mapper, nameof(mapper));
+
+            return new MaybeZip<T, R>(sources, mapper, delayErrors);
+        }
+
+        /// <summary>
+        /// Waits for all maybe sources to produce a success item and
+        /// calls the <paramref name="mapper"/> function to generate
+        /// the output success value to be signaled to the downstream.
+        /// </summary>
+        /// <typeparam name="T">The success value type of the <paramref name="sources"/>.</typeparam>
+        /// <typeparam name="R">The output success value type.</typeparam>
+        /// <param name="mapper">The function receiving the success values of all the
+        /// <paramref name="sources"/> and should return the result value to be
+        /// signaled as the success value.</param>
+        /// <param name="sources">The enumerable sequence of maybe sources to zip together.</param>
+        /// <param name="delayErrors">If true, the operator waits for all
+        /// sources to terminate, even if some of them didn't produce a success item
+        /// and terminates with the aggregate signal. If false, the downstream
+        /// is terminated with the terminal event of the first empty source.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.12</remarks>
+        public static IMaybeSource<R> Zip<T, R>(this IEnumerable<IMaybeSource<T>> sources, Func<T[], R> mapper, bool delayErrors = false)
+        {
+            RequireNonNull(sources, nameof(sources));
+            RequireNonNull(mapper, nameof(mapper));
+
+            return new MaybeZipEnumerable<T, R>(sources, mapper, delayErrors);
         }
 
         //-------------------------------------------------
@@ -693,11 +771,22 @@ namespace akarnokd.reactive_extensions
             return new MaybeOnTerminateDetach<T>(source);
         }
 
+        /// <summary>
+        /// Cache the terminal signal of the upstream
+        /// and relay/replay it to current or future
+        /// maybe observers.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <param name="source">The upstream maybe source to cache.</param>
+        /// <param name="cancel">Called once when subscribing to the source
+        /// upon the first subscriber.</param>
+        /// <returns>The new maybe source instance.</returns>
+        /// <remarks>Since 0.0.12</remarks>
         public static IMaybeSource<T> Cache<T>(this IMaybeSource<T> source, Action<IDisposable> cancel = null)
         {
             RequireNonNull(source, nameof(source));
 
-            throw new NotImplementedException();
+            return new MaybeCache<T>(source, cancel);
         }
 
         /// <summary>

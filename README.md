@@ -8,7 +8,7 @@ Extensions to the [dotnet/reactive](https://github.com/dotnet/reactive) library.
 ### Setup
 
 ```
-Install-Package akarnokd.reactive_extensions -Version 0.0.11-alpha
+Install-Package akarnokd.reactive_extensions -Version 0.0.12-alpha
 ```
 
 ### Dependencies
@@ -687,9 +687,11 @@ Extension methods host: `MaybeSource`
 - `Never`
 - `Timer`
 - `Using`
+- `Zip`
 
 ### Instance methods
 
+- `Cache`
 - `Compose`
 - `DefaultIfEmpty`
 - `Delay`
