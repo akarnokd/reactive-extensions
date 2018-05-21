@@ -140,6 +140,7 @@
     <Compile Include="maybe\MaybeConcatTest.cs" />
     <Compile Include="maybe\MaybeAmbTest.cs" />
     <Compile Include="maybe\MaybeConcatEagerTest.cs" />
+    <Compile Include="maybe\MaybeConcatMapEagerTest.cs" />
     <Compile Include="SingleSubjectTest.cs" />
     <Compile Include="maybe\MaybeCreateTest.cs" />
     <Compile Include="maybe\MaybeEmptyTest.cs" />

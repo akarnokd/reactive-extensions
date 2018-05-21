@@ -19,6 +19,7 @@
   - ConcatAll
   - ConcatEager
   - ConcatEagerAll
+  - ConcatMapEager (on IObservable)
   - ToObservable
   - ToSingle
   - Zip

@@ -1369,13 +1369,29 @@ namespace akarnokd.reactive_extensions
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Runs some or all maybe sources, provided by
+        /// mapping the source observable sequence into
+        /// maybe sources, at once but emits
+        /// their success item in order and optionally delays
+        /// errors until all sources terminate.
+        /// </summary>
+        /// <typeparam name="T">The value type of the source sequence.</typeparam>
+        /// <typeparam name="R">The success value type of the inner maybe sources.</typeparam>
+        /// <param name="source">The observable sequence to map into maybe sources.</param>
+        /// <param name="mapper">The function receiving the upstream item and should return
+        /// a maybe source to concatenate eagerly.</param>
+        /// <param name="delayErrors">If true, errors are delayed until all sources terminate.</param>
+        /// <param name="maxConcurrency">The maximum number of active inner maybe sources to run at once.</param>
+        /// <returns>The new observable instance.</returns>
+        /// <remarks>Since 0.0.12</remarks>
         public static IObservable<R> ConcatMapEager<T, R>(this IObservable<T> source, Func<T, IMaybeSource<R>> mapper, bool delayErrors = false, int maxConcurrency = int.MaxValue)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(mapper, nameof(mapper));
             RequirePositive(maxConcurrency, nameof(maxConcurrency));
 
-            throw new NotImplementedException();
+            return new MaybeConcatMapEager<T, R>(source, mapper, delayErrors, maxConcurrency);
         }
 
         public static IObservable<R> FlatMap<T, R>(this IObservable<T> source, Func<T, IMaybeSource<R>> mapper, bool delayErrors = false, int maxConcurrency = int.MaxValue)

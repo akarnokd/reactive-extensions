@@ -733,6 +733,7 @@ Extension methods host: `MaybeSource`
 
 ### Interoperation
 
+- `ConcatMapEager` (on `IObservable`)
 - `ElementAtIndex` (on `IObservable`)
 - `FirstElement` (on `IObservable`)
 - `FlatMap` (onto `ICompletableSource`, `ISingleSource`, `IObservable`, `IEnumerable`)
