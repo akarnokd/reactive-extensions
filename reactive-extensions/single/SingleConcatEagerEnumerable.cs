@@ -6,22 +6,22 @@ using static akarnokd.reactive_extensions.ValidationHelper;
 namespace akarnokd.reactive_extensions
 {
     /// <summary>
-    /// Runs some or all maybe sources, produced by
+    /// Runs some or all single sources, produced by
     /// an enumerable sequence, at once but emits
     /// their success item in order and optionally delays
     /// errors until all sources terminate.
     /// </summary>
     /// <typeparam name="T">The success value type.</typeparam>
     /// <remarks>Since 0.0.12</remarks>
-    internal sealed class MaybeConcatEagerEnumerable<T> : IObservable<T>
+    internal sealed class SingleConcatEagerEnumerable<T> : IObservable<T>
     {
-        readonly IEnumerable<IMaybeSource<T>> sources;
+        readonly IEnumerable<ISingleSource<T>> sources;
 
         readonly int maxConcurrency;
 
         readonly bool delayErrors;
 
-        public MaybeConcatEagerEnumerable(IEnumerable<IMaybeSource<T>> sources, int maxConcurrency, bool delayErrors)
+        public SingleConcatEagerEnumerable(IEnumerable<ISingleSource<T>> sources, int maxConcurrency, bool delayErrors)
         {
             this.sources = sources;
             this.maxConcurrency = maxConcurrency;
@@ -30,7 +30,7 @@ namespace akarnokd.reactive_extensions
 
         public IDisposable Subscribe(IObserver<T> observer)
         {
-            var en = default(IEnumerator<IMaybeSource<T>>);
+            var en = default(IEnumerator<ISingleSource<T>>);
 
             try
             {
@@ -44,12 +44,12 @@ namespace akarnokd.reactive_extensions
 
             if (maxConcurrency == int.MaxValue)
             {
-                var parent = new MaybeConcatEagerAllCoordinator<T>(observer, delayErrors);
+                var parent = new SingleConcatEagerAllCoordinator<T>(observer, delayErrors);
 
                 for (; ; )
                 {
                     var b = false;
-                    var src = default(IMaybeSource<T>);
+                    var src = default(ISingleSource<T>);
                     try
                     {
                         b = en.MoveNext();
@@ -61,7 +61,7 @@ namespace akarnokd.reactive_extensions
                     }
                     catch (Exception ex)
                     {
-                        parent.SubscribeTo(MaybeSource.Error<T>(ex));
+                        parent.SubscribeTo(SingleSource.Error<T>(ex));
                         break;
                     }
 
@@ -88,9 +88,9 @@ namespace akarnokd.reactive_extensions
             }
         }
 
-        sealed class ConcatEagerLimitedCoordinator : MaybeConcatEagerCoordinator<T>
+        sealed class ConcatEagerLimitedCoordinator : SingleConcatEagerCoordinator<T>
         {
-            IEnumerator<IMaybeSource<T>> sources;
+            IEnumerator<ISingleSource<T>> sources;
 
             readonly int maxConcurrency;
 
@@ -98,7 +98,7 @@ namespace akarnokd.reactive_extensions
 
             bool done;
 
-            internal ConcatEagerLimitedCoordinator(IObserver<T> downstream, IEnumerator<IMaybeSource<T>> sources, int maxConcurrency, bool delayErrors) : base(downstream, delayErrors)
+            internal ConcatEagerLimitedCoordinator(IObserver<T> downstream, IEnumerator<ISingleSource<T>> sources, int maxConcurrency, bool delayErrors) : base(downstream, delayErrors)
             {
                 this.sources = sources;
                 this.maxConcurrency = maxConcurrency;
@@ -153,7 +153,7 @@ namespace akarnokd.reactive_extensions
                         if (active < maxConcurrency && !done)
                         {
 
-                            var src = default(IMaybeSource<T>);
+                            var src = default(ISingleSource<T>);
 
                             try
                             {

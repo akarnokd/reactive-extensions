@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
-    <Version>0.0.13-alpha</Version>
+    <Version>0.0.14-alpha</Version>
     <Description>Extension methods for the dotnet/reactive library.</Description>
     <Authors>David Karnok</Authors>
     <PackageId>akarnokd.reactive_extensions</PackageId>
@@ -12,12 +12,56 @@
     <RepositoryType>GitHub</RepositoryType>
     <Copyright>Copyright 2018, David Karnok</Copyright>
     <PackageReleaseNotes>New operators:
-+ IMaybeSource
++ ISingleSource
+  - Amb
+  - BlockingSubscribe
+  - Cache
+  - Concat
+  - ConcatAll
+  - ConcatEager
+  - ConcatEagerAll
   - ConcatMap (on IObservable)
-  - FlatMap (on IObservable)
+  - ConcatMapEager (on IObservable)
+  - Defer
+  - Delay
+  - DelaySubscription
+  - DoAfterSuccess
+  - DoAfterTerminate
+  - DoOnDispose
+  - DoOnError
+  - DoOnTerminate
+  - DoOnSubscribe
+  - DoOnSuccess
+  - ElementAtOrError
+  - FlatMap (onto IEnumerable, onto ISingleSource, onto IObservable)
+  - FromTask
+  - LastOrError
+  - Map
+  - Merge
+  - MergeAll
+  - ObserveOn
+  - OnErrorResumeNext
+  - OnTerminateDetach
+  - Repeat
   - RepeatWhen
+  - Retry
   - RetryWhen
-  - SwitchMap (on IObservable)</PackageReleaseNotes>
+  - SingleOrError
+  - SubscribeOn
+  - SubscribeSafe 
+  - SwitchMap (on IObservable)
+  - TakeUntil
+  - Timeout
+  - Timer
+  - ToMaybe
+  - ToObservable
+  - ToSingle
+  - ToTask
+  - UnsubscribeOn
+  - Using
+  - Wait
+  - Zip
+</PackageReleaseNotes>
     <PackageTags>reactive, extensions</PackageTags>
   </PropertyGroup>
 

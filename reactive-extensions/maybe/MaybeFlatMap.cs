@@ -123,13 +123,13 @@ namespace akarnokd.reactive_extensions
     /// </summary>
     /// <typeparam name="R">The success element type.</typeparam>
     /// <remarks>Since 0.0.11</remarks>
-    internal sealed class FlatMapInnerObserver<R> : ISingleObserver<R>, IMaybeObserver<R>, IDisposable
+    internal sealed class MaybeFlatMapInnerObserver<R> : ISingleObserver<R>, IMaybeObserver<R>, IDisposable
     {
         readonly IMaybeObserver<R> downstream;
 
         IDisposable upstream;
 
-        public FlatMapInnerObserver(IMaybeObserver<R> downstream)
+        public MaybeFlatMapInnerObserver(IMaybeObserver<R> downstream)
         {
             this.downstream = downstream;
         }
@@ -173,14 +173,14 @@ namespace akarnokd.reactive_extensions
 
         protected readonly IMaybeObserver<R> downstream;
 
-        protected readonly FlatMapInnerObserver<R> inner;
+        protected readonly MaybeFlatMapInnerObserver<R> inner;
 
         protected IDisposable upstream;
 
         public MaybeFlatMapObserver(IMaybeObserver<R> downstream)
         {
             this.downstream = downstream;
-            this.inner = new FlatMapInnerObserver<R>(downstream);
+            this.inner = new MaybeFlatMapInnerObserver<R>(downstream);
         }
 
         public virtual void Dispose()

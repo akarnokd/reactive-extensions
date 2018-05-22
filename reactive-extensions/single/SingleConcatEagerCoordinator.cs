@@ -9,7 +9,7 @@ namespace akarnokd.reactive_extensions
     /// </summary>
     /// <typeparam name="T">The success value type of the sources.</typeparam>
     /// <remarks>Since 0.0.12</remarks>
-    internal abstract class MaybeConcatEagerCoordinator<T> : IDisposable
+    internal abstract class SingleConcatEagerCoordinator<T> : IDisposable
     {
         protected readonly IObserver<T> downstream;
 
@@ -23,7 +23,7 @@ namespace akarnokd.reactive_extensions
 
         protected Exception errors;
 
-        protected MaybeConcatEagerCoordinator(IObserver<T> downstream, bool delayErrors)
+        protected SingleConcatEagerCoordinator(IObserver<T> downstream, bool delayErrors)
         {
             this.downstream = downstream;
             this.delayErrors = delayErrors;
@@ -58,7 +58,7 @@ namespace akarnokd.reactive_extensions
             Drain();
         }
 
-        public bool SubscribeTo(IMaybeSource<T> source)
+        public bool SubscribeTo(ISingleSource<T> source)
         {
             var inner = new InnerObserver(this);
             observers.Enqueue(inner);
@@ -70,7 +70,7 @@ namespace akarnokd.reactive_extensions
             }
             if (source == null)
             {
-                InnerError(inner, new NullReferenceException("The IMaybeSource is null"));
+                InnerError(inner, new NullReferenceException("The ISingleSource is null"));
                 return true;
             }
             source.Subscribe(inner);
@@ -79,16 +79,16 @@ namespace akarnokd.reactive_extensions
 
         internal abstract void Drain();
 
-        internal sealed class InnerObserver : IMaybeObserver<T>, IDisposable
+        internal sealed class InnerObserver : ISingleObserver<T>, IDisposable
         {
-            readonly MaybeConcatEagerCoordinator<T> parent;
+            readonly SingleConcatEagerCoordinator<T> parent;
 
             internal IDisposable upstream;
 
             internal T value;
             int state;
 
-            public InnerObserver(MaybeConcatEagerCoordinator<T> parent)
+            public InnerObserver(SingleConcatEagerCoordinator<T> parent)
             {
                 this.parent = parent;
             }
@@ -106,12 +106,6 @@ namespace akarnokd.reactive_extensions
             internal void SetDone()
             {
                 Volatile.Write(ref this.state, 2);
-            }
-
-            public void OnCompleted()
-            {
-                SetDone();
-                parent.Drain();
             }
 
             public void OnError(Exception error)
@@ -135,15 +129,15 @@ namespace akarnokd.reactive_extensions
 
     /// <summary>
     /// Coordinator for eagerly concatenating all sources.
-    /// Use <code>SubscribeTo(IMaybeSource{T})</code>
+    /// Use <code>SubscribeTo(ISingleSource{T})</code>
     /// to submit items, then call <see cref="Done"/>.
     /// </summary>
     /// <remarks>Since 0.0.12</remarks>
-    internal sealed class MaybeConcatEagerAllCoordinator<T> : MaybeConcatEagerCoordinator<T>
+    internal sealed class SingleConcatEagerAllCoordinator<T> : SingleConcatEagerCoordinator<T>
     {
         bool done;
 
-        internal MaybeConcatEagerAllCoordinator(IObserver<T> downstream, bool delayErrors) : base(downstream, delayErrors)
+        internal SingleConcatEagerAllCoordinator(IObserver<T> downstream, bool delayErrors) : base(downstream, delayErrors)
         {
         }
 

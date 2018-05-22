@@ -7,25 +7,25 @@ using static akarnokd.reactive_extensions.ValidationHelper;
 namespace akarnokd.reactive_extensions
 {
     /// <summary>
-    /// Retries (resubscribes to) the maybe source after a failure and when the observable
+    /// Retries (resubscribes to) the single source after a failure and when the observable
     /// returned by a handler produces an arbitrary item.
     /// </summary>
     /// <typeparam name="T">The type of the elements in the source sequence.</typeparam>
     /// <typeparam name="U">The arbitrary element type signaled by the handler observable.</typeparam>
     /// <remarks>Since 0.0.13</remarks>
-    internal sealed class MaybeRetryWhen<T, U> : IMaybeSource<T>
+    internal sealed class SingleRetryWhen<T, U> : ISingleSource<T>
     {
-        readonly IMaybeSource<T> source;
+        readonly ISingleSource<T> source;
 
         readonly Func<IObservable<Exception>, IObservable<U>> handler;
 
-        public MaybeRetryWhen(IMaybeSource<T> source, Func<IObservable<Exception>, IObservable<U>> handler)
+        public SingleRetryWhen(ISingleSource<T> source, Func<IObservable<Exception>, IObservable<U>> handler)
         {
             this.source = source;
             this.handler = handler;
         }
 
-        public void Subscribe(IMaybeObserver<T> observer)
+        public void Subscribe(ISingleObserver<T> observer)
         {
             var terminalSignal = new UnicastSubject<Exception>();
 
@@ -50,23 +50,13 @@ namespace akarnokd.reactive_extensions
             parent.Next();
         }
 
-        internal sealed class RetryWhenObserver : MaybeRedoWhenObserver<T, U, Exception>
+        internal sealed class RetryWhenObserver : SingleRedoWhenObserver<T, U, Exception>
         {
-            readonly IMaybeObserver<T> downstream;
+            readonly ISingleObserver<T> downstream;
 
-            public RetryWhenObserver(IMaybeObserver<T> downstream, IMaybeSource<T> source, IObserver<Exception> terminalSignal) : base(source, terminalSignal)
+            public RetryWhenObserver(ISingleObserver<T> downstream, ISingleSource<T> source, IObserver<Exception> terminalSignal) : base(source, terminalSignal)
             {
                 this.downstream = downstream;
-            }
-
-            public override void OnCompleted()
-            {
-                DisposableHelper.WeakDispose(ref upstream);
-                redoObserver.Dispose();
-                if (Interlocked.CompareExchange(ref halfSerializer, 1, 0) == 0)
-                {
-                    downstream.OnCompleted();
-                }
             }
 
             public override void OnError(Exception error)
@@ -90,7 +80,7 @@ namespace akarnokd.reactive_extensions
                 Dispose();
                 if (Interlocked.CompareExchange(ref halfSerializer, 1, 0) == 0)
                 {
-                    downstream.OnCompleted();
+                    downstream.OnError(new IndexOutOfRangeException("The source is empty"));
                 }
             }
 

@@ -1,27 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Text;
 using System.Threading;
-using static akarnokd.reactive_extensions.ValidationHelper;
 
 namespace akarnokd.reactive_extensions
 {
+
     /// <summary>
-    /// Runs some or all maybe sources, produced by
-    /// an enumerable sequence, at once but emits
+    /// Runs some or all single sources at once but emits
     /// their success item in order and optionally delays
     /// errors until all sources terminate.
     /// </summary>
     /// <typeparam name="T">The success value type.</typeparam>
     /// <remarks>Since 0.0.12</remarks>
-    internal sealed class MaybeConcatEagerEnumerable<T> : IObservable<T>
+    internal sealed class SingleConcatEager<T> : IObservable<T>
     {
-        readonly IEnumerable<IMaybeSource<T>> sources;
+        readonly ISingleSource<T>[] sources;
 
         readonly int maxConcurrency;
 
         readonly bool delayErrors;
 
-        public MaybeConcatEagerEnumerable(IEnumerable<IMaybeSource<T>> sources, int maxConcurrency, bool delayErrors)
+        public SingleConcatEager(ISingleSource<T>[] sources, int maxConcurrency, bool delayErrors)
         {
             this.sources = sources;
             this.maxConcurrency = maxConcurrency;
@@ -30,57 +29,25 @@ namespace akarnokd.reactive_extensions
 
         public IDisposable Subscribe(IObserver<T> observer)
         {
-            var en = default(IEnumerator<IMaybeSource<T>>);
-
-            try
-            {
-                en = RequireNonNullRef(sources.GetEnumerator(), "The GetEnumerator returned a null IEnumerator");
-            }
-            catch (Exception ex)
-            {
-                observer.OnError(ex);
-                return DisposableHelper.EMPTY;
-            }
-
             if (maxConcurrency == int.MaxValue)
             {
-                var parent = new MaybeConcatEagerAllCoordinator<T>(observer, delayErrors);
+                var parent = new SingleConcatEagerAllCoordinator<T>(observer, delayErrors);
 
-                for (; ; )
+                foreach (var src in sources)
                 {
-                    var b = false;
-                    var src = default(IMaybeSource<T>);
-                    try
-                    {
-                        b = en.MoveNext();
-                        if (!b)
-                        {
-                            break;
-                        }
-                        src = en.Current;
-                    }
-                    catch (Exception ex)
-                    {
-                        parent.SubscribeTo(MaybeSource.Error<T>(ex));
-                        break;
-                    }
-
                     if (!parent.SubscribeTo(src))
                     {
                         break;
                     }
                 }
 
-                en.Dispose();
-
                 parent.Done();
 
                 return parent;
-
             }
             else
             {
-                var parent = new ConcatEagerLimitedCoordinator(observer, en, maxConcurrency, delayErrors);
+                var parent = new ConcatEagerLimitedCoordinator(observer, sources, maxConcurrency, delayErrors);
 
                 parent.Drain();
 
@@ -88,26 +55,20 @@ namespace akarnokd.reactive_extensions
             }
         }
 
-        sealed class ConcatEagerLimitedCoordinator : MaybeConcatEagerCoordinator<T>
+        sealed class ConcatEagerLimitedCoordinator : SingleConcatEagerCoordinator<T>
         {
-            IEnumerator<IMaybeSource<T>> sources;
+            readonly ISingleSource<T>[] sources;
 
             readonly int maxConcurrency;
 
+            int index;
+
             int active;
 
-            bool done;
-
-            internal ConcatEagerLimitedCoordinator(IObserver<T> downstream, IEnumerator<IMaybeSource<T>> sources, int maxConcurrency, bool delayErrors) : base(downstream, delayErrors)
+            internal ConcatEagerLimitedCoordinator(IObserver<T> downstream, ISingleSource<T>[] sources, int maxConcurrency, bool delayErrors) : base(downstream, delayErrors)
             {
                 this.sources = sources;
                 this.maxConcurrency = maxConcurrency;
-            }
-
-            public override void Dispose()
-            {
-                base.Dispose();
-                Drain();
             }
 
             internal override void Drain()
@@ -122,6 +83,7 @@ namespace akarnokd.reactive_extensions
                 var downstream = this.downstream;
                 var delayErrors = this.delayErrors;
                 var sources = this.sources;
+                var n = sources.Length;
 
                 for (; ; )
                 {
@@ -130,11 +92,6 @@ namespace akarnokd.reactive_extensions
                         while (observers.TryDequeue(out var inner))
                         {
                             inner.Dispose();
-                        }
-                        if (sources != null)
-                        {
-                            this.sources = null;
-                            sources.Dispose();
                         }
                     }
                     else
@@ -150,54 +107,19 @@ namespace akarnokd.reactive_extensions
                             }
                         }
 
-                        if (active < maxConcurrency && !done)
+                        var idx = index;
+                        if (active < maxConcurrency && idx < n)
                         {
+                            var src = sources[idx];
 
-                            var src = default(IMaybeSource<T>);
+                            index = idx + 1;
+                            active++;
 
-                            try
-                            {
-                                if (sources.MoveNext())
-                                {
-                                    src = sources.Current;
-                                }
-                                else
-                                {
-                                    done = true;
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                done = true;
-                                sources.Dispose();
-                                this.sources = null;
-
-                                if (delayErrors)
-                                {
-                                    ExceptionHelper.AddException(ref errors, ex);
-                                }
-                                else
-                                {
-                                    Interlocked.CompareExchange(ref errors, ex, null);
-                                }
-                                continue;
-                            }
-
-                            if (!done)
-                            {
-                                active++;
-
-                                SubscribeTo(src);
-                                continue;
-                            }
-                            else
-                            {
-                                sources.Dispose();
-                                this.sources = null;
-                            }
+                            SubscribeTo(src);
+                            continue;
                         }
 
-                        var d = done;
+                        var d = index == n;
                         var empty = !observers.TryPeek(out var inner);
 
                         if (d && empty)

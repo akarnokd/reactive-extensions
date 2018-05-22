@@ -31,7 +31,7 @@ namespace akarnokd.reactive_extensions
         {
             if (maxConcurrency == int.MaxValue)
             {
-                var parent = new ConcatEagerAllCoordinator<T>(observer, delayErrors);
+                var parent = new MaybeConcatEagerAllCoordinator<T>(observer, delayErrors);
 
                 foreach (var src in sources)
                 {

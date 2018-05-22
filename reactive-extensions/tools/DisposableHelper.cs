@@ -187,6 +187,12 @@ namespace akarnokd.reactive_extensions
             observer.OnCompleted();
         }
 
+        internal static void Complete<T>(this ISingleObserver<T> observer)
+        {
+            observer.OnSubscribe(EMPTY);
+            observer.OnError(new IndexOutOfRangeException("The source was empty."));
+        }
+
         internal static void Complete<T>(this IMaybeObserver<T> observer)
         {
             observer.OnSubscribe(EMPTY);
