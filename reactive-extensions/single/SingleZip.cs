@@ -61,8 +61,6 @@ namespace akarnokd.reactive_extensions
 
         Exception error;
 
-        bool hasEmpty;
-
         internal static void Run(ISingleSource<T>[] srcs, int n, ISingleObserver<R> observer, Func<T[], R> mapper, bool delayErrors)
         {
             if (n == 0)
@@ -178,12 +176,6 @@ namespace akarnokd.reactive_extensions
                         if (ex != null)
                         {
                             downstream.OnError(ex);
-                            return;
-                        }
-
-                        if (hasEmpty)
-                        {
-                            downstream.OnError(new IndexOutOfRangeException("One or more sources are empty"));
                             return;
                         }
                     }

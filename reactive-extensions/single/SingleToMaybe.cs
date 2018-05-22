@@ -11,11 +11,11 @@ namespace akarnokd.reactive_extensions
     /// </summary>
     /// <typeparam name="T">The element type of the single source.</typeparam>
     /// <remarks>Since 0.0.12</remarks>
-    internal sealed class SingleToSingle<T> : IMaybeSource<T>
+    internal sealed class SingleToMaybe<T> : IMaybeSource<T>
     {
         readonly ISingleSource<T> source;
 
-        public SingleToSingle(ISingleSource<T> source)
+        public SingleToMaybe(ISingleSource<T> source)
         {
             this.source = source;
         }

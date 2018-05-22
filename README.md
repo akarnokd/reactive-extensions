@@ -629,28 +629,83 @@ Extension methods host: `SingleSource`
 
 ### Factory methods
 
+- `Amb`
+- `AmbAll`
+- `Concat`
+- `ConcatAll`
+- `ConcatEager`
+- `ConcatEagerAll`
 - `Create`
+- `Defer`
 - `Error`
 - `FromFunc`
+- `FromTask`
 - `Just`
+- `Merge`
+- `MergeAll`
 - `Never`
+- `Timer`
+- `Using`
+- `Zip`
 
 ### Instance methods
 
 - `Compose`
 - `Filter`
 - `FlatMap`
+- `Cache`
+- `Delay`
+- `DelaySubscription`
+- `DoAfterSuccess`
+- `DoAfterTerminate`
+- `DoOnDispose`
+- `DoOnError`
+- `DoOnSubscribe`
+- `DoOnSuccess`
+- `DoOnTerminate`
+- `FlatMap` (onto `IEnumerable`, `ISingleSource`)
+- `Map`
+- `ObserveOn`
+- `OnErrorResumeNext`
+- `OnTerminateDetach`
+- `Repeat`
+- `RepeatWhen`
+- `Retry`
+- `RetryWhen`
+- `SubscribeOn`
+- `SubscribeSafe`
+- `TakeUntil`
+- `Timeout`
+- `UnsubscribeOn`
 
 ### Consumer methods
 
+- `BlockingSubscribe`
 - `Subscribe`
+- `SubscribeSafe`
 - `SubscribeWith`
 - `Test`
+- `Wait`
 
 ### Interoperation
 
-- `FlatMap` (onto `ICompletableSource`, `IMaybeSource`)
+- `ConcatMap` (on `IObservable`)
+- `ConcatMapEager` (on `IObservable`)
+- `ElementAtOrDefault`
+- `ElementAtOrError`
+- `FirstOrDefault`
+- `FirstOrError`
+- `FlatMap` (onto `ICompletableSource`, `IMaybeSource`, `IObservable`)
 - `IgnoreElement`
+- `LastOrDefault`
+- `LastOrError`
+- `SingleOrDefault`
+- `SingleOrError`
+- `SwitchMap` (on `IObservable`)
+- `ToMaybe`
+- `ToObservable`
+- `ToSingle`
+- `ToTask`
 
 ### SingleSubject
 
@@ -749,9 +804,9 @@ Extension methods host: `MaybeSource`
 - `LastElement` (on `IObservable`)
 - `SingleElement` (on `IObservable`)
 - `SwitchMap` (on `IObservable`)
-- `ToTask`
 - `ToObservable`
 - `ToSingle`
+- `ToTask`
 
 ### MaybeSubject
 
