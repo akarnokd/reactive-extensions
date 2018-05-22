@@ -3,26 +3,16 @@ using System;
 using akarnokd.reactive_extensions;
 using System.Threading;
 
-namespace akarnokd.reactive_extensions_test.maybe
+namespace akarnokd.reactive_extensions_test.single
 {
     [TestFixture]
-    public class MaybeToTaskTest
+    public class SingleToTaskTest
     {
-        [Test]
-        public void Basic()
-        {
-            Assert.True(
-                MaybeSource.Empty<int>()
-                .ToTask()
-                .Wait(5000)
-            );
-        }
-
         [Test]
         public void Success()
         {
             Assert.True(
-                MaybeSource.Just(1)
+                SingleSource.Just(1)
                 .ToTask()
                 .Wait(5000)
             );
@@ -31,7 +21,7 @@ namespace akarnokd.reactive_extensions_test.maybe
         [Test]
         public void Success_Value()
         {
-            var t = MaybeSource.Just(1)
+            var t = SingleSource.Just(1)
                 .ToTask();
 
             t.Wait(5000);
@@ -45,7 +35,7 @@ namespace akarnokd.reactive_extensions_test.maybe
             try
             {
                 Assert.True(
-                    MaybeSource.Error<int>(new InvalidOperationException())
+                    SingleSource.Error<int>(new InvalidOperationException())
                     .ToTask()
                     .Wait(5000)
                 );
@@ -59,24 +49,12 @@ namespace akarnokd.reactive_extensions_test.maybe
         }
 
         [Test]
-        public void Basic_Token()
-        {
-            var cts = new CancellationTokenSource();
-
-            Assert.True(
-                MaybeSource.Empty<int>()
-                .ToTask(cts)
-                .Wait(5000)
-            );
-        }
-
-        [Test]
         public void Success_Token()
         {
             var cts = new CancellationTokenSource();
 
             Assert.True(
-                MaybeSource.Just(1)
+                SingleSource.Just(1)
                 .ToTask(cts)
                 .Wait(5000)
             );
@@ -90,7 +68,7 @@ namespace akarnokd.reactive_extensions_test.maybe
             try
             {
                 Assert.True(
-                    MaybeSource.Error<int>(new InvalidOperationException())
+                    SingleSource.Error<int>(new InvalidOperationException())
                     .ToTask(cts)
                     .Wait(5000)
                 );
@@ -108,7 +86,7 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             var cts = new CancellationTokenSource();
 
-            var cs = new MaybeSubject<int>();
+            var cs = new SingleSubject<int>();
 
             var task = cs
                 .ToTask(cts);
@@ -129,7 +107,7 @@ namespace akarnokd.reactive_extensions_test.maybe
             var cts = new CancellationTokenSource();
             cts.Cancel();
 
-            var cs = new MaybeSubject<int>();
+            var cs = new SingleSubject<int>();
 
             var task = cs
                 .ToTask(cts);

@@ -4,33 +4,22 @@ using akarnokd.reactive_extensions;
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace akarnokd.reactive_extensions_test.maybe
+namespace akarnokd.reactive_extensions_test.single
 {
     [TestFixture]
-    public class MaybeBlockingSubscribeTest
+    public class SingleBlockingSubscribeTest
     {
-        #region + IMaybeObserver +
+        #region + ISingleObserver +
 
         [Test]
         public void Observer_Success()
         {
             var to = new TestObserver<int>();
 
-            MaybeSource.Just(1)
+            SingleSource.Just(1)
                 .BlockingSubscribe(to);
 
             to.AssertResult(1);
-        }
-
-        [Test]
-        public void Observer_Empty()
-        {
-            var to = new TestObserver<int>();
-
-            MaybeSource.Empty<int>()
-                .BlockingSubscribe(to);
-
-            to.AssertResult();
         }
 
         [Test]
@@ -38,7 +27,7 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             var to = new TestObserver<int>();
 
-            MaybeSource.Error<int>(new InvalidOperationException())
+            SingleSource.Error<int>(new InvalidOperationException())
                 .BlockingSubscribe(to);
 
             to.AssertFailure(typeof(InvalidOperationException));
@@ -50,7 +39,7 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             for (int i = 0; i < TestHelper.RACE_LOOPS; i++)
             {
-                var cs = new MaybeSubject<int>();
+                var cs = new SingleSubject<int>();
 
                 var to = new TestObserver<int>();
 
@@ -73,35 +62,11 @@ namespace akarnokd.reactive_extensions_test.maybe
 
         [Test]
         [Timeout(5000)]
-        public void Observer_Complete_Async()
-        {
-            for (int i = 0; i < TestHelper.RACE_LOOPS; i++)
-            {
-                var cs = new MaybeSubject<int>();
-
-                var to = new TestObserver<int>();
-
-                var cdl = new CountdownEvent(1);
-
-                Task.Factory.StartNew(() =>
-                {
-                    while (!cs.HasObserver()) ;
-                    cs.OnCompleted();
-                });
-
-                cs.BlockingSubscribe(to);
-
-                to.AssertResult();
-            }
-        }
-
-        [Test]
-        [Timeout(5000)]
         public void Observer_Success_Async()
         {
             for (int i = 0; i < TestHelper.RACE_LOOPS; i++)
             {
-                var cs = new MaybeSubject<int>();
+                var cs = new SingleSubject<int>();
 
                 var to = new TestObserver<int>();
 
@@ -125,7 +90,7 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             for (int i = 0; i < TestHelper.RACE_LOOPS; i++)
             {
-                var cs = new MaybeSubject<int>();
+                var cs = new SingleSubject<int>();
 
                 var to = new TestObserver<int>();
 
@@ -143,27 +108,16 @@ namespace akarnokd.reactive_extensions_test.maybe
             }
         }
 
-        #endregion + IMaybeObserver +
+        #endregion + ISingleObserver +
 
         #region + Action +
-
-        [Test]
-        public void Action_Empty_Ignored()
-        {
-            var count = 0;
-
-            MaybeSource.FromAction<int>(() => count++)
-                .BlockingSubscribe();
-
-            Assert.AreEqual(1, count);
-        }
 
         [Test]
         public void Action_Just_Ignored()
         {
             var count = 0;
 
-            MaybeSource.FromFunc(() => ++count)
+            SingleSource.FromFunc(() => ++count)
                 .BlockingSubscribe();
 
             Assert.AreEqual(1, count);
@@ -172,19 +126,8 @@ namespace akarnokd.reactive_extensions_test.maybe
         [Test]
         public void Action_Block_Error_Ignored()
         {
-            MaybeSource.Error<int>(new InvalidOperationException())
+            SingleSource.Error<int>(new InvalidOperationException())
                 .BlockingSubscribe();
-        }
-
-        [Test]
-        public void Action_Empty()
-        {
-            var to = new TestObserver<int>();
-
-            MaybeSource.Empty<int>()
-                .BlockingSubscribe(to.OnSuccess, to.OnError, to.OnCompleted);
-
-            to.AssertResult();
         }
 
         [Test]
@@ -192,8 +135,8 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             var to = new TestObserver<int>();
 
-            MaybeSource.Error<int>(new InvalidOperationException())
-                .BlockingSubscribe(to.OnSuccess, to.OnError, to.OnCompleted);
+            SingleSource.Error<int>(new InvalidOperationException())
+                .BlockingSubscribe(to.OnSuccess, to.OnError);
 
             to.AssertFailure(typeof(InvalidOperationException));
         }
@@ -204,7 +147,7 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             for (int i = 0; i < TestHelper.RACE_LOOPS; i++)
             {
-                var cs = new MaybeSubject<int>();
+                var cs = new SingleSubject<int>();
 
                 var to = new TestObserver<int>();
 
@@ -217,7 +160,7 @@ namespace akarnokd.reactive_extensions_test.maybe
                     cdl.Signal();
                 });
 
-                cs.BlockingSubscribe(to.OnSuccess, to.OnError, to.OnCompleted, to.OnSubscribe);
+                cs.BlockingSubscribe(to.OnSuccess, to.OnError, to.OnSubscribe);
 
                 cdl.Wait();
 
@@ -227,35 +170,11 @@ namespace akarnokd.reactive_extensions_test.maybe
 
         [Test]
         [Timeout(5000)]
-        public void Action_Complete_Async()
-        {
-            for (int i = 0; i < TestHelper.RACE_LOOPS; i++)
-            {
-                var cs = new MaybeSubject<int>();
-
-                var to = new TestObserver<int>();
-
-                var cdl = new CountdownEvent(1);
-
-                Task.Factory.StartNew(() =>
-                {
-                    while (!cs.HasObserver()) ;
-                    cs.OnCompleted();
-                });
-
-                cs.BlockingSubscribe(to.OnSuccess, to.OnError, to.OnCompleted);
-
-                to.AssertResult();
-            }
-        }
-
-        [Test]
-        [Timeout(5000)]
         public void Action_Success_Async()
         {
             for (int i = 0; i < TestHelper.RACE_LOOPS; i++)
             {
-                var cs = new MaybeSubject<int>();
+                var cs = new SingleSubject<int>();
 
                 var to = new TestObserver<int>();
 
@@ -267,7 +186,7 @@ namespace akarnokd.reactive_extensions_test.maybe
                     cs.OnSuccess(1);
                 });
 
-                cs.BlockingSubscribe(to.OnSuccess, to.OnError, to.OnCompleted);
+                cs.BlockingSubscribe(to.OnSuccess, to.OnError);
 
                 to.AssertResult(1);
             }
@@ -279,7 +198,7 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             for (int i = 0; i < TestHelper.RACE_LOOPS; i++)
             {
-                var cs = new MaybeSubject<int>();
+                var cs = new SingleSubject<int>();
 
                 var to = new TestObserver<int>();
 
@@ -291,7 +210,7 @@ namespace akarnokd.reactive_extensions_test.maybe
                     cs.OnError(new InvalidOperationException());
                 });
 
-                cs.BlockingSubscribe(to.OnSuccess, to.OnError, to.OnCompleted);
+                cs.BlockingSubscribe(to.OnSuccess, to.OnError);
 
                 to.AssertFailure(typeof(InvalidOperationException));
             }

@@ -11,11 +11,11 @@ namespace akarnokd.reactive_extensions
     /// </summary>
     /// <typeparam name="T">The value type of the source observable.</typeparam>
     /// <remarks>Since 0.0.11</remarks>
-    internal sealed class SingleSingleElement<T> : ISingleSource<T>
+    internal sealed class SingleSingleOrError<T> : ISingleSource<T>
     {
         readonly IObservable<T> source;
 
-        public SingleSingleElement(IObservable<T> source)
+        public SingleSingleOrError(IObservable<T> source)
         {
             this.source = source;
         }

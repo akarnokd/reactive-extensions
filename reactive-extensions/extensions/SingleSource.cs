@@ -17,10 +17,10 @@ namespace akarnokd.reactive_extensions
     {
         /// <summary>
         /// Test an observable by creating a TestObserver and subscribing 
-        /// it to the <paramref name="source"/> maybe.
+        /// it to the <paramref name="source"/> single.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="source">The source maybe to test.</param>
+        /// <param name="source">The source single to test.</param>
         /// <param name="dispose">Dispose the TestObserver before the subscription happens</param>
         /// <returns>The new TestObserver instance.</returns>
         public static TestObserver<T> Test<T>(this ISingleSource<T> source, bool dispose = false)
@@ -40,14 +40,14 @@ namespace akarnokd.reactive_extensions
         //-------------------------------------------------
 
         /// <summary>
-        /// Creates a maybe that calls the specified <paramref name="onSubscribe"/>
+        /// Creates a single that calls the specified <paramref name="onSubscribe"/>
         /// action with a <see cref="ISingleEmitter{T}"/> to allow
         /// bridging the callback world with the reactive world.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
         /// <param name="onSubscribe">The action that is called with an emitter
         /// that can be used for signaling an item, completion or error event.</param>
-        /// <returns>The new maybe instance</returns>
+        /// <returns>The new single instance</returns>
         public static ISingleSource<T> Create<T>(Action<ISingleEmitter<T>> onSubscribe)
         {
             RequireNonNull(onSubscribe, nameof(onSubscribe));
@@ -56,12 +56,12 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Creates a failing maybe that signals the specified error
+        /// Creates a failing single that signals the specified error
         /// immediately.
         /// </summary>
-        /// <typeparam name="T">The element type of the maybe.</typeparam>
+        /// <typeparam name="T">The element type of the single.</typeparam>
         /// <param name="error">The error to signal.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <returns>The new single source instance.</returns>
         public static ISingleSource<T> Error<T>(Exception error)
         {
             RequireNonNull(error, nameof(error));
@@ -70,21 +70,21 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Creates a maybe that never terminates.
+        /// Creates a single that never terminates.
         /// </summary>
-        /// <typeparam name="T">The element type of the maybe.</typeparam>
-        /// <returns>The shared never-terminating maybe instance.</returns>
+        /// <typeparam name="T">The element type of the single.</typeparam>
+        /// <returns>The shared never-terminating single instance.</returns>
         public static ISingleSource<T> Never<T>()
         {
             return SingleNever<T>.INSTANCE;
         }
 
         /// <summary>
-        /// Creates a maybe that succeeds with the given <paramref name="item"/>.
+        /// Creates a single that succeeds with the given <paramref name="item"/>.
         /// </summary>
         /// <typeparam name="T">The type of the single item.</typeparam>
         /// <param name="item">The item to succeed with.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.9</remarks>
         public static ISingleSource<T> Just<T>(T item)
         {
@@ -93,12 +93,12 @@ namespace akarnokd.reactive_extensions
 
         /// <summary>
         /// Wraps and runs a function for each incoming
-        /// maybe observer and signals the value returned
+        /// single observer and signals the value returned
         /// by the function as the success event.
         /// </summary>
         /// <typeparam name="T">The value type.</typeparam>
         /// <param name="func">The function to call for each observer.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.11</remarks>
         public static ISingleSource<T> FromFunc<T>(Func<T> func)
         {
@@ -108,13 +108,13 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Creates a maybe source that succeeds or fails
+        /// Creates a single source that succeeds or fails
         /// its observers when the given (possibly still ongoing)
         /// task terminates.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
         /// <param name="task">The task to wrap.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.11</remarks>
         public static ISingleSource<T> FromTask<T>(Task<T> task)
         {
@@ -122,12 +122,12 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Relays the signals of the first maybe source to respond
+        /// Relays the signals of the first single source to respond
         /// and disposes the other sources.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="sources">The array of maybe sources.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <param name="sources">The array of single sources.</param>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.12</remarks>
         public static ISingleSource<T> AmbAll<T>(this ISingleSource<T>[] sources)
         {
@@ -137,12 +137,12 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Relays the signals of the first maybe source to respond
+        /// Relays the signals of the first single source to respond
         /// and disposes the other sources.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="sources">The array of maybe sources.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <param name="sources">The array of single sources.</param>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.12</remarks>
         public static ISingleSource<T> Amb<T>(params ISingleSource<T>[] sources)
         {
@@ -152,12 +152,12 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Relays the signals of the first maybe source to respond
+        /// Relays the signals of the first single source to respond
         /// and disposes the other sources.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="sources">The enumerable sequence of maybe sources.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <param name="sources">The enumerable sequence of single sources.</param>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.12</remarks>
         public static ISingleSource<T> Amb<T>(this IEnumerable<ISingleSource<T>> sources)
         {
@@ -167,12 +167,12 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Runs each source maybe and emits their success items in order,
+        /// Runs each source single and emits their success items in order,
         /// optionally delaying errors from all of them until
         /// all terminate.
         /// </summary>
         /// <typeparam name="T">The success and result value type.</typeparam>
-        /// <param name="sources">The array of maybe sources.</param>
+        /// <param name="sources">The array of single sources.</param>
         /// <param name="delayErrors">If true, errors are delayed until all sources terminate.</param>
         /// <returns>The new observable instance.</returns>
         /// <remarks>Since 0.0.12</remarks>
@@ -184,10 +184,10 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Runs each source maybe and emits their success items in order.
+        /// Runs each source single and emits their success items in order.
         /// </summary>
         /// <typeparam name="T">The success and result value type.</typeparam>
-        /// <param name="sources">The array of maybe sources.</param>
+        /// <param name="sources">The array of single sources.</param>
         /// <returns>The new observable instance.</returns>
         /// <remarks>Since 0.0.12</remarks>
         public static IObservable<T> Concat<T>(params ISingleSource<T>[] sources)
@@ -196,12 +196,12 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Runs each source maybe and emits their success items in order,
+        /// Runs each source single and emits their success items in order,
         /// optionally delaying errors from all of them until
         /// all terminate.
         /// </summary>
         /// <typeparam name="T">The success and result value type.</typeparam>
-        /// <param name="sources">The array of maybe sources.</param>
+        /// <param name="sources">The array of single sources.</param>
         /// <param name="delayErrors">If true, errors are delayed until all sources terminate.</param>
         /// <returns>The new observable instance.</returns>
         /// <remarks>Since 0.0.12</remarks>
@@ -211,13 +211,13 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Runs each source maybe returned by the enumerable sequence
+        /// Runs each source single returned by the enumerable sequence
         /// and emits their success items in order,
         /// optionally delaying errors from all of them until
         /// all terminate.
         /// </summary>
         /// <typeparam name="T">The success and result value type.</typeparam>
-        /// <param name="sources">The enumerable sequence of maybe sources.</param>
+        /// <param name="sources">The enumerable sequence of single sources.</param>
         /// <param name="delayErrors">If true, errors are delayed until all sources terminate.</param>
         /// <returns>The new observable instance.</returns>
         /// <remarks>Since 0.0.12</remarks>
@@ -229,13 +229,13 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Runs each inner maybe source produced by the observable sequence
+        /// Runs each inner single source produced by the observable sequence
         /// and emits their success items in order,
         /// optionally delaying errors from all of them until
         /// all terminate.
         /// </summary>
         /// <typeparam name="T">The success and result value type.</typeparam>
-        /// <param name="sources">The array of maybe sources.</param>
+        /// <param name="sources">The array of single sources.</param>
         /// <param name="delayErrors">If true, errors are delayed until all sources terminate.</param>
         /// <returns>The new observable instance.</returns>
         /// <remarks>Since 0.0.12</remarks>
@@ -245,14 +245,14 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Runs some or all maybe sources at once but emits
+        /// Runs some or all single sources at once but emits
         /// their success item in order and optionally delays
         /// errors until all sources terminate.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="maxConcurrency">The maximum number of active inner maybe sources to run at once.</param>
+        /// <param name="maxConcurrency">The maximum number of active inner single sources to run at once.</param>
         /// <param name="delayErrors">If true, errors are delayed until all sources terminate.</param>
-        /// <param name="sources">The array of maybe sources to run eagerly.</param>
+        /// <param name="sources">The array of single sources to run eagerly.</param>
         /// <returns>The new observable instance.</returns>
         /// <remarks>Since 0.0.12</remarks>
         public static IObservable<T> ConcatEagerAll<T>(this ISingleSource<T>[] sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
@@ -264,11 +264,11 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Runs all maybe sources at once but emits
+        /// Runs all single sources at once but emits
         /// their success item in order.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="sources">The array of maybe sources to run eagerly.</param>
+        /// <param name="sources">The array of single sources to run eagerly.</param>
         /// <returns>The new observable instance.</returns>
         /// <remarks>Since 0.0.12</remarks>
         public static IObservable<T> ConcatEager<T>(params ISingleSource<T>[] sources)
@@ -277,15 +277,15 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Runs some or all maybe sources, produced by
+        /// Runs some or all single sources, produced by
         /// an enumerable sequence, at once but emits
         /// their success item in order and optionally delays
         /// errors until all sources terminate.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="sources">The enumerable sequence of maybe sources to run eagerly.</param>
+        /// <param name="sources">The enumerable sequence of single sources to run eagerly.</param>
         /// <param name="delayErrors">If true, errors are delayed until all sources terminate.</param>
-        /// <param name="maxConcurrency">The maximum number of active inner maybe sources to run at once.</param>
+        /// <param name="maxConcurrency">The maximum number of active inner single sources to run at once.</param>
         /// <returns>The new observable instance.</returns>
         /// <remarks>Since 0.0.12</remarks>
         public static IObservable<T> ConcatEager<T>(this IEnumerable<ISingleSource<T>> sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
@@ -297,12 +297,12 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Runs some or all maybe sources at once but emits
+        /// Runs some or all single sources at once but emits
         /// their success item in order.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="maxConcurrency">The maximum number of active inner maybe sources to run at once.</param>
-        /// <param name="sources">The array of maybe sources to run eagerly.</param>
+        /// <param name="maxConcurrency">The maximum number of active inner single sources to run at once.</param>
+        /// <param name="sources">The array of single sources to run eagerly.</param>
         /// <returns>The new observable instance.</returns>
         /// <remarks>Since 0.0.12</remarks>
         public static IObservable<T> ConcatEager<T>(int maxConcurrency, params ISingleSource<T>[] sources)
@@ -311,14 +311,14 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Runs some or all maybe sources at once but emits
+        /// Runs some or all single sources at once but emits
         /// their success item in order and optionally delays
         /// errors until all sources terminate.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="maxConcurrency">The maximum number of active inner maybe sources to run at once.</param>
+        /// <param name="maxConcurrency">The maximum number of active inner single sources to run at once.</param>
         /// <param name="delayErrors">If true, errors are delayed until all sources terminate.</param>
-        /// <param name="sources">The array of maybe sources to run eagerly.</param>
+        /// <param name="sources">The array of single sources to run eagerly.</param>
         /// <returns>The new observable instance.</returns>
         /// <remarks>Since 0.0.12</remarks>
         public static IObservable<T> ConcatEager<T>(bool delayErrors, int maxConcurrency, params ISingleSource<T>[] sources)
@@ -327,13 +327,13 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Runs all maybe sources at once but emits
+        /// Runs all single sources at once but emits
         /// their success item in order and optionally delays
         /// errors until all sources terminate.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
         /// <param name="delayErrors">If true, errors are delayed until all sources terminate.</param>
-        /// <param name="sources">The array of maybe sources to run eagerly.</param>
+        /// <param name="sources">The array of single sources to run eagerly.</param>
         /// <returns>The new observable instance.</returns>
         /// <remarks>Since 0.0.12</remarks>
         public static IObservable<T> ConcatEager<T>(bool delayErrors, params ISingleSource<T>[] sources)
@@ -342,15 +342,15 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Runs some or all maybe sources, provided by
+        /// Runs some or all single sources, provided by
         /// the observable sequence, at once but emits
         /// their success item in order and optionally delays
         /// errors until all sources terminate.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="sources">The observable sequence of maybe sources to run eagerly.</param>
+        /// <param name="sources">The observable sequence of single sources to run eagerly.</param>
         /// <param name="delayErrors">If true, errors are delayed until all sources terminate.</param>
-        /// <param name="maxConcurrency">The maximum number of active inner maybe sources to run at once.</param>
+        /// <param name="maxConcurrency">The maximum number of active inner single sources to run at once.</param>
         /// <returns>The new observable instance.</returns>
         /// <remarks>Since 0.0.12</remarks>
         public static IObservable<T> ConcatEager<T>(this IObservable<ISingleSource<T>> sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
@@ -359,13 +359,13 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Defers the creation of the actual maybe source
-        /// provided by a supplier function until a maybe observer completes.
+        /// Defers the creation of the actual single source
+        /// provided by a supplier function until a single observer completes.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="supplier">The function called for each individual maybe
-        /// observer and should return a maybe source to subscribe to.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <param name="supplier">The function called for each individual single
+        /// observer and should return a single source to subscribe to.</param>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.11</remarks>
         public static ISingleSource<T> Defer<T>(Func<ISingleSource<T>> supplier)
         {
@@ -375,13 +375,13 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Runs and merges some or all maybe sources into one observable sequence
+        /// Runs and merges some or all single sources into one observable sequence
         /// and optionally delays all errors until all sources terminate.
         /// </summary>
         /// <typeparam name="T">The success element and result type.</typeparam>
-        /// <param name="sources">The array of maybe sources.</param>
+        /// <param name="sources">The array of single sources.</param>
         /// <param name="delayErrors">Delays errors until all sources terminate.</param>
-        /// <param name="maxConcurrency">The maximum number of inner maybe sources to run at once.</param>
+        /// <param name="maxConcurrency">The maximum number of inner single sources to run at once.</param>
         /// <returns>The new observable instance.</returns>
         /// <remarks>Since 0.0.12</remarks>
         public static IObservable<T> MergeAll<T>(this ISingleSource<T>[] sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
@@ -393,10 +393,10 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Runs and merges all maybe sources into one observable sequence.
+        /// Runs and merges all single sources into one observable sequence.
         /// </summary>
         /// <typeparam name="T">The success element and result type.</typeparam>
-        /// <param name="sources">The array of maybe sources.</param>
+        /// <param name="sources">The array of single sources.</param>
         /// <returns>The new observable instance.</returns>
         /// <remarks>Since 0.0.12</remarks>
         public static IObservable<T> Merge<T>(params ISingleSource<T>[] sources)
@@ -405,14 +405,14 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Runs and merges some or all maybe sources, provided by an enumerable sequence,
+        /// Runs and merges some or all single sources, provided by an enumerable sequence,
         /// into one observable sequence and optionally delays all errors 
         /// until all sources terminate.
         /// </summary>
         /// <typeparam name="T">The success element and result type.</typeparam>
-        /// <param name="sources">The enumerable sequence of maybe sources.</param>
+        /// <param name="sources">The enumerable sequence of single sources.</param>
         /// <param name="delayErrors">Delays errors until all sources terminate.</param>
-        /// <param name="maxConcurrency">The maximum number of inner maybe sources to run at once.</param>
+        /// <param name="maxConcurrency">The maximum number of inner single sources to run at once.</param>
         /// <returns>The new observable instance.</returns>
         /// <remarks>Since 0.0.12</remarks>
         public static IObservable<T> Merge<T>(this IEnumerable<ISingleSource<T>> sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
@@ -424,11 +424,11 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Runs and merges some or all maybe sources into one observable sequence.
+        /// Runs and merges some or all single sources into one observable sequence.
         /// </summary>
         /// <typeparam name="T">The success element and result type.</typeparam>
-        /// <param name="sources">The array of maybe sources.</param>
-        /// <param name="maxConcurrency">The maximum number of inner maybe sources to run at once.</param>
+        /// <param name="sources">The array of single sources.</param>
+        /// <param name="maxConcurrency">The maximum number of inner single sources to run at once.</param>
         /// <returns>The new observable instance.</returns>
         /// <remarks>Since 0.0.12</remarks>
         public static IObservable<T> Merge<T>(int maxConcurrency, params ISingleSource<T>[] sources)
@@ -437,11 +437,11 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Runs and merges all maybe sources into one observable sequence
+        /// Runs and merges all single sources into one observable sequence
         /// and optionally delays all errors until all sources terminate.
         /// </summary>
         /// <typeparam name="T">The success element and result type.</typeparam>
-        /// <param name="sources">The array of maybe sources.</param>
+        /// <param name="sources">The array of single sources.</param>
         /// <param name="delayErrors">Delays errors until all sources terminate.</param>
         /// <returns>The new observable instance.</returns>
         /// <remarks>Since 0.0.12</remarks>
@@ -451,13 +451,13 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Runs and merges some or all maybe sources into one observable sequence
+        /// Runs and merges some or all single sources into one observable sequence
         /// and optionally delays all errors until all sources terminate.
         /// </summary>
         /// <typeparam name="T">The success element and result type.</typeparam>
-        /// <param name="sources">The array of maybe sources.</param>
+        /// <param name="sources">The array of single sources.</param>
         /// <param name="delayErrors">Delays errors until all sources terminate.</param>
-        /// <param name="maxConcurrency">The maximum number of inner maybe sources to run at once.</param>
+        /// <param name="maxConcurrency">The maximum number of inner single sources to run at once.</param>
         /// <returns>The new observable instance.</returns>
         /// <remarks>Since 0.0.12</remarks>
         public static IObservable<T> Merge<T>(bool delayErrors, int maxConcurrency, params ISingleSource<T>[] sources)
@@ -466,13 +466,13 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Runs and merges some or all maybe sources, provided by an observable sequence,
+        /// Runs and merges some or all single sources, provided by an observable sequence,
         /// into one observable sequence and optionally delays all errors until all sources terminate.
         /// </summary>
         /// <typeparam name="T">The success element and result type.</typeparam>
-        /// <param name="sources">The observable sequence of maybe sources.</param>
+        /// <param name="sources">The observable sequence of single sources.</param>
         /// <param name="delayErrors">Delays errors until all sources terminate.</param>
-        /// <param name="maxConcurrency">The maximum number of inner maybe sources to run at once.</param>
+        /// <param name="maxConcurrency">The maximum number of inner single sources to run at once.</param>
         /// <returns>The new observable instance.</returns>
         /// <remarks>Since 0.0.12</remarks>
         public static IObservable<T> Merge<T>(this IObservable<ISingleSource<T>> sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
@@ -485,7 +485,7 @@ namespace akarnokd.reactive_extensions
         /// </summary>
         /// <param name="time">The time to wait before signaling a success value of 0L.</param>
         /// <param name="scheduler">The scheduler to use for emitting the success value.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.11</remarks>
         public static ISingleSource<long> Timer(TimeSpan time, IScheduler scheduler)
         {
@@ -495,21 +495,21 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Generates a resource and a dependent maybe source
-        /// for each maybe observer and cleans up the resource
-        /// just before or just after the maybe source terminated
+        /// Generates a resource and a dependent single source
+        /// for each single observer and cleans up the resource
+        /// just before or just after the single source terminated
         /// or the observer has disposed the setup.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
         /// <typeparam name="S">The resource type.</typeparam>
         /// <param name="resourceSupplier">The supplier for a per-observer resource.</param>
         /// <param name="sourceSelector">Function that receives the per-observer resource returned
-        /// by <paramref name="resourceSupplier"/> and returns a maybe source.</param>
+        /// by <paramref name="resourceSupplier"/> and returns a single source.</param>
         /// <param name="resourceCleanup">The optional callback for cleaning up the resource supplied by
         /// the <paramref name="resourceSupplier"/>.</param>
         /// <param name="eagerCleanup">If true, the per-observer resource is cleaned up before the
         /// terminal event is signaled to the downstream. If false, the cleanup happens after.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.11</remarks>
         public static ISingleSource<T> Using<T, S>(Func<S> resourceSupplier, Func<S, ISingleSource<T>> sourceSelector, Action<S> resourceCleanup = null, bool eagerCleanup = true)
         {
@@ -520,7 +520,7 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Waits for all maybe sources to produce a success item and
+        /// Waits for all single sources to produce a success item and
         /// calls the <paramref name="mapper"/> function to generate
         /// the output success value to be signaled to the downstream.
         /// </summary>
@@ -529,8 +529,8 @@ namespace akarnokd.reactive_extensions
         /// <param name="mapper">The function receiving the success values of all the
         /// <paramref name="sources"/> and should return the result value to be
         /// signaled as the success value.</param>
-        /// <param name="sources">The array of maybe sources to zip together.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <param name="sources">The array of single sources to zip together.</param>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.12<br/>
         /// If any of the sources don't succeed, the other sources are disposed and
         /// the output is the completion/exception of that source.
@@ -541,7 +541,7 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Waits for all maybe sources to produce a success item and
+        /// Waits for all single sources to produce a success item and
         /// calls the <paramref name="mapper"/> function to generate
         /// the output success value to be signaled to the downstream.
         /// </summary>
@@ -550,12 +550,12 @@ namespace akarnokd.reactive_extensions
         /// <param name="mapper">The function receiving the success values of all the
         /// <paramref name="sources"/> and should return the result value to be
         /// signaled as the success value.</param>
-        /// <param name="sources">The array of maybe sources to zip together.</param>
+        /// <param name="sources">The array of single sources to zip together.</param>
         /// <param name="delayErrors">If true, the operator waits for all
         /// sources to terminate, even if some of them didn't produce a success item
         /// and terminates with the aggregate signal. If false, the downstream
         /// is terminated with the terminal event of the first empty source.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.12</remarks>
         public static ISingleSource<R> Zip<T, R>(Func<T[], R> mapper, bool delayErrors, params ISingleSource<T>[] sources)
         {
@@ -563,7 +563,7 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Waits for all maybe sources to produce a success item and
+        /// Waits for all single sources to produce a success item and
         /// calls the <paramref name="mapper"/> function to generate
         /// the output success value to be signaled to the downstream.
         /// </summary>
@@ -572,12 +572,12 @@ namespace akarnokd.reactive_extensions
         /// <param name="mapper">The function receiving the success values of all the
         /// <paramref name="sources"/> and should return the result value to be
         /// signaled as the success value.</param>
-        /// <param name="sources">The array of maybe sources to zip together.</param>
+        /// <param name="sources">The array of single sources to zip together.</param>
         /// <param name="delayErrors">If true, the operator waits for all
         /// sources to terminate, even if some of them didn't produce a success item
         /// and terminates with the aggregate signal. If false, the downstream
         /// is terminated with the terminal event of the first empty source.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.12</remarks>
         public static ISingleSource<R> Zip<T, R>(this ISingleSource<T>[] sources, Func<T[], R> mapper, bool delayErrors = false)
         {
@@ -588,7 +588,7 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Waits for all maybe sources to produce a success item and
+        /// Waits for all single sources to produce a success item and
         /// calls the <paramref name="mapper"/> function to generate
         /// the output success value to be signaled to the downstream.
         /// </summary>
@@ -597,12 +597,12 @@ namespace akarnokd.reactive_extensions
         /// <param name="mapper">The function receiving the success values of all the
         /// <paramref name="sources"/> and should return the result value to be
         /// signaled as the success value.</param>
-        /// <param name="sources">The enumerable sequence of maybe sources to zip together.</param>
+        /// <param name="sources">The enumerable sequence of single sources to zip together.</param>
         /// <param name="delayErrors">If true, the operator waits for all
         /// sources to terminate, even if some of them didn't produce a success item
         /// and terminates with the aggregate signal. If false, the downstream
         /// is terminated with the terminal event of the first empty source.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.12</remarks>
         public static ISingleSource<R> Zip<T, R>(this IEnumerable<ISingleSource<T>> sources, Func<T[], R> mapper, bool delayErrors = false)
         {
@@ -618,15 +618,15 @@ namespace akarnokd.reactive_extensions
 
         /// <summary>
         /// Applies a function to the source at assembly-time and returns the
-        /// maybe source returned by this function.
-        /// This allows creating reusable set of operators to be applied to maybe sources.
+        /// single source returned by this function.
+        /// This allows creating reusable set of operators to be applied to single sources.
         /// </summary>
         /// <typeparam name="T">The upstream element type.</typeparam>
-        /// <typeparam name="R">The element type of the returned maybe source.</typeparam>
-        /// <param name="source">The upstream maybe source.</param>
+        /// <typeparam name="R">The element type of the returned single source.</typeparam>
+        /// <param name="source">The upstream single source.</param>
         /// <param name="composer">The function called immediately on <paramref name="source"/>
-        /// and should return a maybe source.</param>
-        /// <returns>The maybe source returned by the <paramref name="composer"/> function.</returns>
+        /// and should return a single source.</param>
+        /// <returns>The single source returned by the <paramref name="composer"/> function.</returns>
         public static ISingleSource<R> Compose<T, R>(this ISingleSource<T> source, Func<ISingleSource<T>, ISingleSource<R>> composer)
         {
             return composer(source);
@@ -634,12 +634,12 @@ namespace akarnokd.reactive_extensions
 
         /// <summary>
         /// Calls the given <paramref name="handler"/> whenever the
-        /// upstream maybe <paramref name="source"/> signals a success item.
+        /// upstream single <paramref name="source"/> signals a success item.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="source">The maybe source to peek into.</param>
+        /// <param name="source">The single source to peek into.</param>
         /// <param name="handler">The handler to call.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.11</remarks>
         public static ISingleSource<T> DoOnSuccess<T>(this ISingleSource<T> source, Action<T> handler)
         {
@@ -651,13 +651,13 @@ namespace akarnokd.reactive_extensions
 
         /// <summary>
         /// Calls the given <paramref name="handler"/> after the
-        /// upstream maybe <paramref name="source"/>'s success
+        /// upstream single <paramref name="source"/>'s success
         /// item has been signaled to the downstream.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="source">The maybe source to peek into.</param>
+        /// <param name="source">The single source to peek into.</param>
         /// <param name="handler">The handler to call.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.11</remarks>
         public static ISingleSource<T> DoAfterSuccess<T>(this ISingleSource<T> source, Action<T> handler)
         {
@@ -669,12 +669,12 @@ namespace akarnokd.reactive_extensions
 
         /// <summary>
         /// Calls the given <paramref name="handler"/> whenever a
-        /// maybe observer subscribes to the maybe <paramref name="source"/>.
+        /// single observer subscribes to the single <paramref name="source"/>.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="source">The maybe source to peek into.</param>
+        /// <param name="source">The single source to peek into.</param>
         /// <param name="handler">The handler to call.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.11</remarks>
         public static ISingleSource<T> DoOnSubscribe<T>(this ISingleSource<T> source, Action<IDisposable> handler)
         {
@@ -686,13 +686,13 @@ namespace akarnokd.reactive_extensions
 
         /// <summary>
         /// Calls the given <paramref name="handler"/> whenever a
-        /// maybe observer disposes to the connection to
-        /// the maybe <paramref name="source"/>.
+        /// single observer disposes to the connection to
+        /// the single <paramref name="source"/>.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="source">The maybe source to peek into.</param>
+        /// <param name="source">The single source to peek into.</param>
         /// <param name="handler">The handler to call.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.11</remarks>
         public static ISingleSource<T> DoOnDispose<T>(this ISingleSource<T> source, Action handler)
         {
@@ -704,31 +704,13 @@ namespace akarnokd.reactive_extensions
 
         /// <summary>
         /// Calls the given <paramref name="handler"/> before a
-        /// maybe observer gets completed by
-        /// the maybe <paramref name="source"/>.
+        /// single observer receives the error signal from
+        /// the single <paramref name="source"/>.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="source">The maybe source to peek into.</param>
+        /// <param name="source">The single source to peek into.</param>
         /// <param name="handler">The handler to call.</param>
-        /// <returns>The new maybe source instance.</returns>
-        /// <remarks>Since 0.0.11</remarks>
-        public static ISingleSource<T> DoOnCompleted<T>(this ISingleSource<T> source, Action handler)
-        {
-            RequireNonNull(source, nameof(source));
-            RequireNonNull(handler, nameof(handler));
-
-            return SinglePeek<T>.Create(source, onCompleted: handler);
-        }
-
-        /// <summary>
-        /// Calls the given <paramref name="handler"/> before a
-        /// maybe observer receives the error signal from
-        /// the maybe <paramref name="source"/>.
-        /// </summary>
-        /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="source">The maybe source to peek into.</param>
-        /// <param name="handler">The handler to call.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.11</remarks>
         public static ISingleSource<T> DoOnError<T>(this ISingleSource<T> source, Action<Exception> handler)
         {
@@ -740,13 +722,13 @@ namespace akarnokd.reactive_extensions
 
         /// <summary>
         /// Calls the given <paramref name="handler"/> before a
-        /// maybe observer gets terminated normally or with an error by
-        /// the maybe <paramref name="source"/>.
+        /// single observer gets terminated normally or with an error by
+        /// the single <paramref name="source"/>.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="source">The maybe source to peek into.</param>
+        /// <param name="source">The single source to peek into.</param>
         /// <param name="handler">The handler to call.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.11</remarks>
         public static ISingleSource<T> DoOnTerminate<T>(this ISingleSource<T> source, Action handler)
         {
@@ -758,13 +740,13 @@ namespace akarnokd.reactive_extensions
 
         /// <summary>
         /// Calls the given <paramref name="handler"/> after a
-        /// maybe observer gets terminated normally or exceptionally by
-        /// the maybe <paramref name="source"/>.
+        /// single observer gets terminated normally or exceptionally by
+        /// the single <paramref name="source"/>.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="source">The maybe source to peek into.</param>
+        /// <param name="source">The single source to peek into.</param>
         /// <param name="handler">The handler to call.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.11</remarks>
         public static ISingleSource<T> DoAfterTerminate<T>(this ISingleSource<T> source, Action handler)
         {
@@ -775,15 +757,15 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Calls the given <paramref name="handler"/> exactly once per maybe
-        /// observer and after the maybe observer gets terminated normally
+        /// Calls the given <paramref name="handler"/> exactly once per single
+        /// observer and after the single observer gets terminated normally
         /// or exceptionally or the observer disposes the connection to the
-        /// the maybe <paramref name="source"/>.
+        /// the single <paramref name="source"/>.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="source">The maybe source to peek into.</param>
+        /// <param name="source">The single source to peek into.</param>
         /// <param name="handler">The handler to call.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.11</remarks>
         public static ISingleSource<T> DoFinally<T>(this ISingleSource<T> source, Action handler)
         {
@@ -795,16 +777,16 @@ namespace akarnokd.reactive_extensions
 
         /// <summary>
         /// If the upstream doesn't terminate within the specified
-        /// timeout, the maybe observer is terminated with
+        /// timeout, the single observer is terminated with
         /// a <see cref="TimeoutException"/> or is switched to the optional
-        /// <paramref name="fallback"/> maybe source.
+        /// <paramref name="fallback"/> single source.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="source">The maybe source to timeout.</param>
+        /// <param name="source">The single source to timeout.</param>
         /// <param name="timeout">The time to wait before canceling the source.</param>
         /// <param name="scheduler">The scheduler to use wait for the termination of the upstream.</param>
-        /// <param name="fallback">The optional maybe source to switch to if the upstream times out.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <param name="fallback">The optional single source to switch to if the upstream times out.</param>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.11</remarks>
         public static ISingleSource<T> Timeout<T>(this ISingleSource<T> source, TimeSpan timeout, IScheduler scheduler, ISingleSource<T> fallback = null)
         {
@@ -815,13 +797,13 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Switches to a <paramref name="fallback"/> maybe source if
+        /// Switches to a <paramref name="fallback"/> single source if
         /// the upstream fails.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="source">The maybe source that can fail.</param>
-        /// <param name="fallback">The fallback maybe source to resume with if <paramref name="source"/> fails.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <param name="source">The single source that can fail.</param>
+        /// <param name="fallback">The fallback single source to resume with if <paramref name="source"/> fails.</param>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.11</remarks>
         public static ISingleSource<T> OnErrorResumeNext<T>(this ISingleSource<T> source, ISingleSource<T> fallback)
         {
@@ -832,14 +814,14 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Switches to a fallback maybe source provided
-        /// by a handler function if the main maybe source fails.
+        /// Switches to a fallback single source provided
+        /// by a handler function if the main single source fails.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="source">The maybe source that can fail.</param>
+        /// <param name="source">The single source that can fail.</param>
         /// <param name="handler">The function that receives the exception from the main
-        /// source and should return a fallback maybe source to resume with.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// source and should return a fallback single source to resume with.</param>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.11</remarks>
         public static ISingleSource<T> OnErrorResumeNext<T>(this ISingleSource<T> source, Func<Exception, ISingleSource<T>> handler)
         {
@@ -850,12 +832,12 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Subscribe to a maybe source repeatedly if it
+        /// Subscribe to a single source repeatedly if it
         /// succeeds or completes normally and
         /// emit its success items.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="source">The maybe source to subscribe to repeatedly.</param>
+        /// <param name="source">The single source to subscribe to repeatedly.</param>
         /// <param name="times">The maximum number of times to resubscribe.</param>
         /// <returns>The new observable instance.</returns>
         /// <remarks>Since 0.0.12</remarks>
@@ -868,12 +850,12 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Subscribe to a maybe source repeatedly if it
+        /// Subscribe to a single source repeatedly if it
         /// succeeds or completes normally and
         /// the given handler returns true.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="source">The maybe source to subscribe to repeatedly.</param>
+        /// <param name="source">The single source to subscribe to repeatedly.</param>
         /// <param name="handler">The predicate called with the current repeat count
         /// and should return true to indicate repetition.</param>
         /// <returns>The new observable instance.</returns>
@@ -887,17 +869,17 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Repeats (resubscribes to) the maybe after a success or completion and when the observable
+        /// Repeats (resubscribes to) the single after a success or completion and when the observable
         /// returned by a handler produces an arbitrary item.
         /// </summary>
         /// <typeparam name="T">The type of the elements in the source sequence.</typeparam>
         /// <typeparam name="U">The arbitrary element type signaled by the handler observable.</typeparam>
-        /// <param name="source">The maybe source to repeat while it successfully terminates.</param>
+        /// <param name="source">The single source to repeat while it successfully terminates.</param>
         /// <param name="handler">The function that is called for each observer and takes an observable sequence of
         /// errors. It should return an observable of arbitrary items that should signal that arbitrary item in
         /// response to receiving the completion signal from the source observable. If this observable signals
         /// a terminal event, the sequence is terminated with that signal instead.</param>
-        /// <returns>An observable sequence producing the elements of the given maybe source repeatedly while it terminates successfully.</returns>
+        /// <returns>An observable sequence producing the elements of the given single source repeatedly while it terminates successfully.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="handler"/> is null.</exception>
         /// <remarks>Since 0.0.13</remarks>
@@ -910,13 +892,13 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Subscribe to a maybe source repeatedly (or up to a maximum
+        /// Subscribe to a single source repeatedly (or up to a maximum
         /// number of times) if it keeps failing.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="source">The maybe source to subscribe to repeatedly.</param>
+        /// <param name="source">The single source to subscribe to repeatedly.</param>
         /// <param name="times">The maximum number of times to resubscribe.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.12</remarks>
         public static ISingleSource<T> Retry<T>(this ISingleSource<T> source, long times = long.MaxValue)
         {
@@ -926,14 +908,14 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Subscribe to a maybe source repeatedly if it keeps failing
+        /// Subscribe to a single source repeatedly if it keeps failing
         /// and the handler returns true upon a failure.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="source">The maybe source to subscribe to repeatedly.</param>
+        /// <param name="source">The single source to subscribe to repeatedly.</param>
         /// <param name="handler">The predicate called with the current retry count
         /// and should return true to indicate repetition.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.12</remarks>
         public static ISingleSource<T> Retry<T>(this ISingleSource<T> source, Func<Exception, long, bool> handler)
         {
@@ -943,17 +925,17 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Retries (resubscribes to) the maybe source after a failure and when the observable
+        /// Retries (resubscribes to) the single source after a failure and when the observable
         /// returned by a handler produces an arbitrary item.
         /// </summary>
         /// <typeparam name="T">The type of the elements in the source sequence.</typeparam>
         /// <typeparam name="U">The arbitrary element type signaled by the handler observable.</typeparam>
-        /// <param name="source">The maybe source to repeat until it successfully terminates.</param>
+        /// <param name="source">The single source to repeat until it successfully terminates.</param>
         /// <param name="handler">The function that is called for each observer and takes an observable sequence of
         /// errors. It should return an observable of arbitrary items that should signal that arbitrary item in
         /// response to receiving the failure Exception from the source observable. If this observable signals
         /// a terminal event, the sequence is terminated with that signal instead.</param>
-        /// <returns>A maybe source that retries a maybe source if it fails.</returns>
+        /// <returns>A single source that retries a single source if it fails.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="handler"/> is null.</exception>
         /// <remarks>Since 0.0.13</remarks>
@@ -968,9 +950,9 @@ namespace akarnokd.reactive_extensions
         /// Subscribes to the source on the given scheduler.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="source">The target maybe source to subscribe to</param>
+        /// <param name="source">The target single source to subscribe to</param>
         /// <param name="scheduler">The scheduler to use when subscribing to <paramref name="source"/>.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.11</remarks>
         public static ISingleSource<T> SubscribeOn<T>(this ISingleSource<T> source, IScheduler scheduler)
         {
@@ -981,13 +963,13 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Signals the terminal events of the maybe source
+        /// Signals the terminal events of the single source
         /// through the specified <paramref name="scheduler"/>.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="source">The maybe source to observe on the specified scheduler.</param>
+        /// <param name="source">The single source to observe on the specified scheduler.</param>
         /// <param name="scheduler">The scheduler to use.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.11</remarks>
         public static ISingleSource<T> ObserveOn<T>(this ISingleSource<T> source, IScheduler scheduler)
         {
@@ -1004,9 +986,9 @@ namespace akarnokd.reactive_extensions
         /// <code>Dispose()</code> on the upstream.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="source">The maybe source to dispose.</param>
+        /// <param name="source">The single source to dispose.</param>
         /// <param name="scheduler">The scheduler to use.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.11</remarks>
         public static ISingleSource<T> UnsubscribeOn<T>(this ISingleSource<T> source, IScheduler scheduler)
         {
@@ -1022,8 +1004,8 @@ namespace akarnokd.reactive_extensions
         /// leaks of one or the other.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="source">The maybe source to detach from upon termination or cancellation.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <param name="source">The single source to detach from upon termination or cancellation.</param>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.11</remarks>
         public static ISingleSource<T> OnTerminateDetach<T>(this ISingleSource<T> source)
         {
@@ -1035,13 +1017,13 @@ namespace akarnokd.reactive_extensions
         /// <summary>
         /// Cache the terminal signal of the upstream
         /// and relay/replay it to current or future
-        /// maybe observers.
+        /// single observers.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="source">The upstream maybe source to cache.</param>
+        /// <param name="source">The upstream single source to cache.</param>
         /// <param name="cancel">Called once when subscribing to the source
         /// upon the first subscriber.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.12</remarks>
         public static ISingleSource<T> Cache<T>(this ISingleSource<T> source, Action<IDisposable> cancel = null)
         {
@@ -1052,13 +1034,13 @@ namespace akarnokd.reactive_extensions
 
         /// <summary>
         /// Delay the delivery of the terminal events from the
-        /// upstream maybe source by the given time amount.
+        /// upstream single source by the given time amount.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="source">The maybe source to delay signals of.</param>
+        /// <param name="source">The single source to delay signals of.</param>
         /// <param name="time">The time delay.</param>
         /// <param name="scheduler">The scheduler to use for the timed wait and signal emission.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.11</remarks>
         public static ISingleSource<T> Delay<T>(this ISingleSource<T> source, TimeSpan time, IScheduler scheduler)
         {
@@ -1069,14 +1051,14 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Delay the subscription to the main maybe source
+        /// Delay the subscription to the main single source
         /// until the specified time elapsed.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="source">The maybe source to delay subscribing to.</param>
+        /// <param name="source">The single source to delay subscribing to.</param>
         /// <param name="time">The delay time.</param>
         /// <param name="scheduler">The scheduler to use for the timed wait and subscription.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.11</remarks>
         public static ISingleSource<T> DelaySubscription<T>(this ISingleSource<T> source, TimeSpan time, IScheduler scheduler)
         {
@@ -1087,14 +1069,14 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Delay the subscription to the main maybe source
+        /// Delay the subscription to the main single source
         /// until the other source completes.
         /// </summary>
         /// <typeparam name="T">The success value type main source.</typeparam>
         /// <typeparam name="U">The success value type of the other source.</typeparam>
-        /// <param name="source">The maybe source to delay subscribing to.</param>
+        /// <param name="source">The single source to delay subscribing to.</param>
         /// <param name="other">The source that should complete to trigger the main subscription.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.11</remarks>
         public static ISingleSource<T> DelaySubscription<T, U>(this ISingleSource<T> source, ISingleSource<U> other)
         {
@@ -1142,15 +1124,15 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Maps the success value of the upstream maybe source
+        /// Maps the success value of the upstream single source
         /// into another value.
         /// </summary>
         /// <typeparam name="T">The upstream value type.</typeparam>
         /// <typeparam name="R">The result value type</typeparam>
-        /// <param name="source">The upstream maybe source to map.</param>
+        /// <param name="source">The upstream single source to map.</param>
         /// <param name="mapper">The function receiving the upstream success
         /// item and returns a new success item for the downstream.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.11</remarks>
         public static ISingleSource<R> Map<T, R>(this ISingleSource<T> source, Func<T, R> mapper)
         {
@@ -1166,7 +1148,7 @@ namespace akarnokd.reactive_extensions
         /// completed the downstream otherwise.
         /// </summary>
         /// <typeparam name="T">The upstream value type.</typeparam>
-        /// <param name="source">The upstream maybe source to map.</param>
+        /// <param name="source">The upstream single source to map.</param>
         /// <param name="predicate">The function that receives the upstream
         /// success item and should return true if the success
         /// value should be passed along.</param>
@@ -1181,16 +1163,16 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Maps the upstream success item into a maybe source,
+        /// Maps the upstream success item into a single source,
         /// subscribes to it and relays its success or terminal signals
         /// to the downstream.
         /// </summary>
         /// <typeparam name="T">The upstream value type.</typeparam>
-        /// <typeparam name="R">The value type of the inner maybe source.</typeparam>
-        /// <param name="source">The maybe source to map onto another maybe source.</param>
+        /// <typeparam name="R">The value type of the inner single source.</typeparam>
+        /// <param name="source">The single source to map onto another single source.</param>
         /// <param name="mapper">The function receiving the upstream success item
-        /// and should return a maybe source to subscribe to.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// and should return a single source to subscribe to.</param>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.11</remarks>
         public static ISingleSource<R> FlatMap<T, R>(this ISingleSource<T> source, Func<T, ISingleSource<R>> mapper)
         {
@@ -1202,12 +1184,12 @@ namespace akarnokd.reactive_extensions
 
         /// <summary>
         /// Maps the success value of the upstream
-        /// maybe source onto an enumerable sequence
+        /// single source onto an enumerable sequence
         /// and emits the items of this sequence.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
         /// <typeparam name="R">The element type of the enumerable sequence.</typeparam>
-        /// <param name="source">The maybe source to map.</param>
+        /// <param name="source">The single source to map.</param>
         /// <param name="mapper">The function receiving the success item and
         /// should return an enumerable sequence.</param>
         /// <returns>The new observable sequence.</returns>
@@ -1222,12 +1204,12 @@ namespace akarnokd.reactive_extensions
 
         /// <summary>
         /// Maps the success value of the upstream
-        /// maybe source onto an observable sequence
+        /// single source onto an observable sequence
         /// and emits the items of this sequence.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
         /// <typeparam name="R">The element type of the enumerable sequence.</typeparam>
-        /// <param name="source">The maybe source to map.</param>
+        /// <param name="source">The single source to map.</param>
         /// <param name="mapper">The function receiving the success item and
         /// should return an observable sequence.</param>
         /// <returns>The new observable sequence.</returns>
@@ -1244,8 +1226,8 @@ namespace akarnokd.reactive_extensions
         /// Hides the identity and disposable of the upstream from
         /// the downstream.
         /// </summary>
-        /// <param name="source">The maybe source to hide.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <param name="source">The single source to hide.</param>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.9</remarks>
         public static ISingleSource<T> Hide<T>(this ISingleSource<T> source)
         {
@@ -1260,10 +1242,10 @@ namespace akarnokd.reactive_extensions
         // ------------------------------------------------
 
         /// <summary>
-        /// Subscribes to this maybe source and suppresses exceptions
+        /// Subscribes to this single source and suppresses exceptions
         /// throw by the OnXXX methods of the <paramref name="observer"/>.
         /// </summary>
-        /// <param name="source">The maybe source to subscribe to safely.</param>
+        /// <param name="source">The single source to subscribe to safely.</param>
         /// <param name="observer">The unreliable observer.</param>
         /// <remarks>Since 0.0.11</remarks>
         public static void SubscribeSafe<T>(this ISingleSource<T> source, ISingleObserver<T> observer)
@@ -1275,12 +1257,12 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Subscribe to this maybe source and call the
+        /// Subscribe to this single source and call the
         /// appropriate action depending on the success or terminal signal received.
         /// </summary>
-        /// <param name="source">The maybe source to observe.</param>
-        /// <param name="onSuccess">Called with the success item when the maybe source succeeds.</param>
-        /// <param name="onError">Called with the exception when the maybe source terminates with an error.</param>
+        /// <param name="source">The single source to observe.</param>
+        /// <param name="onSuccess">Called with the success item when the single source succeeds.</param>
+        /// <param name="onError">Called with the exception when the single source terminates with an error.</param>
         /// <returns>The disposable that allows canceling the source.</returns>
         /// <remarks>Since 0.0.9</remarks>
         public static IDisposable Subscribe<T>(this ISingleSource<T> source, Action<T> onSuccess = null, Action<Exception> onError = null)
@@ -1294,11 +1276,11 @@ namespace akarnokd.reactive_extensions
 
         /// <summary>
         /// Subscribes to the source and blocks until it terminated, then
-        /// calls the appropriate , maybe observer method on the current
+        /// calls the appropriate , single observer method on the current
         /// thread.
         /// </summary>
-        /// <param name="source">The upstream maybe source to block for.</param>
-        /// <param name="observer">The maybe observer to call the methods on the current thread.</param>
+        /// <param name="source">The upstream single source to block for.</param>
+        /// <param name="observer">The single observer to call the methods on the current thread.</param>
         /// <remarks>Since 0.0.11</remarks>
         public static void BlockingSubscribe<T>(this ISingleSource<T> source, ISingleObserver<T> observer)
         {
@@ -1317,11 +1299,11 @@ namespace akarnokd.reactive_extensions
 
         /// <summary>
         /// Subscribes to the source and blocks until it terminated, then
-        /// calls the appropriate maybe observer method on the current
+        /// calls the appropriate single observer method on the current
         /// thread.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="source">The upstream maybe source to block for.</param>
+        /// <param name="source">The upstream single source to block for.</param>
         /// <param name="onSuccess">Action called with the success item.</param>
         /// <param name="onError">Action called with the exception when the upstream fails.</param>
         /// <param name="onSubscribe">Action called with a disposable just before subscribing to the upstream
@@ -1340,54 +1322,34 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Wait until the upstream terminates and rethrow any exception it
-        /// signaled.
-        /// </summary>
-        /// <param name="source">The maybe source to wait for.</param>
-        /// <param name="timeoutMillis">The maximum time to wait for termination.</param>
-        /// <param name="cts">The means to cancel the wait from outside.</param>
-        /// <exception cref="TimeoutException">If a timeout happens, which also cancels the upstream.</exception>
-        /// <remarks>Since 0.0.11</remarks>
-        public static void Wait<T>(this ISingleSource<T> source, int timeoutMillis = int.MaxValue, CancellationTokenSource cts = null)
-        {
-            RequireNonNull(source, nameof(source));
-
-            var parent = new SingleWait<T>();
-            source.Subscribe(parent);
-
-            parent.Wait(timeoutMillis, cts);
-        }
-
-        /// <summary>
         /// Wait until the upstream terminates and
         /// return its success value or rethrow any exception it
         /// signaled.
         /// </summary>
-        /// <param name="source">The maybe source to wait for.</param>
-        /// <param name="result">The success value if the method returns true</param>
+        /// <param name="source">The single source to wait for.</param>
         /// <param name="timeoutMillis">The maximum time to wait for termination.</param>
         /// <param name="cts">The means to cancel the wait from outside.</param>
-        /// <returns>True if the source succeeded.</returns>
+        /// <returns>The success value.</returns>
         /// <exception cref="TimeoutException">If a timeout happens, which also cancels the upstream.</exception>
         /// <remarks>Since 0.0.11</remarks>
-        public static bool Wait<T>(this ISingleSource<T> source, out T result, int timeoutMillis = int.MaxValue, CancellationTokenSource cts = null)
+        public static T Wait<T>(this ISingleSource<T> source, int timeoutMillis = int.MaxValue, CancellationTokenSource cts = null)
         {
             RequireNonNull(source, nameof(source));
 
             var parent = new SingleWaitValue<T>();
             source.Subscribe(parent);
 
-            return parent.Wait(out result, timeoutMillis, cts);
+            return parent.Wait(timeoutMillis, cts);
         }
 
         /// <summary>
-        /// Subscribes a maybe observer (subclass) to the maybe
+        /// Subscribes a single observer (subclass) to the single
         /// source and returns this observer instance as well.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
         /// <typeparam name="U">The observer type.</typeparam>
-        /// <param name="source">The maybe source to subscribe to.</param>
-        /// <param name="observer">The maybe observer (subclass) to subscribe with.</param>
+        /// <param name="source">The single source to subscribe to.</param>
+        /// <param name="observer">The single observer (subclass) to subscribe with.</param>
         /// <returns>The <paramref name="observer"/> provided as parameter.</returns>
         /// <remarks>Since 0.0.9</remarks>
         public static U SubscribeWith<T, U>(this ISingleSource<T> source, U observer) where U : ISingleObserver<T>
@@ -1404,15 +1366,15 @@ namespace akarnokd.reactive_extensions
         //-------------------------------------------------
 
         /// <summary>
-        /// Maps the upstream observable sequence items into maybe sources, runs them one
+        /// Maps the upstream observable sequence items into single sources, runs them one
         /// after the other relaying their success item in order and
         /// optionally delays errors from all sources until all of them terminate.
         /// </summary>
         /// <typeparam name="T">The element type of the upstream observable sequence.</typeparam>
-        /// <typeparam name="R">The success value type of the inner maybe sources.</typeparam>
-        /// <param name="source">The source of items to map into maybe sources.</param>
+        /// <typeparam name="R">The success value type of the inner single sources.</typeparam>
+        /// <param name="source">The source of items to map into single sources.</param>
         /// <param name="mapper">The function that receives the upstream item and should
-        /// return a maybe source to relay the success item of.</param>
+        /// return a single source to relay the success item of.</param>
         /// <param name="delayErrors">If true, errors are delayed until all sources terminate.</param>
         /// <returns>The new observable instance.</returns>
         /// <remarks>Since 0.0.13</remarks>
@@ -1425,19 +1387,19 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Runs some or all maybe sources, provided by
+        /// Runs some or all single sources, provided by
         /// mapping the source observable sequence into
-        /// maybe sources, at once but emits
+        /// single sources, at once but emits
         /// their success item in order and optionally delays
         /// errors until all sources terminate.
         /// </summary>
         /// <typeparam name="T">The value type of the source sequence.</typeparam>
-        /// <typeparam name="R">The success value type of the inner maybe sources.</typeparam>
-        /// <param name="source">The observable sequence to map into maybe sources.</param>
+        /// <typeparam name="R">The success value type of the inner single sources.</typeparam>
+        /// <param name="source">The observable sequence to map into single sources.</param>
         /// <param name="mapper">The function receiving the upstream item and should return
-        /// a maybe source to concatenate eagerly.</param>
+        /// a single source to concatenate eagerly.</param>
         /// <param name="delayErrors">If true, errors are delayed until all sources terminate.</param>
-        /// <param name="maxConcurrency">The maximum number of active inner maybe sources to run at once.</param>
+        /// <param name="maxConcurrency">The maximum number of active inner single sources to run at once.</param>
         /// <returns>The new observable instance.</returns>
         /// <remarks>Since 0.0.12</remarks>
         public static IObservable<R> ConcatMapEager<T, R>(this IObservable<T> source, Func<T, ISingleSource<R>> mapper, bool delayErrors = false, int maxConcurrency = int.MaxValue)
@@ -1450,17 +1412,17 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Maps the values of an observable sequence into maybe sources,
-        /// runs and merges some or all maybe sources
+        /// Maps the values of an observable sequence into single sources,
+        /// runs and merges some or all single sources
         /// into one observable sequence and optionally delays all errors until all sources terminate.
         /// </summary>
         /// <typeparam name="T">The value type of the source observable sequence.</typeparam>
-        /// <typeparam name="R">The success value type of the inner maybe sources.</typeparam>
-        /// <param name="source">The observable sequence to map into maybe sources.</param>
+        /// <typeparam name="R">The success value type of the inner single sources.</typeparam>
+        /// <param name="source">The observable sequence to map into single sources.</param>
         /// <param name="mapper">The function receiving the upstream item and should return
-        /// a maybe source to concatenate eagerly.</param>
+        /// a single source to concatenate eagerly.</param>
         /// <param name="delayErrors">If true, errors are delayed until all sources terminate.</param>
-        /// <param name="maxConcurrency">The maximum number of active inner maybe sources to run at once.</param>
+        /// <param name="maxConcurrency">The maximum number of active inner single sources to run at once.</param>
         /// <returns>The new observable instance.</returns>
         /// <remarks>Since 0.0.13</remarks>
         public static IObservable<R> FlatMap<T, R>(this IObservable<T> source, Func<T, ISingleSource<R>> mapper, bool delayErrors = false, int maxConcurrency = int.MaxValue)
@@ -1473,15 +1435,15 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Maps the upstream success item into a single source,
+        /// Maps the upstream success item into a maybe source,
         /// subscribes to it and relays its success or failure signals
         /// to the downstream.
         /// </summary>
         /// <typeparam name="T">The upstream value type.</typeparam>
         /// <typeparam name="R">The value type of the inner single source.</typeparam>
-        /// <param name="source">The maybe source to map onto another single source.</param>
+        /// <param name="source">The single source to map onto another maybe source.</param>
         /// <param name="mapper">The function receiving the upstream success item
-        /// and should return a single source to subscribe to.</param>
+        /// and should return a maybe source to subscribe to.</param>
         /// <returns>The new maybe source instance.</returns>
         /// <remarks>Since 0.0.11<br/>
         /// Note that the result type remains ISingleSource because the
@@ -1497,12 +1459,12 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Maps the success value of the upstream maybe source
+        /// Maps the success value of the upstream single source
         /// into a completable source and signals its terminal
         /// events to the downstream.
         /// </summary>
-        /// <typeparam name="T">The element type of the maybe source.</typeparam>
-        /// <param name="source">The maybe source to map into a completable source.</param>
+        /// <typeparam name="T">The element type of the single source.</typeparam>
+        /// <param name="source">The single source to map into a completable source.</param>
         /// <param name="mapper">The function that takes the success value from the upstream
         /// and returns a completable source to subscribe to and relay terminal events of.</param>
         /// <returns>The new completable source instance.</returns>
@@ -1516,16 +1478,16 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Maps the upstream observable sequence into maybe sources and switches to
+        /// Maps the upstream observable sequence into single sources and switches to
         /// the next inner source when it becomes mapped, disposing the previous inner
         /// source if it is still running, optionally delaying
         /// errors until all sources terminate.
         /// </summary>
         /// <typeparam name="T">The element type of the observable sequence.</typeparam>
-        /// <typeparam name="R">The success value type of the inner maybe sources.</typeparam>
-        /// <param name="source">The observable sequence to map into maybe sources.</param>
+        /// <typeparam name="R">The success value type of the inner single sources.</typeparam>
+        /// <param name="source">The observable sequence to map into single sources.</param>
         /// <param name="mapper">The function receiving the upstream item and should return
-        /// a maybe source to switch to.</param>
+        /// a single source to switch to.</param>
         /// <param name="delayErrors">If true, errors are delayed until all sources terminate.</param>
         /// <returns>The new observable instance.</returns>
         /// <remarks>Since 0.0.13</remarks>
@@ -1538,7 +1500,7 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Ignores the success signal of the maybe source and
+        /// Ignores the success signal of the single source and
         /// completes the downstream completable observer instead.
         /// </summary>
         /// <typeparam name="T">The success value type of the source.</typeparam>
@@ -1559,7 +1521,7 @@ namespace akarnokd.reactive_extensions
         /// </summary>
         /// <typeparam name="T">The element type of the sequence.</typeparam>
         /// <param name="source">The observable sequence to get the first element from.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.11</remarks>
         public static ISingleSource<T> FirstOrError<T>(this IObservable<T> source)
         {
@@ -1573,13 +1535,13 @@ namespace akarnokd.reactive_extensions
         /// </summary>
         /// <typeparam name="T">The value type of the source observable.</typeparam>
         /// <param name="source">The source observable sequence to get the single element from.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.11</remarks>
         public static ISingleSource<T> SingleOrError<T>(this IObservable<T> source)
         {
             RequireNonNull(source, nameof(source));
 
-            return new SingleSingleElement<T>(source);
+            return new SingleSingleOrError<T>(source);
         }
 
         /// <summary>
@@ -1588,13 +1550,13 @@ namespace akarnokd.reactive_extensions
         /// </summary>
         /// <typeparam name="T">The value type of the source observable.</typeparam>
         /// <param name="source">The source observable sequence.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.11</remarks>
         public static ISingleSource<T> LastOrError<T>(this IObservable<T> source)
         {
             RequireNonNull(source, nameof(source));
 
-            return new SingleLastElement<T>(source);
+            return new SingleLastOrError<T>(source);
         }
 
         /// <summary>
@@ -1605,21 +1567,21 @@ namespace akarnokd.reactive_extensions
         /// <typeparam name="T">The element type of the sequence.</typeparam>
         /// <param name="source">The observable sequence to get an element from.</param>
         /// <param name="index">The index of the element to get (zero based).</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.11</remarks>
         public static ISingleSource<T> ElementAtOrError<T>(this IObservable<T> source, long index)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNegative(index, nameof(index));
 
-            return new SingleElementAt<T>(source, index);
+            return new SingleElementAtOrError<T>(source, index);
         }
 
         /// <summary>
-        /// Subscribe to a maybe source and expose the terminal
+        /// Subscribe to a single source and expose the terminal
         /// signal as a <see cref="Task"/>.
         /// </summary>
-        /// <param name="source">The source maybe to convert.</param>
+        /// <param name="source">The source single to convert.</param>
         /// <param name="cts">The cancellation token source to watch for external cancellation.</param>
         /// <returns>The new task instance.</returns>
         /// <remarks>Since 0.0.11</remarks>
@@ -1634,12 +1596,12 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Converts an ongoing or already terminated task to a maybe source 
+        /// Converts an ongoing or already terminated task to a single source 
         /// and relays its value or error to observers.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="task">The task to observe as a maybe source.</param>
-        /// <returns>The new maybe source instance.</returns>
+        /// <param name="task">The task to observe as a single source.</param>
+        /// <returns>The new single source instance.</returns>
         /// <remarks>Since 0.0.11<br/>
         /// Note that the <see cref="Task{TResult}"/> API uses an <see cref="AggregateException"/>
         /// to signal there were one or more errors.
@@ -1652,13 +1614,11 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Converts a maybe source into a single source,
-        /// failing with an index out-of-range exception
-        /// if the maybe source is empty
+        /// Converts a single source into a maybe source.
         /// </summary>
         /// <typeparam name="T">The success value type.</typeparam>
-        /// <param name="source">The maybe source to expose as a single source.</param>
-        /// <returns>The new single source instance.</returns>
+        /// <param name="source">The single source to expose as a maybe source.</param>
+        /// <returns>The new maybe source instance.</returns>
         /// <remarks>Since 0.0.12</remarks>
         public static IMaybeSource<T> ToMaybe<T>(this ISingleSource<T> source)
         {
@@ -1668,10 +1628,10 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Exposes a maybe source as a legacy observable.
+        /// Exposes a single source as a legacy observable.
         /// </summary>
-        /// <typeparam name="T">The element type of the maybe and observable sequence.</typeparam>
-        /// <param name="source">The maybe source to expose as an <see cref="IObservable{T}"/></param>
+        /// <typeparam name="T">The element type of the single and observable sequence.</typeparam>
+        /// <param name="source">The single source to expose as an <see cref="IObservable{T}"/></param>
         /// <returns>The new observable instance.</returns>
         /// <remarks>Since 0.0.12</remarks>
         public static IObservable<T> ToObservable<T>(this ISingleSource<T> source)

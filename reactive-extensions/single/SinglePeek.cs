@@ -104,7 +104,6 @@ namespace akarnokd.reactive_extensions
             Action<T> onSuccess = null,
             Action<T> onAfterSuccess = null,
             Action<Exception> onError = null,
-            Action onCompleted = null,
             Action<IDisposable> onSubscribe = null,
             Action onTerminate = null,
             Action onAfterTerminate = null,
@@ -159,6 +158,8 @@ namespace akarnokd.reactive_extensions
 
             IDisposable upstream;
 
+            bool done;
+
             public PeekObserver(
                 ISingleObserver<T> downstream, 
                 Action<T> onSuccess,
@@ -209,6 +210,11 @@ namespace akarnokd.reactive_extensions
 
             public void OnSuccess(T item)
             {
+                if (done)
+                {
+                    return;
+                }
+
                 upstream = DisposableHelper.DISPOSED;
 
                 try
@@ -295,6 +301,10 @@ namespace akarnokd.reactive_extensions
 
             public void OnError(Exception error)
             {
+                if (done)
+                {
+                    return;
+                }
                 Error(error, true);
             }
 
@@ -307,6 +317,7 @@ namespace akarnokd.reactive_extensions
                 }
                 catch (Exception ex)
                 {
+                    done = true;
                     try
                     {
                         onDispose?.Invoke();

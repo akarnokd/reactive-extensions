@@ -2,25 +2,16 @@
 using System;
 using akarnokd.reactive_extensions;
 
-namespace akarnokd.reactive_extensions_test.maybe
+namespace akarnokd.reactive_extensions_test.single
 {
     [TestFixture]
-    public class MaybeToObservableTest
+    public class SingleToObservableTest
     {
-        [Test]
-        public void Basic()
-        {
-            // do not make this var to ensure the target type is correct
-            IObservable<int> o = MaybeSource.Empty<int>().ToObservable<int>();
-
-            o.Test().AssertResult();
-        }
-
         [Test]
         public void Success()
         {
             // do not make this var to ensure the target type is correct
-            IObservable<int> o = MaybeSource.Just(1).ToObservable<int>();
+            IObservable<int> o = SingleSource.Just(1).ToObservable<int>();
 
             o.Test().AssertResult(1);
         }
@@ -29,7 +20,7 @@ namespace akarnokd.reactive_extensions_test.maybe
         public void Error()
         {
             // do not make this var to ensure the target type is correct
-            IObservable<int> o = MaybeSource.Error<int>(new InvalidOperationException()).ToObservable<int>();
+            IObservable<int> o = SingleSource.Error<int>(new InvalidOperationException()).ToObservable<int>();
 
             o.Test().AssertFailure(typeof(InvalidOperationException));
         }
@@ -37,7 +28,7 @@ namespace akarnokd.reactive_extensions_test.maybe
         [Test]
         public void Disposed()
         {
-            var up = new MaybeSubject<int>();
+            var up = new SingleSubject<int>();
 
             IObservable<int> o = up.ToObservable<int>();
 

@@ -4,31 +4,17 @@ using akarnokd.reactive_extensions;
 using System.Reactive.Concurrency;
 using System.Threading;
 
-namespace akarnokd.reactive_extensions_test.maybe
+namespace akarnokd.reactive_extensions_test.single
 {
     [TestFixture]
-    public class MaybeUnsubscribeOnTest
+    public class SingleUnsubscribeOnTest
     {
-        [Test]
-        public void Basic()
-        {
-            var name = "";
-
-            MaybeSource.Empty<int>()
-                .DoOnDispose(() => name = Thread.CurrentThread.Name)
-                .UnsubscribeOn(NewThreadScheduler.Default)
-                .Test()
-                .AssertResult();
-
-            Assert.AreEqual("", name);
-        }
-
         [Test]
         public void Success()
         {
             var name = "";
 
-            MaybeSource.Just(1)
+            SingleSource.Just(1)
                 .DoOnDispose(() => name = Thread.CurrentThread.Name)
                 .UnsubscribeOn(NewThreadScheduler.Default)
                 .Test()
@@ -42,7 +28,7 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             var name = "";
 
-            MaybeSource.Error<int>(new InvalidOperationException())
+            SingleSource.Error<int>(new InvalidOperationException())
                 .DoOnDispose(() => name = Thread.CurrentThread.Name)
                 .UnsubscribeOn(NewThreadScheduler.Default)
                 .Test()
@@ -57,7 +43,7 @@ namespace akarnokd.reactive_extensions_test.maybe
             var name = "";
             var cdl = new CountdownEvent(1);
 
-            MaybeSource.Never<int>()
+            SingleSource.Never<int>()
                 .DoOnDispose(() =>
                 {
                     name = Thread.CurrentThread.Name;

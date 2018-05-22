@@ -2,17 +2,17 @@
 using System;
 using akarnokd.reactive_extensions;
 
-namespace akarnokd.reactive_extensions_test.maybe
+namespace akarnokd.reactive_extensions_test.single
 {
     [TestFixture]
-    public class MaybeDoTest
+    public class SingleDoTest
     {
         [Test]
         public void OnSuccess_Basic()
         {
             var count = 0;
 
-            MaybeSource.Just(1)
+            SingleSource.Just(1)
                 .DoOnSuccess(v => count++)
                 .Test()
                 .AssertResult(1);
@@ -25,7 +25,7 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             var count = 0;
 
-            MaybeSource.Just(1)
+            SingleSource.Just(1)
                 .DoOnSuccess(v => count++)
                 .DoOnSuccess(v => count++)
                 .Test()
@@ -41,7 +41,7 @@ namespace akarnokd.reactive_extensions_test.maybe
 
             var to = new TestObserver<int>();
 
-            MaybeSource.Just(1)
+            SingleSource.Just(1)
                 .DoAfterSuccess(v => count = to.ItemCount)
                 .SubscribeWith(to)
                 .AssertResult(1);
@@ -57,7 +57,7 @@ namespace akarnokd.reactive_extensions_test.maybe
 
             var to = new TestObserver<int>();
 
-            MaybeSource.Just(1)
+            SingleSource.Just(1)
                 .DoAfterSuccess(v => count1 = to.ItemCount)
                 .DoAfterSuccess(v => count2 = to.ItemCount)
                 .SubscribeWith(to)
@@ -68,57 +68,11 @@ namespace akarnokd.reactive_extensions_test.maybe
         }
 
         [Test]
-        public void OnCompleted_Basic()
-        {
-            var count = 0;
-
-            MaybeSource.Empty<int>()
-                .DoOnCompleted(() => count++)
-                .Test()
-                .AssertResult();
-
-            Assert.AreEqual(1, count);
-        }
-
-        [Test]
-        public void OnCompleted_Basic_Twice()
-        {
-            var count = 0;
-
-            MaybeSource.Empty<int>()
-                .DoOnCompleted(() => count++)
-                .DoOnCompleted(() => count++)
-                .Test()
-                .AssertResult();
-
-            Assert.AreEqual(2, count);
-        }
-
-        [Test]
-        public void OnCompleted_Crash()
-        {
-            var count = 0;
-
-            MaybeSource.Empty<int>()
-                .DoOnCompleted(() =>
-                {
-                    count++;
-                    throw new InvalidOperationException();
-                })
-                .Test()
-                .AssertFailure(typeof(InvalidOperationException));
-                ;
-
-            Assert.AreEqual(1, count);
-        }
-
-
-        [Test]
         public void OnError_Basic()
         {
             var count = 0;
 
-            MaybeSource.Error<int>(new InvalidOperationException())
+            SingleSource.Error<int>(new InvalidOperationException())
                 .DoOnError(e => count++)
                 .Test()
                 .AssertFailure(typeof(InvalidOperationException));
@@ -131,7 +85,7 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             var count = 0;
 
-            MaybeSource.Error<int>(new InvalidOperationException())
+            SingleSource.Error<int>(new InvalidOperationException())
                 .DoOnError(e => count++)
                 .DoOnError(e => count++)
                 .Test()
@@ -145,7 +99,7 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             var count = 0;
 
-            MaybeSource.Error<int>(new InvalidOperationException("outer"))
+            SingleSource.Error<int>(new InvalidOperationException("outer"))
                 .DoOnError(e =>
                 {
                     count++;
@@ -165,10 +119,10 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             var count = 0;
 
-            MaybeSource.Empty<int>()
+            SingleSource.Just(1)
                 .DoOnSubscribe(s => count++)
                 .Test()
-                .AssertResult();
+                .AssertResult(1);
 
             Assert.AreEqual(1, count);
         }
@@ -178,11 +132,11 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             var count = 0;
 
-            MaybeSource.Empty<int>()
+            SingleSource.Just(1)
                 .DoOnSubscribe(s => count++)
                 .DoOnSubscribe(s => count++)
                 .Test()
-                .AssertResult();
+                .AssertResult(1);
 
             Assert.AreEqual(2, count);
         }
@@ -192,7 +146,7 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             var count = 0;
 
-            MaybeSource.Empty<int>()
+            SingleSource.Just(1)
                 .DoOnSubscribe(s =>
                 {
                     count++;
@@ -210,10 +164,10 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             var count = 0;
 
-            MaybeSource.Empty<int>()
+            SingleSource.Just(1)
                 .DoFinally(() => count++)
                 .Test()
-                .AssertResult();
+                .AssertResult(1);
 
             Assert.AreEqual(1, count);
         }
@@ -223,11 +177,11 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             var count = 0;
 
-            MaybeSource.Empty<int>()
+            SingleSource.Just(1)
                 .DoFinally(() => count++)
                 .DoFinally(() => count++)
                 .Test()
-                .AssertResult();
+                .AssertResult(1);
 
             Assert.AreEqual(2, count);
         }
@@ -237,14 +191,14 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             var count = 0;
 
-            MaybeSource.Empty<int>()
+            SingleSource.Just(1)
                 .DoFinally(() =>
                 {
                     count++;
                     throw new InvalidOperationException();
                 })
                 .Test()
-                .AssertResult();
+                .AssertResult(1);
             ;
 
             Assert.AreEqual(1, count);
@@ -256,7 +210,7 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             var count = 0;
 
-            MaybeSource.Never<int>()
+            SingleSource.Never<int>()
                 .DoOnDispose(() => count++)
                 .Test(true)
                 .AssertEmpty();
@@ -269,7 +223,7 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             var count = 0;
 
-            MaybeSource.Never<int>()
+            SingleSource.Never<int>()
                 .DoOnDispose(() => count++)
                 .DoOnDispose(() => count++)
                 .Test(true)
@@ -283,7 +237,7 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             var count = 0;
 
-            MaybeSource.Never<int>()
+            SingleSource.Never<int>()
                 .DoOnDispose(() =>
                 {
                     count++;
@@ -301,7 +255,7 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             var count = 0;
 
-            MaybeSource.Just(1)
+            SingleSource.Just(1)
                 .DoOnDispose(() =>
                 {
                     count++;
@@ -314,28 +268,11 @@ namespace akarnokd.reactive_extensions_test.maybe
         }
 
         [Test]
-        public void OnDispose_Complete()
-        {
-            var count = 0;
-
-            MaybeSource.Empty<int>()
-                .DoOnDispose(() =>
-                {
-                    count++;
-                })
-                .Test()
-                .AssertResult();
-            ;
-
-            Assert.AreEqual(0, count);
-        }
-
-        [Test]
         public void OnDispose_Error()
         {
             var count = 0;
 
-            MaybeSource.Error<int>(new InvalidOperationException())
+            SingleSource.Error<int>(new InvalidOperationException())
                 .DoOnDispose(() =>
                 {
                     count++;
@@ -352,10 +289,10 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             var count = 0;
 
-            MaybeSource.Empty<int>()
+            SingleSource.Just(1)
                 .DoOnTerminate(() => count++)
                 .Test()
-                .AssertResult();
+                .AssertResult(1);
 
             Assert.AreEqual(1, count);
         }
@@ -365,7 +302,7 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             var count = 0;
 
-            MaybeSource.Error<int>(new InvalidOperationException())
+            SingleSource.Error<int>(new InvalidOperationException())
                 .DoOnTerminate(() => count++)
                 .Test()
                 .AssertFailure(typeof(InvalidOperationException));
@@ -378,11 +315,11 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             var count = 0;
 
-            MaybeSource.Empty<int>()
+            SingleSource.Just(1)
                 .DoOnTerminate(() => count++)
                 .DoOnTerminate(() => count++)
                 .Test()
-                .AssertResult();
+                .AssertResult(1);
 
             Assert.AreEqual(2, count);
         }
@@ -392,7 +329,7 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             var count = 0;
 
-            MaybeSource.Empty<int>()
+            SingleSource.Just(1)
                 .DoOnTerminate(() =>
                 {
                     count++;
@@ -410,7 +347,7 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             var count = 0;
 
-            MaybeSource.Error<int>(new InvalidOperationException("main"))
+            SingleSource.Error<int>(new InvalidOperationException("main"))
                 .DoOnTerminate(() =>
                 {
                     count++;
@@ -431,10 +368,10 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             var count = 0;
 
-            MaybeSource.Empty<int>()
+            SingleSource.Just(1)
                 .DoAfterTerminate(() => count++)
                 .Test()
-                .AssertResult();
+                .AssertResult(1);
 
             Assert.AreEqual(1, count);
         }
@@ -444,7 +381,7 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             var count = 0;
 
-            MaybeSource.Error<int>(new InvalidOperationException())
+            SingleSource.Error<int>(new InvalidOperationException())
                 .DoAfterTerminate(() => count++)
                 .Test()
                 .AssertFailure(typeof(InvalidOperationException));
@@ -457,11 +394,11 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             var count = 0;
 
-            MaybeSource.Empty<int>()
+            SingleSource.Just(1)
                 .DoAfterTerminate(() => count++)
                 .DoAfterTerminate(() => count++)
                 .Test()
-                .AssertResult();
+                .AssertResult(1);
 
             Assert.AreEqual(2, count);
         }
@@ -471,14 +408,14 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             var count = 0;
 
-            MaybeSource.Empty<int>()
+            SingleSource.Just(1)
                 .DoAfterTerminate(() =>
                 {
                     count++;
                     throw new InvalidOperationException();
                 })
                 .Test()
-                .AssertResult();
+                .AssertResult(1);
             ;
 
             Assert.AreEqual(1, count);
@@ -489,7 +426,7 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             var count = 0;
 
-            MaybeSource.Error<int>(new InvalidOperationException("main"))
+            SingleSource.Error<int>(new InvalidOperationException("main"))
                 .DoAfterTerminate(() =>
                 {
                     count++;
@@ -505,48 +442,10 @@ namespace akarnokd.reactive_extensions_test.maybe
         }
 
         [Test]
-        public void All_Empty()
-        {
-            var success = 0;
-            var afterSuccess = 0;
-            var completed = 0;
-            var error = 0;
-            var terminate = 0;
-            var afterterminate = 0;
-            var subscribe = 0;
-            var dispose = 0;
-            var final = 0;
-
-            MaybeSource.Empty<int>()
-                .DoOnSuccess(v => success++)
-                .DoAfterSuccess(v => afterSuccess++)
-                .DoOnCompleted(() => completed++)
-                .DoOnError(e => error++)
-                .DoOnTerminate(() => terminate++)
-                .DoAfterTerminate(() => afterterminate++)
-                .DoOnSubscribe(d => subscribe++)
-                .DoOnDispose(() => dispose++)
-                .DoFinally(() => final++)
-                .Test()
-                .AssertResult();
-
-            Assert.AreEqual(0, success);
-            Assert.AreEqual(0, afterSuccess);
-            Assert.AreEqual(1, completed);
-            Assert.AreEqual(0, error);
-            Assert.AreEqual(1, terminate);
-            Assert.AreEqual(1, afterterminate);
-            Assert.AreEqual(1, subscribe);
-            Assert.AreEqual(0, dispose);
-            Assert.AreEqual(1, final);
-        }
-
-        [Test]
         public void All_Success()
         {
             var success = 0;
             var afterSuccess = 0;
-            var completed = 0;
             var error = 0;
             var terminate = 0;
             var afterterminate = 0;
@@ -554,10 +453,9 @@ namespace akarnokd.reactive_extensions_test.maybe
             var dispose = 0;
             var final = 0;
 
-            MaybeSource.Just(1)
+            SingleSource.Just(1)
                 .DoOnSuccess(v => success++)
                 .DoAfterSuccess(v => afterSuccess++)
-                .DoOnCompleted(() => completed++)
                 .DoOnError(e => error++)
                 .DoOnTerminate(() => terminate++)
                 .DoAfterTerminate(() => afterterminate++)
@@ -569,7 +467,6 @@ namespace akarnokd.reactive_extensions_test.maybe
 
             Assert.AreEqual(1, success);
             Assert.AreEqual(1, afterSuccess);
-            Assert.AreEqual(0, completed);
             Assert.AreEqual(0, error);
             Assert.AreEqual(1, terminate);
             Assert.AreEqual(1, afterterminate);
@@ -583,7 +480,6 @@ namespace akarnokd.reactive_extensions_test.maybe
         {
             var success = 0;
             var afterSuccess = 0;
-            var completed = 0;
             var error = 0;
             var terminate = 0;
             var afterterminate = 0;
@@ -591,10 +487,9 @@ namespace akarnokd.reactive_extensions_test.maybe
             var dispose = 0;
             var final = 0;
 
-            MaybeSource.Error<int>(new InvalidOperationException())
+            SingleSource.Error<int>(new InvalidOperationException())
                 .DoOnSuccess(v => success++)
                 .DoOnSuccess(v => afterSuccess++)
-                .DoOnCompleted(() => completed++)
                 .DoOnError(e => error++)
                 .DoOnTerminate(() => terminate++)
                 .DoAfterTerminate(() => afterterminate++)
@@ -606,7 +501,6 @@ namespace akarnokd.reactive_extensions_test.maybe
 
             Assert.AreEqual(0, success);
             Assert.AreEqual(0, afterSuccess);
-            Assert.AreEqual(0, completed);
             Assert.AreEqual(1, error);
             Assert.AreEqual(1, terminate);
             Assert.AreEqual(1, afterterminate);

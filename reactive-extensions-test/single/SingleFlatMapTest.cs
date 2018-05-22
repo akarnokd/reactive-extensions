@@ -87,7 +87,65 @@ namespace akarnokd.reactive_extensions_test.single
 
         #region + ISingleSource +
 
-        
+        [Test]
+        public void Single_Basic()
+        {
+            SingleSource.Just(1)
+                .FlatMap(v => SingleSource.Just("" + (v + 1)))
+                .Test()
+                .AssertResult("2");
+        }
+
+        [Test]
+        public void Single_Error()
+        {
+            var count = 0;
+
+            SingleSource.Error<int>(new InvalidOperationException())
+                .FlatMap(v => SingleSource.FromFunc<string>(() => {
+                    count++;
+                    return "";
+                }))
+                .Test()
+                .AssertFailure(typeof(InvalidOperationException));
+
+            Assert.AreEqual(0, count);
+        }
+
+        [Test]
+        public void Single_Error_Inner()
+        {
+            SingleSource.Just(1)
+                .FlatMap(v => SingleSource.Error<int>(new InvalidOperationException()))
+                .Test()
+                .AssertFailure(typeof(InvalidOperationException));
+        }
+
+        [Test]
+        public void Single_Dispose()
+        {
+            TestHelper.VerifyDisposeSingle<int, int>(m => m.FlatMap(v => SingleSource.Just(2)));
+        }
+
+        [Test]
+        public void Single_Dispose_Inner()
+        {
+            TestHelper.VerifyDisposeSingle<int, int>(m => SingleSource.Just(1).FlatMap(v => m));
+        }
+
+        [Test]
+        public void Single_Mapper_Crash()
+        {
+            Func<int, ISingleSource<int>> f = v =>
+            {
+                throw new InvalidOperationException();
+            };
+
+            SingleSource.Just(1)
+                .FlatMap(f)
+                .Test()
+                .AssertFailure(typeof(InvalidOperationException));
+        }
 
         #endregion + ISingleSource +
     }

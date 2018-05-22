@@ -5,40 +5,44 @@ using System.Text;
 namespace akarnokd.reactive_extensions
 {
     /// <summary>
-    /// Signals the last element of the observable sequence
-    /// or completes if the sequence is empty.
+    /// Signals the element at the specified index as the
+    /// success value or completes if the observable
+    /// sequence is shorter than the specified index.
     /// </summary>
-    /// <typeparam name="T">The value type of the source observable.</typeparam>
+    /// <typeparam name="T">The element type of the sequence.</typeparam>
     /// <remarks>Since 0.0.11</remarks>
-    internal sealed class SingleLastElement<T> : ISingleSource<T>
+    internal sealed class SingleElementAtOrError<T> : ISingleSource<T>
     {
         readonly IObservable<T> source;
 
-        public SingleLastElement(IObservable<T> source)
+        readonly long index;
+
+        public SingleElementAtOrError(IObservable<T> source, long index)
         {
             this.source = source;
+            this.index = index;
         }
 
         public void Subscribe(ISingleObserver<T> observer)
         {
-            var parent = new LastElementObserver(observer);
+            var parent = new ElementAtObserver(observer, index);
             observer.OnSubscribe(parent);
 
             parent.OnSubscribe(source.Subscribe(parent));
         }
 
-        sealed class LastElementObserver : IObserver<T>, IDisposable
+        sealed class ElementAtObserver : IObserver<T>, IDisposable
         {
             readonly ISingleObserver<T> downstream;
 
+            long index;
+
             IDisposable upstream;
 
-            T element;
-            bool hasElement;
-
-            public LastElementObserver(ISingleObserver<T> downstream)
+            public ElementAtObserver(ISingleObserver<T> downstream, long index)
             {
                 this.downstream = downstream;
+                this.index = index;
             }
 
             public void Dispose()
@@ -48,31 +52,32 @@ namespace akarnokd.reactive_extensions
 
             public void OnCompleted()
             {
-                if (hasElement)
-                {
-                    var e = element;
-                    element = default(T);
-                    downstream.OnSuccess(e);
-                }
-                else
+                if (index >= 0)
                 {
                     downstream.OnError(new IndexOutOfRangeException("The source is empty"));
                 }
+                Dispose();
             }
 
             public void OnError(Exception error)
             {
-                element = default(T);
-                downstream.OnError(error);
+                if (index >= 0)
+                {
+                    downstream.OnError(error);
+                }
+                Dispose();
             }
 
             public void OnNext(T value)
             {
-                element = value;
-                hasElement = true;
+                if (index-- == 0)
+                {
+                    downstream.OnSuccess(value);
+                    Dispose();
+                }
             }
 
-            public void OnSubscribe(IDisposable d)
+            internal void OnSubscribe(IDisposable d)
             {
                 DisposableHelper.SetOnce(ref upstream, d);
             }
