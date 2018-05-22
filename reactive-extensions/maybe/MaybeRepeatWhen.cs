@@ -88,7 +88,7 @@ namespace akarnokd.reactive_extensions
 
             internal override void RedoError(Exception ex)
             {
-                HalfSerializer.OnError(downstream, error, ref halfSerializer, ref this.error);
+                HalfSerializer.OnError(downstream, ex, ref halfSerializer, ref this.error);
                 Dispose();
             }
 
