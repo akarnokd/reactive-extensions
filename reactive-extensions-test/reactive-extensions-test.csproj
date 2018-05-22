@@ -146,6 +146,8 @@
     <Compile Include="maybe\MaybeRetryTest.cs" />
     <Compile Include="maybe\MaybeMergeTest.cs" />
     <Compile Include="maybe\MaybeRepeatWhenTest.cs" />
+    <Compile Include="maybe\MaybeConcatMapTest.cs" />
+    <Compile Include="maybe\MaybeFlatMapManyTest.cs" />
     <Compile Include="SingleSubjectTest.cs" />
     <Compile Include="maybe\MaybeCreateTest.cs" />
     <Compile Include="maybe\MaybeEmptyTest.cs" />

@@ -8,7 +8,7 @@ Extensions to the [dotnet/reactive](https://github.com/dotnet/reactive) library.
 ### Setup
 
 ```
-Install-Package akarnokd.reactive_extensions -Version 0.0.12-alpha
+Install-Package akarnokd.reactive_extensions -Version 0.0.13-alpha
 ```
 
 ### Dependencies
@@ -739,10 +739,12 @@ Extension methods host: `MaybeSource`
 
 ### Interoperation
 
+- `ConcatMap` (on `IObservable`)
 - `ConcatMapEager` (on `IObservable`)
 - `ElementAtIndex` (on `IObservable`)
 - `FirstElement` (on `IObservable`)
 - `FlatMap` (onto `ICompletableSource`, `ISingleSource`, `IObservable`, `IEnumerable`)
+- `FlatMap` (on `IObservable`)
 - `IgnoreElement`
 - `LastElement` (on `IObservable`)
 - `SingleElement` (on `IObservable`)

@@ -1510,12 +1510,25 @@ namespace akarnokd.reactive_extensions
         // Interoperation with other reactive types
         //-------------------------------------------------
 
+        /// <summary>
+        /// Maps the upstream observable sequence items into maybe sources, runs them one
+        /// after the other relaying their success item in order and
+        /// optionally delays errors from all sources until all of them terminate.
+        /// </summary>
+        /// <typeparam name="T">The element type of the upstream observable sequence.</typeparam>
+        /// <typeparam name="R">The success value type of the inner maybe sources.</typeparam>
+        /// <param name="source">The source of items to map into maybe sources.</param>
+        /// <param name="mapper">The function that receives the upstream item and should
+        /// return a maybe source to relay the success item of.</param>
+        /// <param name="delayErrors">If true, errors are delayed until all sources terminate.</param>
+        /// <returns>The new observable instance.</returns>
+        /// <remarks>Since 0.0.13</remarks>
         public static IObservable<R> ConcatMap<T, R>(this IObservable<T> source, Func<T, IMaybeSource<R>> mapper, bool delayErrors = false)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(mapper, nameof(mapper));
 
-            throw new NotImplementedException();
+            return new MaybeConcatMap<T, R>(source, mapper, delayErrors);
         }
 
         /// <summary>
@@ -1543,13 +1556,27 @@ namespace akarnokd.reactive_extensions
             return new MaybeConcatMapEager<T, R>(source, mapper, delayErrors, maxConcurrency);
         }
 
+        /// <summary>
+        /// Maps the values of an observable sequence into maybe sources,
+        /// runs and merges some or all maybe sources
+        /// into one observable sequence and optionally delays all errors until all sources terminate.
+        /// </summary>
+        /// <typeparam name="T">The value type of the source observable sequence.</typeparam>
+        /// <typeparam name="R">The success value type of the inner maybe sources.</typeparam>
+        /// <param name="source">The observable sequence to map into maybe sources.</param>
+        /// <param name="mapper">The function receiving the upstream item and should return
+        /// a maybe source to concatenate eagerly.</param>
+        /// <param name="delayErrors">If true, errors are delayed until all sources terminate.</param>
+        /// <param name="maxConcurrency">The maximum number of active inner maybe sources to run at once.</param>
+        /// <returns>The new observable instance.</returns>
+        /// <remarks>Since 0.0.13</remarks>
         public static IObservable<R> FlatMap<T, R>(this IObservable<T> source, Func<T, IMaybeSource<R>> mapper, bool delayErrors = false, int maxConcurrency = int.MaxValue)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(mapper, nameof(mapper));
             RequirePositive(maxConcurrency, nameof(maxConcurrency));
 
-            throw new NotImplementedException();
+            return new MaybeFlatMapMany<T, R>(source, mapper, delayErrors, maxConcurrency);
         }
 
         /// <summary>

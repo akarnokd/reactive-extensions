@@ -33,7 +33,7 @@ namespace akarnokd.reactive_extensions
             return Volatile.Read(ref disposed);
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             if (IsDisposed())
             {

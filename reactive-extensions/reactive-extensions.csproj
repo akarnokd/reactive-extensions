@@ -13,6 +13,8 @@
     <Copyright>Copyright 2018, David Karnok</Copyright>
     <PackageReleaseNotes>New operators:
 + IMaybeSource
+  - ConcatMap (on IObservable)
+  - FlatMap (on IObservable)
   - RepeatWhen
   - RetryWhen</PackageReleaseNotes>
     <PackageTags>reactive, extensions</PackageTags>
