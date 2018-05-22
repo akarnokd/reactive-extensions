@@ -1622,12 +1622,26 @@ namespace akarnokd.reactive_extensions
             return new CompletableFlatMapMaybe<T>(source, mapper);
         }
 
-        public static IObservable<R> SwitchMap<T, R>(this IObservable<T> source, Func<T, IMaybeSource<T>> mapper, bool delayErrors = false)
+        /// <summary>
+        /// Maps the upstream observable sequence into maybe sources and switches to
+        /// the next inner source when it becomes mapped, disposing the previous inner
+        /// source if it is still running, optionally delaying
+        /// errors until all sources terminate.
+        /// </summary>
+        /// <typeparam name="T">The element type of the observable sequence.</typeparam>
+        /// <typeparam name="R">The success value type of the inner maybe sources.</typeparam>
+        /// <param name="source">The observable sequence to map into maybe sources.</param>
+        /// <param name="mapper">The function receiving the upstream item and should return
+        /// a maybe source to switch to.</param>
+        /// <param name="delayErrors">If true, errors are delayed until all sources terminate.</param>
+        /// <returns>The new observable instance.</returns>
+        /// <remarks>Since 0.0.13</remarks>
+        public static IObservable<R> SwitchMap<T, R>(this IObservable<T> source, Func<T, IMaybeSource<R>> mapper, bool delayErrors = false)
         {
             RequireNonNull(source, nameof(source));
             RequireNonNull(mapper, nameof(mapper));
 
-            throw new NotImplementedException();
+            return new MaybeSwitchMap<T, R>(source, mapper, delayErrors);
         }
 
         /// <summary>

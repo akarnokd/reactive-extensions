@@ -748,6 +748,7 @@ Extension methods host: `MaybeSource`
 - `IgnoreElement`
 - `LastElement` (on `IObservable`)
 - `SingleElement` (on `IObservable`)
+- `SwitchMap` (on `IObservable`)
 - `ToTask`
 - `ToObservable`
 - `ToSingle`

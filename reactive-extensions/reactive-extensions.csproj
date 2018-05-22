@@ -16,7 +16,8 @@
   - ConcatMap (on IObservable)
   - FlatMap (on IObservable)
   - RepeatWhen
-  - RetryWhen</PackageReleaseNotes>
+  - RetryWhen
+  - SwitchMap (on IObservable)</PackageReleaseNotes>
     <PackageTags>reactive, extensions</PackageTags>
   </PropertyGroup>
 
