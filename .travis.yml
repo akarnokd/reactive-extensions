@@ -6,4 +6,4 @@ install:
 script:
   - msbuild /p:Configuration=Release reactive-extensions.sln
 #  - find .
-  - mono ./testrunner/NUnit.ConsoleRunner.3.8.0/tools/nunit3-console.exe ./reactive-extensions-test/bin/Release/reactive-extensions-test.dll
+  - mono ./testrunner/NUnit.ConsoleRunner.3.8.0/tools/nunit3-console.exe ./reactive-extensions-test/bin/Release/reactive-extensions-test.dll --labels=All
