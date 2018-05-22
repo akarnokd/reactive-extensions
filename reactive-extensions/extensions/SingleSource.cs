@@ -1641,32 +1641,74 @@ namespace akarnokd.reactive_extensions
             return new SingleToObservable<T>(source);
         }
 
+        /// <summary>
+        /// Signals the first item of the upstream observable sequence
+        /// or signals the default item if the source is empty.
+        /// </summary>
+        /// <typeparam name="T">The element type of the observable sequence.</typeparam>
+        /// <param name="source">The upstream observable sequence.</param>
+        /// <param name="defaultItem">The item to signal if the source is empty.</param>
+        /// <returns>The new single source instance.</returns>
+        /// <remarks>Since 0.0.14</remarks>
         public static ISingleSource<T> FirstOrDefault<T>(this IObservable<T> source, T defaultItem)
         {
             RequireNonNull(source, nameof(source));
 
-            throw new NotImplementedException();
+            return ElementAtOrDefault(source, 0L, defaultItem);
         }
 
+        /// <summary>
+        /// Signals the only item of the upstream observable sequence
+        /// or signals the default item if the source is empty,
+        /// fails with an IndexOutOfRangeException if the source has
+        /// more than one element.
+        /// </summary>
+        /// <typeparam name="T">The element type of the observable sequence.</typeparam>
+        /// <param name="source">The upstream observable sequence.</param>
+        /// <param name="defaultItem">The item to signal if the source is empty.</param>
+        /// <returns>The new single source instance.</returns>
+        /// <remarks>Since 0.0.14</remarks>
         public static ISingleSource<T> SingleOrDefault<T>(this IObservable<T> source, T defaultItem)
         {
             RequireNonNull(source, nameof(source));
 
-            throw new NotImplementedException();
+            return new SingleSingleOrDefault<T>(source, defaultItem);
         }
 
+        /// <summary>
+        /// Signals the last item of the upstream observable sequence
+        /// or signals the default item if the source is empty.
+        /// </summary>
+        /// <typeparam name="T">The element type of the observable sequence.</typeparam>
+        /// <param name="source">The upstream observable sequence.</param>
+        /// <param name="defaultItem">The item to signal if the source is empty.</param>
+        /// <returns>The new single source instance.</returns>
+        /// <remarks>Since 0.0.14</remarks>
         public static ISingleSource<T> LastOrDefault<T>(this IObservable<T> source, T defaultItem)
         {
             RequireNonNull(source, nameof(source));
 
-            throw new NotImplementedException();
+            return new SingleLastOrDefault<T>(source, defaultItem);
         }
 
+        /// <summary>
+        /// Signals the item at a specified zero-based index of the upstream 
+        /// observable sequence or signals the default item if the source is
+        /// shorter.
+        /// </summary>
+        /// <typeparam name="T">The element type of the observable sequence.</typeparam>
+        /// <param name="source">The upstream observable sequence.</param>
+        /// <param name="index">The element index.</param>
+        /// <param name="defaultItem">The item to signal if the source is sorter than the index.</param>
+        /// <returns>The new single source instance.</returns>
+        /// <remarks>Since 0.0.14</remarks>
         public static ISingleSource<T> ElementAtOrDefault<T>(this IObservable<T> source, long index, T defaultItem)
         {
             RequireNonNull(source, nameof(source));
+            RequireNonNegative(index, nameof(index));
 
-            throw new NotImplementedException();
+            return new SingleElementAtOrDefault<T>(source, index, defaultItem);
+
         }
 
     }

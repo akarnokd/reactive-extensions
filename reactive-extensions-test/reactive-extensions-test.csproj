@@ -175,6 +175,8 @@
     <Compile Include="single\SingleDelaySubscriptionTest.cs" />
     <Compile Include="single\SingleDelayTest.cs" />
     <Compile Include="single\SingleDoTest.cs" />
+    <Compile Include="single\SingleSingleOrDefaultTest.cs" />
+    <Compile Include="single\SingleLastOrDefaultTest.cs" />
     <Compile Include="single\SingleElementAtOrErrorTest.cs" />
     <Compile Include="single\SingleFlatMapEnumerableTest.cs" />
     <Compile Include="single\SingleFlatMapManyTest.cs" />
@@ -213,6 +215,8 @@
     <Compile Include="single\SingleCreateTest.cs" />
     <Compile Include="single\SingleNeverTest.cs" />
     <Compile Include="single\SingleErrorTest.cs" />
+    <Compile Include="single\SingleElementAtOrDefaultTest.cs" />
+    <Compile Include="single\UnitTest1.cs" />
     <Compile Include="tools\FailingEnumerable.cs" />
     <Compile Include="tools\TestHelper_VerifyDispose_Observable.cs" />
     <Compile Include="tools\TestHelper_VerifyDispose_Single.cs" />
