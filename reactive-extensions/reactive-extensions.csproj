@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
-    <Version>0.0.12-alpha</Version>
+    <Version>0.0.13-alpha</Version>
     <Description>Extension methods for the dotnet/reactive library.</Description>
     <Authors>David Karnok</Authors>
     <PackageId>akarnokd.reactive_extensions</PackageId>
@@ -13,20 +13,8 @@
     <Copyright>Copyright 2018, David Karnok</Copyright>
     <PackageReleaseNotes>New operators:
 + IMaybeSource
-  - Amb
-  - Cache
-  - Concat
-  - ConcatAll
-  - ConcatEager
-  - ConcatEagerAll
-  - ConcatMapEager (on IObservable)
-  - Merge
-  - MergeAll
-  - Repeat
-  - Retry
-  - ToObservable
-  - ToSingle
-  - Zip</PackageReleaseNotes>
+  - RepeatWhen
+  - RetryWhen</PackageReleaseNotes>
     <PackageTags>reactive, extensions</PackageTags>
   </PropertyGroup>
 

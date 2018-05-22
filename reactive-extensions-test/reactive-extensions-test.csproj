@@ -101,6 +101,7 @@
     <Compile Include="completable\CompletableFlatMapObservableTest.cs" />
     <Compile Include="completable\CompletableSwitchMapTest.cs" />
     <Compile Include="completable\UnitTest1.cs" />
+    <Compile Include="maybe\MaybeRetryWhenTest.cs" />
     <Compile Include="maybe\MaybeToObservableTest.cs" />
     <Compile Include="maybe\MaybeTakeUntilTest.cs" />
     <Compile Include="maybe\MaybeDelaySubscriptionTest.cs" />
@@ -144,6 +145,7 @@
     <Compile Include="maybe\MaybeRepeatTest.cs" />
     <Compile Include="maybe\MaybeRetryTest.cs" />
     <Compile Include="maybe\MaybeMergeTest.cs" />
+    <Compile Include="maybe\MaybeRepeatWhenTest.cs" />
     <Compile Include="SingleSubjectTest.cs" />
     <Compile Include="maybe\MaybeCreateTest.cs" />
     <Compile Include="maybe\MaybeEmptyTest.cs" />

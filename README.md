@@ -719,7 +719,9 @@ Extension methods host: `MaybeSource`
 - `OnErrorResumeNext`
 - `OnTerminateDetach`
 - `Repeat`
+- `RepeatWhen`
 - `Retry`
+- `RetryWhen`
 - `SubscribeOn`
 - `SwitchIfEmpty`
 - `TakeUntil`
