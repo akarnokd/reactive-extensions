@@ -72,7 +72,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netstandard1.3\reactive-extensions.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\netstandard2.0\reactive-extensions.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -80,7 +80,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Reactive.Interfaces" Version="4.0.0-preview.2.build.380" />
+    <PackageReference Include="System.Reactive" Version="4.0.0-preview.4.build.391" />
   </ItemGroup>
 
 </Project>
