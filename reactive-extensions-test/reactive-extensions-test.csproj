@@ -250,7 +250,13 @@
     <Compile Include="TestSchedulerTest.cs" />
     <Compile Include="CompletableSubjectTest.cs" />
     <Compile Include="MaybeSubjectTest.cs" />
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="ImmediateSchedulerTest.cs" />
+    <Compile Include="TestObserverTest.cs" />
+    <Compile Include="SingleAssignmentDisposableTest.cs" />
+    <Compile Include="ExceptionHelperTest.cs" />
+    <Compile Include="HalfSerializerTest.cs" />
+    <Compile Include="ValidationHelperTest.cs" />
+    <Compile Include="UnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

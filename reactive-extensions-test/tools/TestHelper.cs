@@ -20,7 +20,7 @@ namespace akarnokd.reactive_extensions_test
         /// <summary>
         /// Number of iterations to perform in concurrency-race tests by default.
         /// </summary>
-        internal static readonly int RACE_LOOPS = 1000;
+        internal static readonly int RACE_LOOPS = 200;
 
         /// <summary>
         /// Runs two actions concurrently, synchronizing their

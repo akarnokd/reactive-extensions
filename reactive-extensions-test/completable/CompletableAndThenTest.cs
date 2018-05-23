@@ -223,6 +223,65 @@ namespace akarnokd.reactive_extensions_test.completable
 
         #region + Single +
 
+        [Test]
+        public void Single_Basic()
+        {
+            CompletableSource.Empty()
+                .AndThen(SingleSource.Just(1))
+                .Test()
+                .AssertResult(1);
+        }
+
+        [Test]
+        public void Single_Main_Error()
+        {
+            CompletableSource.Error(new InvalidOperationException())
+                .AndThen(SingleSource.Just(1))
+                .Test()
+                .AssertFailure(typeof(InvalidOperationException));
+        }
+
+        [Test]
+        public void Single_Next_Error()
+        {
+            CompletableSource.Empty()
+                .AndThen(SingleSource.Error<int>(new InvalidOperationException()))
+                .Test()
+                .AssertFailure(typeof(InvalidOperationException));
+        }
+
+        [Test]
+        public void Single_Dispose_Main()
+        {
+            var cs = new CompletableSubject();
+
+            var to = cs
+                .AndThen(SingleSource.Just(1))
+                .Test();
+
+            Assert.True(cs.HasObserver());
+
+            to.Dispose();
+
+            Assert.False(cs.HasObserver());
+        }
+
+        [Test]
+        public void Single_Dispose_Other()
+        {
+            var ms = new SingleSubject<int>();
+
+            var to = CompletableSource.Empty()
+                .AndThen(ms)
+                .Test();
+
+            Assert.True(ms.HasObserver());
+
+            to.Dispose();
+
+            Assert.False(ms.HasObserver());
+        }
+
         #endregion Single
     }
 }

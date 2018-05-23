@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using System.Linq;
 
 namespace akarnokd.reactive_extensions
 {
@@ -30,7 +31,7 @@ namespace akarnokd.reactive_extensions
                 else
                 if (a is AggregateException g)
                 {
-                    b = new AggregateException(g, ex).Flatten();
+                    b = new AggregateException(g.InnerExceptions.Concat(new[] { ex }));
                 }
                 else
                 {

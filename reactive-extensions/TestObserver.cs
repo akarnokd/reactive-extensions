@@ -109,6 +109,7 @@ namespace akarnokd.reactive_extensions
             if (Volatile.Read(ref once) != 0)
             {
                 OnError(new InvalidOperationException("OnSuccess called after termination"));
+                return;
             }
             OnCompleted();
         }
@@ -675,5 +676,11 @@ namespace akarnokd.reactive_extensions
         /// </summary>
         /// <remarks>Since 0.0.8</remarks>
         public string Tag { get { return tag; } }
+
+        /// <summary>
+        /// The number of OnCompleted events received.
+        /// </summary>
+        /// <remarks>Since 0.0.15</remarks>
+        public int CompletionCount { get { return Volatile.Read(ref completions); } }
     }
 }
