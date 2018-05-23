@@ -1,9 +1,10 @@
 language: csharp
-solution: reactive-extensions.sln
+mono: none
+dotnet: 2.0.0
+
 install:
-  - nuget restore reactive-extensions.sln
-  - nuget install NUnit.ConsoleRunner -Version 3.8.0 -OutputDirectory testrunner
+- dotnet restore
+
 script:
-  - msbuild /p:Configuration=Release reactive-extensions.sln
-#  - find .
-  - mono ./testrunner/NUnit.ConsoleRunner.3.8.0/tools/nunit3-console.exe ./reactive-extensions-test/bin/Release/reactive-extensions-test.dll --labels=All
+ - dotnet build
+ - dotnet test reactive-extensions-test/reactive-extensions-test.csproj
