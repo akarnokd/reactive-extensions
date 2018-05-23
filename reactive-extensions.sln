@@ -4,8 +4,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.27428.2043
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "reactive-extensions", "reactive-extensions\reactive-extensions.csproj", "{7CD28B40-B6D2-495A-8FFC-C3236E4784E8}"
+	ProjectSection(SolutionItems) = preProject
+		Global.proj = Global.proj
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "reactive-extensions-test", "reactive-extensions-test\reactive-extensions-test.csproj", "{001B120D-C4E3-4260-A7C5-D0793434DE91}"
+	ProjectSection(SolutionItems) = preProject
+		Global.proj = Global.proj
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "reactive-extensions-benchmarks", "reactive-extensions-benchmarks\reactive-extensions-benchmarks.csproj", "{7800D1E4-EB56-4545-8753-295450B3BAB0}"
 EndProject
