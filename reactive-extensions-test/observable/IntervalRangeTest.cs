@@ -9,7 +9,9 @@ namespace akarnokd.reactive_extensions_test.observable
     public class IntervalRangeTest
     {
         [Test]
+#if NETFRAMEWORK
         [Timeout(10000)]
+#endif
         public void Basic()
         {
             var ts = new TestScheduler();
@@ -28,7 +30,9 @@ namespace akarnokd.reactive_extensions_test.observable
         }
 
         [Test]
+#if NETFRAMEWORK
         [Timeout(10000)]
+#endif
         public void Basic_Single_Step()
         {
             var ts = new TestScheduler();

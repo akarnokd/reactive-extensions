@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>netstandard1.3</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <Version>0.0.14-alpha</Version>
     <Description>Extension methods for the dotnet/reactive library.</Description>
     <Authors>David Karnok</Authors>
@@ -72,15 +71,15 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netstandard1.3\reactive-extensions.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\netstandard2.0\reactive-extensions.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\netstandard1.3\reactive-extensions.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\netstandard2.0\reactive-extensions.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Reactive.Interfaces" Version="4.0.0-preview.2.build.380" />
+    <PackageReference Include="System.Reactive" Version="4.0.0-preview.4.build.391" />
   </ItemGroup>
 
 </Project>

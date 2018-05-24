@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 
 [assembly: InternalsVisibleTo("reactive-extensions-test")]
+[assembly: InternalsVisibleTo("reactive-extensions-test-core")]
 [assembly: InternalsVisibleTo("reactive-extensions-benchmarks")]
 
 namespace akarnokd.reactive_extensions

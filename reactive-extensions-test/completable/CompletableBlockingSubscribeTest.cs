@@ -34,7 +34,9 @@ namespace akarnokd.reactive_extensions_test.completable
         }
 
         [Test]
+#if NETFRAMEWORK
         [Timeout(5000)]
+#endif
         public void Observer_Dispose()
         {
             for (int i = 0; i < TestHelper.RACE_LOOPS; i++)
@@ -61,7 +63,9 @@ namespace akarnokd.reactive_extensions_test.completable
         }
 
         [Test]
+#if NETFRAMEWORK
         [Timeout(5000)]
+#endif
         public void Observer_Complete_Async()
         {
             for (int i = 0; i < TestHelper.RACE_LOOPS; i++)
@@ -85,7 +89,9 @@ namespace akarnokd.reactive_extensions_test.completable
         }
 
         [Test]
+#if NETFRAMEWORK
         [Timeout(5000)]
+#endif
         public void Observer_Error_Async()
         {
             for (int i = 0; i < TestHelper.RACE_LOOPS; i++)
@@ -149,7 +155,9 @@ namespace akarnokd.reactive_extensions_test.completable
         }
 
         [Test]
+#if NETFRAMEWORK
         [Timeout(5000)]
+#endif
         public void Action_Dispose()
         {
             for (int i = 0; i < TestHelper.RACE_LOOPS; i++)
@@ -176,7 +184,9 @@ namespace akarnokd.reactive_extensions_test.completable
         }
 
         [Test]
+#if NETFRAMEWORK
         [Timeout(5000)]
+#endif
         public void Action_Complete_Async()
         {
             for (int i = 0; i < TestHelper.RACE_LOOPS; i++)
@@ -200,7 +210,9 @@ namespace akarnokd.reactive_extensions_test.completable
         }
 
         [Test]
+#if NETFRAMEWORK
         [Timeout(5000)]
+#endif
         public void Action_Error_Async()
         {
             for (int i = 0; i < TestHelper.RACE_LOOPS; i++)
