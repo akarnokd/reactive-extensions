@@ -3,19 +3,19 @@
 queue: 
   name: Hosted Linux Preview
   
-# steps:
-# - task: dotNetCoreCLI@1
-#   inputs:
-#     command: restore
-#     projects: "**/*.csproj"
-#   displayName: dotnet restore
+steps:
+- task: dotNetCoreCLI@1
+  inputs:
+    command: restore
+    projects: "reactive-extensions-test-core/*.csproj"
+  displayName: dotnet restore
 
-# - task: dotNetCoreCLI@1
-#   inputs:
-#     command: build
-#     projects: "**/*.csproj"
-#     arguments: --configuration release
-#   displayName: dotnet build
+- task: dotNetCoreCLI@1
+  inputs:
+    command: build
+    projects: "reactive-extensions-test-core/*.csproj"
+    arguments: --configuration release
+  displayName: dotnet build
 
 - task: dotNetCoreCLI@1
   inputs:
