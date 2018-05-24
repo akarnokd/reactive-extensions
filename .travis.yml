@@ -1,9 +1,6 @@
 language: csharp
 dotnet: 2.1.103
 
-install:
-- dotnet restore
-
 script:
- - cd reactive-extensions-core
+ - cd reactive-extensions-test
  - dotnet test
