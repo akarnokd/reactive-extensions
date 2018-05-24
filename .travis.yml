@@ -2,5 +2,4 @@ language: csharp
 dotnet: 2.1.103
 
 script:
- - cd reactive-extensions-test
- - dotnet test
+ - dotnet test ./reactive-extensions-test/reactive-extensions-test.csproj
