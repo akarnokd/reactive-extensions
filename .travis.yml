@@ -1,10 +1,9 @@
 language: csharp
-mono: latest
 dotnet: 2.1.103
 
 install:
 - dotnet restore
 
 script:
- - cd reactive-extensions-test-core
+ - cd reactive-extensions-core
  - dotnet test
