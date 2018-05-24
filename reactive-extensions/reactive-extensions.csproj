@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Version>0.0.15-alpha</Version>
@@ -14,15 +14,7 @@
 - Upgrade reactive-extensions to require NETStandard 2.0 (because preview 4 now requires that at minimum)
 - Improve and fix some TestObserver internals
 - Improved code coverage</PackageReleaseNotes>
-    <PackageTags>reactive, extensions</PackageTags>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netstandard2.0\reactive-extensions.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\netstandard2.0\reactive-extensions.xml</DocumentationFile>
+    <PackageTags>reactive extensions</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
