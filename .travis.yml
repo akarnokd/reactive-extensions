@@ -1,5 +1,5 @@
 language: csharp
-dotnet: 2.1.201
+dotnet: 2.1.200
 
 script:
  - dotnet test ./reactive-extensions-test/reactive-extensions-test.csproj
