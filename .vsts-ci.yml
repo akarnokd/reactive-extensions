@@ -24,6 +24,7 @@ steps:
     arguments: --configuration release
   displayName: dotnet test
 
+
  - task: dotNetCoreCLI@1
   inputs:
     command: publish
