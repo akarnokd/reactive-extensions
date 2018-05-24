@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.0.14-alpha</Version>
+    <Version>0.0.15-alpha</Version>
     <Description>Extension methods for the dotnet/reactive library.</Description>
     <Authors>David Karnok</Authors>
     <PackageId>akarnokd.reactive_extensions</PackageId>
@@ -10,63 +10,10 @@
     <RepositoryUrl>https://github.com/akarnokd/reactive-extensions</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <Copyright>Copyright 2018, David Karnok</Copyright>
-    <PackageReleaseNotes>New operators:
-+ ISingleSource
-  - Amb
-  - AmbAll
-  - BlockingSubscribe
-  - Cache
-  - Concat
-  - ConcatAll
-  - ConcatEager
-  - ConcatEagerAll
-  - ConcatMap (on IObservable)
-  - ConcatMapEager (on IObservable)
-  - Defer
-  - Delay
-  - DelaySubscription
-  - DoAfterSuccess
-  - DoAfterTerminate
-  - DoOnDispose
-  - DoOnError
-  - DoOnTerminate
-  - DoOnSubscribe
-  - DoOnSuccess
-  - ElementAtOrDefault
-  - ElementAtOrError
-  - FirstOrDefault
-  - FirstOrError
-  - FlatMap (onto IEnumerable, onto ISingleSource, onto IObservable)
-  - FromTask
-  - LastOrDefault
-  - LastOrError
-  - Map
-  - Merge
-  - MergeAll
-  - ObserveOn
-  - OnErrorResumeNext
-  - OnTerminateDetach
-  - Repeat
-  - RepeatWhen
-  - Retry
-  - RetryWhen
-  - SingleOrDefault
-  - SingleOrError
-  - SubscribeOn
-  - SubscribeSafe 
-  - SwitchMap (on IObservable)
-  - TakeUntil
-  - Timeout
-  - Timer
-  - ToMaybe
-  - ToObservable
-  - ToSingle
-  - ToTask
-  - UnsubscribeOn
-  - Using
-  - Wait
-  - Zip
-</PackageReleaseNotes>
+    <PackageReleaseNotes>- Upgrade to System.Reactive 4.0.0-preview.4.build.391
+- Upgrade reactive-extensions to require NETStandard 2.0 (because preview 4 now requires that at minimum)
+- Improve and fix some TestObserver internals
+- Improved code coverage</PackageReleaseNotes>
     <PackageTags>reactive, extensions</PackageTags>
   </PropertyGroup>
 
