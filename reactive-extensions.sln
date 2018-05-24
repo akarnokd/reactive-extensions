@@ -8,6 +8,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "reactive-extensions-test", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "reactive-extensions-benchmarks", "reactive-extensions-benchmarks\reactive-extensions-benchmarks.csproj", "{7800D1E4-EB56-4545-8753-295450B3BAB0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{00A7B664-2796-4FE9-94B4-27D87FB891D1}"
+	ProjectSection(SolutionItems) = preProject
+		.vsts-ci.yml = .vsts-ci.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
