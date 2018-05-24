@@ -5,7 +5,7 @@ queue:
   
 steps:
 
-#- script: mkdir /opt/vsts/work/1/s/reactive-extensions/bin/Release/netstandard2.0
+- script: mkdir /opt/vsts/work/1/s/reactive-extensions/bin/Release/netstandard2.0
 
 - task: dotNetCoreCLI@1
   inputs:
