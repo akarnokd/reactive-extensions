@@ -4,18 +4,34 @@ queue:
   name: Hosted Linux Preview
   
 steps:
-#- task: dotNetCoreCLI@1
-#  inputs:
-#    command: restore
-#    projects: "reactive-extensions-test-core/*.csproj"
-#  displayName: dotnet restore
 
-#- task: dotNetCoreCLI@1
-#  inputs:
-#    command: build
-#    projects: "reactive-extensions-test-core/*.csproj"
-#    arguments: --configuration release
-#  displayName: dotnet build
+#- script: mkdir /opt/vsts/work/1/s/reactive-extensions/bin/Release/netstandard2.0
+
+- task: dotNetCoreCLI@1
+  inputs:
+    command: restore
+    projects: "reactive-extensions/*.csproj"
+  displayName: dotnet restore class library
+
+- task: dotNetCoreCLI@1
+  inputs:
+    command: restore
+    projects: "reactive-extensions-test-core/*.csproj"
+  displayName: dotnet restore test core
+
+- task: dotNetCoreCLI@1
+  inputs:
+    command: build
+    projects: "reactive-extensions/*.csproj"
+    arguments: --configuration release
+  displayName: dotnet build class library
+
+- task: dotNetCoreCLI@1
+  inputs:
+    command: build
+    projects: "reactive-extensions-test-core/*.csproj"
+    arguments: --configuration release
+  displayName: dotnet build test core
 
 - task: dotNetCoreCLI@1
   inputs:
