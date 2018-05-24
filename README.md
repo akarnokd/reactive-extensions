@@ -2,7 +2,7 @@
 
 <a href='https://travis-ci.org/akarnokd/reactive-extensions/builds'><img src='https://travis-ci.org/akarnokd/reactive-extensions.svg?branch=master'></a>
 <a href='https://www.nuget.org/packages/akarnokd.reactive_extensions'><img src='https://img.shields.io/nuget/v/akarnokd.reactive_extensions.svg' alt="reactive-extensions NuGet version"/></a>
-[![Build Status](https://akarnokd.visualstudio.com/_apis/public/build/definitions/94ed59dd-ad54-4947-8246-cf05f35562a6/1/badge)](https://akarnokd.visualstudio.com/MyFirstProject/_build/index?definitionId=1)
+[![Build Status](https://akarnokd.visualstudio.com/_apis/public/build/definitions/94ed59dd-ad54-4947-8246-cf05f35562a6/5/badge)](https://akarnokd.visualstudio.com/MyFirstProject/_build/index?definitionId=5)
 
 Extensions to the [dotnet/reactive](https://github.com/dotnet/reactive) library.
 
