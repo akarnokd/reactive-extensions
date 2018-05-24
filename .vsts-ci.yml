@@ -37,12 +37,13 @@ steps:
   inputs:
     command: test 
     projects: "reactive-extensions-test-core/*.csproj"
-    arguments: --configuration release
+    arguments: --configuration release --logger:trx
   displayName: dotnet test
 
 - task: PublishTestResults@2
   inputs:
     testRunner: nUnit
+    testResultsFiles: '**/*.trx'
 
 - task: dotNetCoreCLI@1
   inputs:
