@@ -3,7 +3,7 @@
 queue: 
   name: Hosted Linux Preview
   
-#steps:
+steps:
 #- task: dotNetCoreCLI@2
 #  inputs:
 #    command: restore
