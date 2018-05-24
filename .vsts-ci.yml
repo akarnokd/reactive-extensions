@@ -41,6 +41,8 @@ steps:
   displayName: dotnet test
 
 - task: PublishTestResults@2
+  inputs:
+    testRunner: nUnit
 
 - task: dotNetCoreCLI@1
   inputs:
