@@ -25,17 +25,16 @@ steps:
   displayName: dotnet test
 
 
- - task: dotNetCoreCLI@1
+- task: dotNetCoreCLI@1
   inputs:
     command: publish
-    # --output "$(Build.ArtifactStagingDirectory)"
-    arguments: --configuration release
+    arguments: --configuration release --output "$(Build.ArtifactStagingDirectory)"
     zipAfterPublish: true
   displayName: dotnet publish
 
 - task: publishBuildArtifacts@1
   inputs:
-#    PathtoPublish: "$(Build.ArtifactStagingDirectory)"
+    PathtoPublish: "$(Build.ArtifactStagingDirectory)"
     ArtifactName: drop
     ArtifactType: Container
   displayName: Publish the artifacts
