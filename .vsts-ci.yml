@@ -42,15 +42,16 @@ steps:
 
 - task: PublishTestResults@2
   inputs:
-    testRunner: nUnit
+    testRunner: vSTest
     testResultsFiles: '**/*.trx'
+  displayName: publish test results
 
-- task: dotNetCoreCLI@1
-  inputs:
-    command: publish
-    arguments: --configuration release --output "$(Build.ArtifactStagingDirectory)"
-    zipAfterPublish: true
-  displayName: dotnet publish
+#- task: dotNetCoreCLI@1
+#  inputs:
+#    command: publish
+#    arguments: --configuration release --output "$(Build.ArtifactStagingDirectory)"
+#    zipAfterPublish: true
+#  displayName: dotnet publish
 
 - task: publishBuildArtifacts@1
   inputs:
