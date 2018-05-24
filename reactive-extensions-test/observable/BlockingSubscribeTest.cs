@@ -33,7 +33,9 @@ namespace akarnokd.reactive_extensions_test.observable
         }
 
         [Test]
-        [Timeout(5000)]
+#if NETFRAMEWORK
+        [Timeout(10000)]
+#endif
         public void Basic_Observer_Dispose()
         {
             var to = new TestObserver<int>();
@@ -86,7 +88,9 @@ namespace akarnokd.reactive_extensions_test.observable
         }
 
         [Test]
-        [Timeout(5000)]
+#if NETFRAMEWORK
+        [Timeout(10000)]
+#endif
         public void Basic_Action_Dispose()
         {
             var to = new TestObserver<int>();
@@ -145,7 +149,9 @@ namespace akarnokd.reactive_extensions_test.observable
         }
 
         [Test]
-        [Timeout(5000)]
+#if NETFRAMEWORK
+        [Timeout(10000)]
+#endif
         public void Basic_While_Dispose()
         {
             var to = new TestObserver<int>();

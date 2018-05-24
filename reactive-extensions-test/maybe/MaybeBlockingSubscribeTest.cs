@@ -45,7 +45,9 @@ namespace akarnokd.reactive_extensions_test.maybe
         }
 
         [Test]
-        [Timeout(5000)]
+#if NETFRAMEWORK
+        [Timeout(10000)]
+#endif
         public void Observer_Dispose()
         {
             for (int i = 0; i < TestHelper.RACE_LOOPS; i++)
@@ -72,7 +74,9 @@ namespace akarnokd.reactive_extensions_test.maybe
         }
 
         [Test]
-        [Timeout(5000)]
+#if NETFRAMEWORK
+        [Timeout(10000)]
+#endif
         public void Observer_Complete_Async()
         {
             for (int i = 0; i < TestHelper.RACE_LOOPS; i++)
@@ -96,7 +100,9 @@ namespace akarnokd.reactive_extensions_test.maybe
         }
 
         [Test]
-        [Timeout(5000)]
+#if NETFRAMEWORK
+        [Timeout(10000)]
+#endif
         public void Observer_Success_Async()
         {
             for (int i = 0; i < TestHelper.RACE_LOOPS; i++)
@@ -120,7 +126,9 @@ namespace akarnokd.reactive_extensions_test.maybe
         }
 
         [Test]
-        [Timeout(5000)]
+#if NETFRAMEWORK
+        [Timeout(10000)]
+#endif
         public void Observer_Error_Async()
         {
             for (int i = 0; i < TestHelper.RACE_LOOPS; i++)
@@ -199,7 +207,9 @@ namespace akarnokd.reactive_extensions_test.maybe
         }
 
         [Test]
-        [Timeout(5000)]
+#if NETFRAMEWORK
+        [Timeout(10000)]
+#endif
         public void Action_Dispose()
         {
             for (int i = 0; i < TestHelper.RACE_LOOPS; i++)
@@ -226,7 +236,9 @@ namespace akarnokd.reactive_extensions_test.maybe
         }
 
         [Test]
-        [Timeout(5000)]
+#if NETFRAMEWORK
+        [Timeout(10000)]
+#endif
         public void Action_Complete_Async()
         {
             for (int i = 0; i < TestHelper.RACE_LOOPS; i++)
@@ -250,7 +262,9 @@ namespace akarnokd.reactive_extensions_test.maybe
         }
 
         [Test]
-        [Timeout(5000)]
+#if NETFRAMEWORK
+        [Timeout(10000)]
+#endif
         public void Action_Success_Async()
         {
             for (int i = 0; i < TestHelper.RACE_LOOPS; i++)
@@ -274,7 +288,9 @@ namespace akarnokd.reactive_extensions_test.maybe
         }
 
         [Test]
-        [Timeout(5000)]
+#if NETFRAMEWORK
+        [Timeout(10000)]
+#endif
         public void Action_Error_Async()
         {
             for (int i = 0; i < TestHelper.RACE_LOOPS; i++)

@@ -64,7 +64,9 @@ namespace akarnokd.reactive_extensions_test.completable
         }
 
         [Test]
+#if NETFRAMEWORK
         [Timeout(10000)]
+#endif
         public void Dispose()
         {
             var count = 0;
@@ -150,7 +152,9 @@ namespace akarnokd.reactive_extensions_test.completable
         }
 
         [Test]
+#if NETFRAMEWORK
         [Timeout(10000)]
+#endif
         public void Predicate_Dispose()
         {
             var count = 0;

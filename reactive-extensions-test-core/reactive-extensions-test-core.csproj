@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\reactive-extensions-test\**\*.cs" Exclude="..\reactive-extensions-test\obj\**;..\reactive-extensions-test\Properties\AssemblyInfo.cs;..\reactive-extensions-test\*.csproj">
+  <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
+</Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="nunit" Version="3.10.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.6.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\reactive-extensions\reactive-extensions.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -8,7 +8,9 @@ namespace akarnokd.reactive_extensions_test.completable
     public class CompletableRepeatTest
     {
         [Test]
+#if NETFRAMEWORK
         [Timeout(10000)]
+#endif
         public void Basic_Finite()
         {
             for (int i = 0; i < 100; i++)
@@ -25,7 +27,9 @@ namespace akarnokd.reactive_extensions_test.completable
         }
 
         [Test]
+#if NETFRAMEWORK
         [Timeout(10000)]
+#endif
         public void Basic_Infinite()
         {
             var count = 0;
@@ -44,7 +48,9 @@ namespace akarnokd.reactive_extensions_test.completable
         }
 
         [Test]
+#if NETFRAMEWORK
         [Timeout(10000)]
+#endif
         public void Dispose()
         {
             var count = 0;
@@ -73,7 +79,9 @@ namespace akarnokd.reactive_extensions_test.completable
         }
 
         [Test]
+#if NETFRAMEWORK
         [Timeout(10000)]
+#endif
         public void Predicate_Finite()
         {
             for (int i = 0; i < 100; i++)
@@ -90,7 +98,9 @@ namespace akarnokd.reactive_extensions_test.completable
         }
 
         [Test]
+#if NETFRAMEWORK
         [Timeout(10000)]
+#endif
         public void Predicate_Infinite()
         {
             var count = 0;
@@ -109,7 +119,9 @@ namespace akarnokd.reactive_extensions_test.completable
         }
 
         [Test]
+#if NETFRAMEWORK
         [Timeout(10000)]
+#endif
         public void Predicate_Dispose()
         {
             var count = 0;
@@ -138,7 +150,9 @@ namespace akarnokd.reactive_extensions_test.completable
         }
 
         [Test]
+#if NETFRAMEWORK
         [Timeout(10000)]
+#endif
         public void Predicate_Crash()
         {
             CompletableSource.Empty()
