@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.0.15-alpha</Version>
+    <Version>0.0.16-alpha</Version>
     <Description>Extension methods for the dotnet/reactive library.</Description>
     <Authors>David Karnok</Authors>
     <PackageId>akarnokd.reactive_extensions</PackageId>
@@ -10,15 +10,18 @@
     <RepositoryUrl>https://github.com/akarnokd/reactive-extensions</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <Copyright>Copyright 2018, David Karnok</Copyright>
-    <PackageReleaseNotes>- Upgrade to System.Reactive 4.0.0-preview.4.build.391
-- Upgrade reactive-extensions to require NETStandard 2.0 (because preview 4 now requires that at minimum)
-- Improve and fix some TestObserver internals
-- Improved code coverage</PackageReleaseNotes>
+    <PackageReleaseNotes>- Upgrade to System.Reactive 4.0.0 final</PackageReleaseNotes>
     <PackageTags>reactive extensions</PackageTags>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netstandard2.0\reactive-extensions.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netstandard2.0\reactive-extensions.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Reactive" Version="4.0.0-preview.4.build.391" />
+    <PackageReference Include="System.Reactive" Version="4.0.0" />
   </ItemGroup>
 
 </Project>
