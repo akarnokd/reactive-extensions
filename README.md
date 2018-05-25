@@ -9,17 +9,14 @@ Extensions to the [dotnet/reactive](https://github.com/dotnet/reactive) library.
 ### Setup
 
 ```
-Install-Package akarnokd.reactive_extensions -Version 0.0.15-alpha
+Install-Package akarnokd.reactive_extensions -Version 0.0.16-alpha
 ```
 
 ### Dependencies
 
-Due to some versioning shenanigans, this library requires at least the
-`System.Reactive` 4.0.0-preview.4 Rx.NET interface library.
+- `NETStandard2.0`
+- [`System.Reactive` 4.0.0 or newer](https://www.nuget.org/packages/System.Reactive/).
 
-Note that preview-4 has switched to NETStandard2.0 and no longer offers a separate
-`System.Reactive.Interfaces`. Therefore, this library had to be upgraded
-to NETStandard2.0 as well.
 
 ### Table of contents
 
