@@ -32,6 +32,8 @@ Install-Package akarnokd.reactive_extensions -Version 0.0.16-alpha
     - [SingleSubject](#singlesubject)
   - [IMaybeSource](#imaybesource)
     - [MaybeSubject](#maybesubject)
+  - [IObservableSource](#iobservablesource)
+
 
 ## Operators
 
@@ -820,3 +822,29 @@ all maybe observers dispose before the subject succeeds or terminates, it will
 terminate its upstream connection (if any).
 
 *Since 0.0.9*
+
+## IObservableSource
+
+*Since 0.0.17*
+
+A fully push-based observable source implementation that fixes the issues with
+the `IObservable` interface.
+
+Consumer type: `ISignalObserver` (may change)
+
+Main differences:
+
+- `IObservable.Subscribe` is now void and thus fire-and-forget. Works both in synchronous and asynchronous cases because cancellation is now pushed down,
+- `ISignalObserver.OnSubscribe` receives a Disposable upfront so it can be cancelled synchronously and asynchronously.
+
+### Factory methods
+
+- `Just`
+
+### Instance methods
+
+
+### Consumer methods
+
+- `SubscribeWith`
+- `Test`

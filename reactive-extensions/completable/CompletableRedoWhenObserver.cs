@@ -10,7 +10,7 @@ namespace akarnokd.reactive_extensions
     /// when the handlerObserver receives a item.
     /// </summary>
     /// <remarks>Since 0.0.10</remarks>
-    internal abstract class CompletableRedoWhenObserver<U, X> : ICompletableObserver
+    internal abstract class CompletableRedoWhenObserver<U, X> : ICompletableObserver, IDisposable
     {
         protected readonly ICompletableObserver downstream;
 

@@ -19,6 +19,7 @@ namespace akarnokd.reactive_extensions
         public void Subscribe(ISingleObserver<T> observer)
         {
             var parent = new LastOrDefault(observer, defaultItem);
+            observer.OnSubscribe(parent);
 
             parent.OnSubscribe(source.Subscribe(parent));
         }

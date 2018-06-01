@@ -46,6 +46,8 @@ namespace akarnokd.reactive_extensions
 
             var parent = new MainObserver(observer, source, new SerializedObserver<object>(completeSignals));
 
+            observer.OnSubscribe(parent);
+
             var d = redo.Subscribe(parent.handlerObserver);
             parent.handlerObserver.OnSubscribe(d);
 

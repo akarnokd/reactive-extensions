@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.0.16-alpha</Version>
-    <Description>Extension methods for the dotnet/reactive library.</Description>
+    <Version>0.0.17-alpha</Version>
+    <Description>Extension methods and classes for the dotnet/reactive library.</Description>
     <Authors>David Karnok</Authors>
     <PackageId>akarnokd.reactive_extensions</PackageId>
     <PackageLicenseUrl>https://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
@@ -10,7 +10,11 @@
     <RepositoryUrl>https://github.com/akarnokd/reactive-extensions</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <Copyright>Copyright 2018, David Karnok</Copyright>
-    <PackageReleaseNotes>- Upgrade to System.Reactive 4.0.0 final</PackageReleaseNotes>
+    <PackageReleaseNotes>New reactive base type: IObservableSource + ISignalObserver
+- IObservableSource operators:
+  - Just
+  - Test
+  - SubscribeWith</PackageReleaseNotes>
     <PackageTags>reactive extensions</PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

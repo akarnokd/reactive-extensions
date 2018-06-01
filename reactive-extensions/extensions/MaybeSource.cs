@@ -26,7 +26,7 @@ namespace akarnokd.reactive_extensions
         public static TestObserver<T> Test<T>(this IMaybeSource<T> source, bool dispose = false)
         {
             RequireNonNull(source, nameof(source));
-            var to = new TestObserver<T>();
+            var to = new TestObserver<T>(true);
             if (dispose)
             {
                 to.Dispose();

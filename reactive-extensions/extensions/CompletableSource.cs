@@ -26,7 +26,7 @@ namespace akarnokd.reactive_extensions
         public static TestObserver<object> Test(this ICompletableSource source, bool dispose = false)
         {
             RequireNonNull(source, nameof(source));
-            var to = new TestObserver<object>();
+            var to = new TestObserver<object>(true);
             if (dispose)
             {
                 to.Dispose();

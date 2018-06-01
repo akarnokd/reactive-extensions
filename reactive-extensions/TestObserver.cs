@@ -14,8 +14,11 @@ namespace akarnokd.reactive_extensions
     /// <typeparam name="T">The value consumed.</typeparam>
     public class TestObserver<T> : IObserver<T>, IDisposable
         , IMaybeObserver<T>, ISingleObserver<T>, ICompletableObserver
+        , ISignalObserver<T>
     {
         readonly CountdownEvent cdl;
+
+        readonly bool requireOnSubscribe;
 
         readonly List<T> items;
 
@@ -38,11 +41,12 @@ namespace akarnokd.reactive_extensions
         /// <summary>
         /// Constructs an empty TestObserver.
         /// </summary>
-        public TestObserver()
+        public TestObserver(bool requireOnSubscribe = false)
         {
             this.items = new List<T>();
             this.errors = new List<Exception>();
             this.cdl = new CountdownEvent(1);
+            this.requireOnSubscribe = requireOnSubscribe;
         }
 
         /// <summary>
@@ -448,6 +452,10 @@ namespace akarnokd.reactive_extensions
         /// <returns>this</returns>
         public TestObserver<T> AssertResult(params T[] expected)
         {
+            if (requireOnSubscribe)
+            {
+                AssertSubscribed();
+            }
             AssertValues(expected);
             AssertNoError();
             AssertCompleted();
@@ -463,6 +471,10 @@ namespace akarnokd.reactive_extensions
         /// <returns>this</returns>
         public TestObserver<T> AssertFailure(Type expectedError, params T[] expected)
         {
+            if (requireOnSubscribe)
+            {
+                AssertSubscribed();
+            }
             AssertValues(expected);
             AssertNotCompleted();
             AssertError(expectedError);
@@ -475,6 +487,10 @@ namespace akarnokd.reactive_extensions
         /// <returns>this</returns>
         public TestObserver<T> AssertEmpty()
         {
+            if (requireOnSubscribe)
+            {
+                AssertSubscribed();
+            }
             AssertValueCount(0);
             AssertNoError();
             AssertNotCompleted();
@@ -517,6 +533,10 @@ namespace akarnokd.reactive_extensions
         /// <returns>this</returns>
         public TestObserver<T> AssertValuesOnly(params T[] expected)
         {
+            if (requireOnSubscribe)
+            {
+                AssertSubscribed();
+            }
             AssertValues(expected);
             AssertNoError();
             AssertNotCompleted();
