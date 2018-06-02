@@ -12,7 +12,11 @@
     <Copyright>Copyright 2018, David Karnok</Copyright>
     <PackageReleaseNotes>New reactive base type: IObservableSource + ISignalObserver
 - IObservableSource operators:
+  - Defer
+  - Empty
+  - Error
   - Just
+  - Never
   - Test
   - SubscribeWith</PackageReleaseNotes>
     <PackageTags>reactive extensions</PackageTags>

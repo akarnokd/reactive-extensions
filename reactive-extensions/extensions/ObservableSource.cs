@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using static akarnokd.reactive_extensions.ValidationHelper;
 
 namespace akarnokd.reactive_extensions
 {
@@ -18,6 +19,30 @@ namespace akarnokd.reactive_extensions
         public static IObservableSource<T> Just<T>(T item)
         {
             return new ObservableSourceJust<T>(item);
+        }
+
+        public static IObservableSource<T> Empty<T>()
+        {
+            return ObservableSourceEmpty<T>.Instance;
+        }
+
+        public static IObservableSource<T> Never<T>()
+        {
+            return ObservableSourceNever<T>.Instance;
+        }
+
+        public static IObservableSource<T> Error<T>(Exception error)
+        {
+            RequireNonNull(error, nameof(error));
+
+            return new ObservableSourceError<T>(error);
+        }
+
+        public static IObservableSource<T> Defer<T>(Func<IObservableSource<T>> supplier)
+        {
+            RequireNonNull(supplier, nameof(supplier));
+
+            return new ObservableSourceDefer<T>(supplier);
         }
 
         // --------------------------------------------------------------

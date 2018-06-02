@@ -9,7 +9,7 @@ Extensions to the [dotnet/reactive](https://github.com/dotnet/reactive) library.
 ### Setup
 
 ```
-Install-Package akarnokd.reactive_extensions -Version 0.0.16-alpha
+Install-Package akarnokd.reactive_extensions -Version 0.0.17-alpha
 ```
 
 ### Dependencies
@@ -839,7 +839,11 @@ Main differences:
 
 ### Factory methods
 
+- `Defer`
+- `Empty`
+- `Error`
 - `Just`
+- `Never`
 
 ### Instance methods
 

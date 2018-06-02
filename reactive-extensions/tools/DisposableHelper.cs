@@ -216,5 +216,62 @@ namespace akarnokd.reactive_extensions
             observer.OnSubscribe(EMPTY);
             observer.OnError(error);
         }
+
+        internal static void Complete<T>(this ISignalObserver<T> observer)
+        {
+            observer.OnSubscribe(Empty<T>());
+            observer.OnCompleted();
+        }
+
+        internal static void Error<T>(this ISignalObserver<T> observer, Exception error)
+        {
+            observer.OnSubscribe(Empty<T>());
+            observer.OnError(error);
+        }
+
+        /// <summary>
+        /// Returns an empty fuseable disposable instance.
+        /// </summary>
+        /// <typeparam name="T">The target value type.</typeparam>
+        /// <returns>The fuseable disposable instance.</returns>
+        /// <remarks>Since 0.0.17</remarks>
+        internal static IDisposable Empty<T>()
+        {
+            return EmptyDisposable<T>.Instance;
+        }
+
+        /// <summary>
+        /// Represents an fuseable empty disposable that does nothing upon dispose.
+        /// </summary>
+        sealed class EmptyDisposable<T> : IFuseableDisposable<T>
+        {
+            internal static readonly EmptyDisposable<T> Instance = new EmptyDisposable<T>();
+
+            public void Clear()
+            {
+                // always empty
+            }
+
+            public void Dispose()
+            {
+                // deliberately no-op
+            }
+
+            public bool IsEmpty()
+            {
+                return true;
+            }
+
+            public int RequestFusion(int mode)
+            {
+                return mode & FusionSupport.Async;
+            }
+
+            public T TryPoll(out bool success)
+            {
+                success = false;
+                return default(T);
+            }
+        }
     }
 }

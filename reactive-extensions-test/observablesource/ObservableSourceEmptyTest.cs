@@ -5,23 +5,23 @@ using akarnokd.reactive_extensions;
 namespace akarnokd.reactive_extensions_test.observablesource
 {
     [TestFixture]
-    public class ObservableSourceJustTest
+    public class ObservableSourceEmptyTest
     {
         [Test]
         public void Basic()
         {
-            ObservableSource.Just(1)
+            ObservableSource.Empty<int>()
                 .Test()
-                .AssertResult(1);
+                .AssertResult();
         }
 
         [Test]
         public void Scalar()
         {
-            var scalar = ObservableSource.Just(1) as IStaticValue<int>;
+            var scalar = ObservableSource.Empty<int>() as IStaticValue<int>;
 
-            Assert.AreEqual(1, scalar.GetValue(out var success));
-            Assert.True(success);
+            Assert.AreEqual(default(int), scalar.GetValue(out var success));
+            Assert.False(success);
         }
     }
 }
