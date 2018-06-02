@@ -25,6 +25,12 @@ namespace akarnokd.reactive_extensions
         Exception error;
 
         /// <summary>
+        /// Returns true if this subject has an observer.
+        /// </summary>
+        /// <remarks>Since 0.0.17</remarks>
+        public bool HasObservers => HasObserver();
+
+        /// <summary>
         /// Constructs a new UnicastSubject with the given capacity hint (expected
         /// number of items to be buffered until consumed) and an action to
         /// call when the UnicastSubject terminates or the observer disposes.

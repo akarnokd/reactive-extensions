@@ -21,10 +21,16 @@
   - Never
   - Range
   - RangeLong
+  - Skip
   - SubscribeWith
   - Take
   - Test
-  - ToObservableSource (on T[])</PackageReleaseNotes>
+  - Timeout
+  - ToObservableSource (on T[])
+
+New subjects:
+- PublishSubject (IObservableSource-based)
+- MonocastSubject (IObservableSource-based)</PackageReleaseNotes>
     <PackageTags>reactive extensions</PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

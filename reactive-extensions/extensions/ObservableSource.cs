@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reactive.Concurrency;
 using System.Text;
 using static akarnokd.reactive_extensions.ValidationHelper;
 
@@ -176,6 +177,44 @@ namespace akarnokd.reactive_extensions
             RequireNonNull(source, nameof(source));
 
             return new ObservableSourceTake<T>(source, n);
+        }
+
+        /// <summary>
+        /// Skips the given number of items from the beginning of
+        /// the sequence and relays the rest if any.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source sequence to skip a number of elements.</param>
+        /// <param name="n">The number of elements to skip. If the sequence is shorter than this or signals an error, completion or error is always relayed.</param>
+        /// <returns></returns>
+        public static IObservableSource<T> Skip<T>(this IObservableSource<T> source, long n)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return new ObservableSourceSkip<T>(source, Math.Max(0L, n));
+        }
+
+        /// <summary>
+        /// If the source sequence doesn't produce the first or
+        /// next item within the specified timeout window,
+        /// signal an error or switch to the given fallback sequence.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source to detect timeout on.</param>
+        /// <param name="timeout">The timeout value.</param>
+        /// <param name="scheduler">The scheduler whose notion of time
+        /// to use and if <paramref name="fallback"/> is present,
+        /// subscribe to it to resume.</param>
+        /// <param name="fallback">Optional observable source sequence to switch
+        /// to if the main source times out.</param>
+        /// <returns>The new observable source sequence.</returns>
+        /// <remarks>Since 0.0.17</remarks>
+        public static IObservableSource<T> Timeout<T>(this IObservableSource<T> source, TimeSpan timeout, IScheduler scheduler, IObservableSource<T> fallback = null)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(scheduler, nameof(scheduler));
+
+            return new ObservableSourceTimeout<T>(source, timeout, scheduler, fallback);
         }
 
         // --------------------------------------------------------------

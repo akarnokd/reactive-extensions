@@ -26,6 +26,12 @@ namespace akarnokd.reactive_extensions
         Exception error;
 
         /// <summary>
+        /// Returns true if this subject has observers.
+        /// </summary>
+        /// <remarks>Since 0.0.17</remarks>
+        public bool HasObservers => HasObserver();
+
+        /// <summary>
         /// Construct an active (non-terminated) completable subject.
         /// </summary>
         /// <param name="refCount">If true, the subject acts as a reference-counter

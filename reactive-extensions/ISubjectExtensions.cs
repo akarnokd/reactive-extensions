@@ -34,5 +34,11 @@ namespace akarnokd.reactive_extensions
         /// </summary>
         /// <returns>The terminal exception or null if the subject has not yet terminated or not with an error.</returns>
         Exception GetException();
+
+        /// <summary>
+        /// Returns true if the subject has any observers.
+        /// </summary>
+        /// <remarks>Since 0.0.17</remarks>
+        bool HasObservers { get; }
     }
 }

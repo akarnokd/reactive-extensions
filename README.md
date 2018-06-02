@@ -851,7 +851,9 @@ Main differences:
 ### Instance methods
 
 - `Compose`
+- `Skip`
 - `Take`
+- `Timeout`
 
 ### Consumer methods
 
@@ -861,3 +863,8 @@ Main differences:
 ### Interoperation with other types
 
 - `ToObservableSource` (on `T[]`)
+
+### PublishSubject
+
+
+### MonocastSubject
