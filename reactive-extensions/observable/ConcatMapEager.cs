@@ -107,7 +107,8 @@ namespace akarnokd.reactive_extensions
                                 break;
                             }
 
-                            if (!q.TryPoll(out var v))
+                            var v = q.TryPoll(out var success);
+                            if (!success)
                             {
                                 break;
                             }
@@ -292,8 +293,13 @@ namespace akarnokd.reactive_extensions
                             current = null;
                         }
 
-                        while (observers.TryPoll(out var inner))
+                        for (; ; )
                         {
+                            var inner = observers.TryPoll(out var success);
+                            if (!success)
+                            {
+                                break;
+                            }
                             inner.Dispose();
                         }
                         Cleanup();
@@ -316,7 +322,8 @@ namespace akarnokd.reactive_extensions
                                 }
                             }
 
-                            var empty = !observers.TryPoll(out curr);
+                            curr = observers.TryPoll(out var success);
+                            var empty = !success;
 
                             if (d && empty)
                             {
@@ -342,7 +349,13 @@ namespace akarnokd.reactive_extensions
                                 var q = curr.GetQueue();
 
                                 var v = default(R);
-                                var empty = q == null || !q.TryPoll(out v);
+                                var empty = true;
+
+                                if (q != null)
+                                {
+                                    v = q.TryPoll(out var success);
+                                    empty = !success;
+                                }
 
                                 if (d && empty)
                                 {

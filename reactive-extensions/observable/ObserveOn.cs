@@ -113,7 +113,8 @@ namespace akarnokd.reactive_extensions
                                 }
                             }
 
-                            var empty = !queue.TryPoll(out var v);
+                            var v = queue.TryPoll(out var success);
+                            var empty = !success;
 
                             if (d && empty)
                             {

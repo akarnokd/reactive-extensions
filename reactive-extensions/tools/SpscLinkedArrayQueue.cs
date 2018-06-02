@@ -13,7 +13,7 @@ namespace akarnokd.reactive_extensions
     /// Represents a single-producer, single-consumer unbounded queue.
     /// </summary>
     /// <typeparam name="T">The element type stored.</typeparam>
-    internal sealed class SpscLinkedArrayQueue<T>
+    internal sealed class SpscLinkedArrayQueue<T> : ISimpleQueue<T>
     {
         Node[] producerArray;
 
@@ -59,7 +59,7 @@ namespace akarnokd.reactive_extensions
             }
         }
 
-        internal bool TryPoll(out T item)
+        public T TryPoll(out bool success)
         {
             var a = consumerArray;
             var ci = consumerIndex;
@@ -69,8 +69,8 @@ namespace akarnokd.reactive_extensions
             var s = Volatile.Read(ref a[offset0].state);
             if (s == 0)
             {
-                item = default(T);
-                return false;
+                success = false;
+                return default(T);
             }
             if (s == 2)
             {
@@ -79,21 +79,35 @@ namespace akarnokd.reactive_extensions
                 consumerArray = b;
                 a = b;
             }
-            item = a[offset0].value;
+            var item = a[offset0].value;
             a[offset0].value = default(T);
             Volatile.Write(ref a[offset0].state, 0);
             Volatile.Write(ref consumerIndex, ci + 1);
-            return true;
+            success = true;
+            return item;
         }
 
-        internal bool IsEmpty()
+        public bool IsEmpty()
         {
             return Volatile.Read(ref producerIndex) == Volatile.Read(ref consumerIndex);
         }
 
-        internal void Clear()
+        public void Clear()
         {
-            while (TryPoll(out T _) && !IsEmpty()) ;
+            for (; ;)
+            {
+                var v = TryPoll(out var success);
+                if (!success && IsEmpty())
+                {
+                    break;
+                }
+            }
+        }
+
+        public bool TryOffer(T item)
+        {
+            Offer(item);
+            return true;
         }
 
         internal static int pow2(int v)

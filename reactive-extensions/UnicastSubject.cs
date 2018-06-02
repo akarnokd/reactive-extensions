@@ -203,7 +203,8 @@ namespace akarnokd.reactive_extensions
                         }
 
                         var d = Volatile.Read(ref done);
-                        var empty = !queue.TryPoll(out var v);
+                        var v = queue.TryPoll(out var success);
+                        var empty = !success;
 
                         if (d && empty)
                         {

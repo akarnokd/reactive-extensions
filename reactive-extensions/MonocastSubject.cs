@@ -217,7 +217,8 @@ namespace akarnokd.reactive_extensions
                 else
                 {
                     var ex = Volatile.Read(ref error);
-                    var empty = !queue.TryPoll(out var v);
+                    var v = queue.TryPoll(out var success);
+                    var empty = !success;
 
                     if (ex != null && empty)
                     {
@@ -301,8 +302,7 @@ namespace akarnokd.reactive_extensions
 
         T TryPoll(out bool success)
         {
-            success = queue.TryPoll(out var v);
-            return v;
+            return queue.TryPoll(out success);
         }
 
         bool IsEmpty()

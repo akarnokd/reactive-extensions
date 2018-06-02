@@ -269,7 +269,13 @@ namespace akarnokd.reactive_extensions
                         var innerDone = a.IsDone();
                         var q = a.GetQueue();
                         var v = default(R);
-                        var empty = q == null || !q.TryPoll(out v);
+                        var empty = true;
+
+                        if (q != null)
+                        {
+                            v = q.TryPoll(out var success);
+                            empty = !success;
+                        }
 
                         if (innerDone && empty)
                         {

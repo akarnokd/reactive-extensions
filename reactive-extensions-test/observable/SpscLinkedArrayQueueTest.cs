@@ -20,13 +20,14 @@ namespace akarnokd.reactive_extensions_test.observable
 
                 Assert.False(q.IsEmpty());
 
-                Assert.True(q.TryPoll(out int v));
+                Assert.AreEqual(i, q.TryPoll(out var success));
 
-                Assert.AreEqual(i, v);
+                Assert.True(success);
                 Assert.True(q.IsEmpty());
             }
 
-            Assert.False(q.TryPoll(out var _));
+            q.TryPoll(out var success2);
+            Assert.False(success2);
             Assert.True(q.IsEmpty());
         }
 
@@ -44,11 +45,12 @@ namespace akarnokd.reactive_extensions_test.observable
 
             for (int i = 0; i < 33; i++)
             {
-                Assert.True(q.TryPoll(out int v));
-                Assert.AreEqual(i, v);
+                Assert.AreEqual(i, q.TryPoll(out var success));
+                Assert.True(success);
             }
 
-            Assert.False(q.TryPoll(out var _));
+            q.TryPoll(out var success2);
+            Assert.False(success2);
             Assert.True(q.IsEmpty());
         }
 
@@ -99,7 +101,14 @@ namespace akarnokd.reactive_extensions_test.observable
                     int v = 0;
                     for (int j = 0; j < n; j++)
                     {
-                        while (!q.TryPoll(out v) && !Volatile.Read(ref stop[0])) ;
+                        for (; ;)
+                        {
+                            v = q.TryPoll(out var success);
+                            if (success || Volatile.Read(ref stop[0]))
+                            {
+                                break;
+                            }
+                        }
 
                         Assert.AreEqual(j, v);
                     }
