@@ -5,7 +5,7 @@ using akarnokd.reactive_extensions;
 namespace akarnokd.reactive_extensions_test.observablesource
 {
     [TestFixture]
-    public class ObservableSourceDefer
+    public class ObservableSourceDeferTest
     {
         [Test]
         public void Basic()

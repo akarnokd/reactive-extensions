@@ -84,9 +84,99 @@ namespace akarnokd.reactive_extensions
             return new ObservableSourceDefer<T>(supplier);
         }
 
+        /// <summary>
+        /// Generates a range of integer values from the given
+        /// starting value and up to the specified number of
+        /// subsequent values.
+        /// </summary>
+        /// <param name="start">The starting value of the sequence.</param>
+        /// <param name="count">The number of integers to produce.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.17</remarks>
+        public static IObservableSource<int> Range(int start, int count)
+        {
+            RequireNonNegative(count, nameof(count));
+            // TODO handle corner cases of count == 0 and count == 1
+            return new ObservableSourceRange(start, start + count);
+        }
+
+        /// <summary>
+        /// Generates a range of long values from the given
+        /// starting value and up to the specified number of
+        /// subsequent values.
+        /// </summary>
+        /// <param name="start">The starting value of the sequence.</param>
+        /// <param name="count">The number of integers to produce.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.17</remarks>
+        public static IObservableSource<long> RangeLong(long start, long count)
+        {
+            RequireNonNegative(count, nameof(count));
+            // TODO handle corner cases of count == 0 and count == 1
+            return new ObservableSourceRangeLong(start, start + count);
+        }
+
+        /// <summary>
+        /// Emits the elements of the array to observers.
+        /// </summary>
+        /// <typeparam name="T">The element type of the source array.</typeparam>
+        /// <param name="array">The array whose elements to emit.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.17</remarks>
+        public static IObservableSource<T> FromArray<T>(params T[] array)
+        {
+            RequireNonNull(array, nameof(array));
+            // TODO handle corner cases of Length == 0 and Length == 1
+
+            return new ObservableSourceArray<T>(array);
+        }
+
         // --------------------------------------------------------------
         // Instance methods
         // --------------------------------------------------------------
+
+        /// <summary>
+        /// Calls the specified function with the upstream source
+        /// during assembly time and returns a possibly new
+        /// observable source sequence with additional behavior applied
+        /// to it.
+        /// This allows applying the same operators to a sequence via
+        /// a help of a function callback in-sequence.
+        /// </summary>
+        /// <typeparam name="T">The upstream element type.</typeparam>
+        /// <typeparam name="R">The downstream element type.</typeparam>
+        /// <param name="source">The source sequence to compose with.</param>
+        /// <param name="composer">The function receiving the upstream
+        /// source sequence and should return an observable sequence in return
+        /// during assembly time.</param>
+        /// <returns>The observable sequence returned by the <paramref name="composer"/> function.</returns>
+        /// <remarks>Since 0.0.17</remarks>
+        public static IObservableSource<R> Compose<T, R>(this IObservableSource<T> source, Func<IObservableSource<T>, IObservableSource<R>> composer)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return composer(source);
+        }
+
+        /// <summary>
+        /// Relays at most the given number of items from the upstream,
+        /// then disposes the upstream and completes the downstream
+        /// observer.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source observable to limit in number of elements.</param>
+        /// <param name="n">The maximum number of elements to let through,
+        /// non-positive values will immediately dispose the upstream thus
+        /// some subscription side-effects would still happen depending
+        /// on the source operator.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.17</remarks>
+        public static IObservableSource<T> Take<T>(this IObservableSource<T> source, long n)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return new ObservableSourceTake<T>(source, n);
+        }
 
         // --------------------------------------------------------------
         // Consumer methods
@@ -105,6 +195,8 @@ namespace akarnokd.reactive_extensions
         /// <remarks>Since 0.0.17</remarks>
         public static TestObserver<T> Test<T>(this IObservableSource<T> source, bool cancel = false, int fusionMode = 0)
         {
+            RequireNonNull(source, nameof(source));
+
             var test = new TestObserver<T>(true, fusionMode);
             if (cancel)
             {
@@ -126,6 +218,9 @@ namespace akarnokd.reactive_extensions
         /// <remarks>Since 0.0.17</remarks>
         public static S SubscribeWith<T, S>(this IObservableSource<T> source, S observer) where S : ISignalObserver<T>
         {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(observer, nameof(observer));
+
             source.Subscribe(observer);
             return observer;
         }
@@ -133,5 +228,20 @@ namespace akarnokd.reactive_extensions
         // --------------------------------------------------------------
         // Interoperation methods
         // --------------------------------------------------------------
+
+        /// <summary>
+        /// Emits the elements of the array to observers.
+        /// </summary>
+        /// <typeparam name="T">The element type of the source array.</typeparam>
+        /// <param name="array">The array whose elements to emit.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.17</remarks>
+        public static IObservableSource<T> ToObservableSource<T>(this T[] array)
+        {
+            RequireNonNull(array, nameof(array));
+            // TODO handle corner cases of Length == 0 and Length == 1
+
+            return new ObservableSourceArray<T>(array);
+        }
     }
 }

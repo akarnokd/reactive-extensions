@@ -12,13 +12,19 @@
     <Copyright>Copyright 2018, David Karnok</Copyright>
     <PackageReleaseNotes>New reactive base type: IObservableSource + ISignalObserver
 - IObservableSource operators:
+  - Compose
   - Defer
   - Empty
   - Error
+  - FromArray
   - Just
   - Never
+  - Range
+  - RangeLong
+  - SubscribeWith
+  - Take
   - Test
-  - SubscribeWith</PackageReleaseNotes>
+  - ToObservableSource (on T[])</PackageReleaseNotes>
     <PackageTags>reactive extensions</PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

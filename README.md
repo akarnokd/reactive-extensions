@@ -842,13 +842,22 @@ Main differences:
 - `Defer`
 - `Empty`
 - `Error`
+- `FromArray`
 - `Just`
 - `Never`
+- `Range`
+- `RangeLong`
 
 ### Instance methods
 
+- `Compose`
+- `Take`
 
 ### Consumer methods
 
 - `SubscribeWith`
 - `Test`
+
+### Interoperation with other types
+
+- `ToObservableSource` (on `T[]`)
