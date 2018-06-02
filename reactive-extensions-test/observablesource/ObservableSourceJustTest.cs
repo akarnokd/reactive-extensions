@@ -23,5 +23,15 @@ namespace akarnokd.reactive_extensions_test.observablesource
             Assert.AreEqual(1, scalar.GetValue(out var success));
             Assert.True(success);
         }
+
+        [Test]
+        public void Fusion_Sync()
+        {
+            ObservableSource.Just(1)
+                .Test(fusionMode: FusionSupport.Sync)
+                .AssertFuseable()
+                .AssertFusionMode(FusionSupport.Sync)
+                .AssertResult(1);
+        }
     }
 }

@@ -53,9 +53,9 @@ namespace akarnokd.reactive_extensions
         // Consumer methods
         // --------------------------------------------------------------
 
-        public static TestObserver<T> Test<T>(this IObservableSource<T> source, bool cancel = false)
+        public static TestObserver<T> Test<T>(this IObservableSource<T> source, bool cancel = false, int fusionMode = 0)
         {
-            var test = new TestObserver<T>(true);
+            var test = new TestObserver<T>(true, fusionMode);
             if (cancel)
             {
                 test.Dispose();

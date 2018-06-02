@@ -20,6 +20,8 @@ namespace akarnokd.reactive_extensions
 
         readonly bool requireOnSubscribe;
 
+        readonly int fusionRequested;
+
         readonly List<T> items;
 
         int itemCount;
@@ -38,15 +40,31 @@ namespace akarnokd.reactive_extensions
 
         string tag;
 
+        int fusionEstablished;
+
+        IFuseableDisposable<T> queue;
+
         /// <summary>
         /// Constructs an empty TestObserver.
         /// </summary>
-        public TestObserver(bool requireOnSubscribe = false)
+        public TestObserver() : this(false)
+        {
+        }
+
+        /// <summary>
+        /// Constructs an empty TestObserver.
+        /// </summary>
+        /// <param name="requireOnSubscribe">Should the OnSubscribe be
+        /// called before any of the other OnXXX methods?</param>
+        /// <param name="fusionRequested">The fusion mode to request, <see cref="FusionSupport"/> constants.</param>
+        public TestObserver(bool requireOnSubscribe, int fusionRequested = 0)
         {
             this.items = new List<T>();
             this.errors = new List<Exception>();
             this.cdl = new CountdownEvent(1);
             this.requireOnSubscribe = requireOnSubscribe;
+            this.fusionRequested = fusionRequested;
+            this.fusionEstablished = -1;
         }
 
         /// <summary>
@@ -59,6 +77,49 @@ namespace akarnokd.reactive_extensions
             if (Interlocked.CompareExchange(ref this.upstream, d, null) != null)
             {
                 d?.Dispose();
+            }
+            else
+            {
+                if (fusionRequested > FusionSupport.None)
+                {
+                    if (d is IFuseableDisposable<T> fd)
+                    {
+                        queue = fd;
+                        fusionEstablished = fd.RequestFusion(fusionRequested);
+
+                        if (fusionEstablished == FusionSupport.Sync)
+                        {
+                            for (; ; )
+                            {
+                                if (IsDisposed())
+                                {
+                                    break;
+                                }
+                                var v = default(T);
+                                var success = false;
+                                try
+                                {
+                                    v = queue.TryPoll(out success);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Dispose();
+                                    OnError(ex);
+                                    break;
+                                }
+
+                                if (!success)
+                                {
+                                    OnCompleted();
+                                    break;
+                                }
+
+                                items.Add(v);
+                                Volatile.Write(ref itemCount, items.Count);
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -94,11 +155,50 @@ namespace akarnokd.reactive_extensions
         /// <param name="value">The new item available.</param>
         public virtual void OnNext(T value)
         {
-            items.Add(value);
-            Volatile.Write(ref itemCount, items.Count);
-            if (Volatile.Read(ref once) != 0)
+            if (fusionEstablished == FusionSupport.Sync)
             {
-                OnError(new InvalidOperationException("OnNext called after termination"));
+                OnError(new InvalidOperationException("OnNext called in Sync fusion mode!"));
+            }
+            else
+            if (fusionEstablished == FusionSupport.Async)
+            {
+                for (; ;)
+                {
+                    if (IsDisposed())
+                    {
+                        break;
+                    }
+
+                    var v = default(T);
+                    var success = false;
+                    try
+                    {
+                        v = queue.TryPoll(out success);
+                    }
+                    catch (Exception ex)
+                    {
+                        Dispose();
+                        OnError(ex);
+                        break;
+                    }
+
+                    if (!success)
+                    {
+                        break;
+                    }
+
+                    items.Add(v);
+                    Volatile.Write(ref itemCount, items.Count);
+                }
+            }
+            else
+            {
+                items.Add(value);
+                Volatile.Write(ref itemCount, items.Count);
+                if (Volatile.Read(ref once) != 0)
+                {
+                    OnError(new InvalidOperationException("OnNext called after termination"));
+                }
             }
         }
 
@@ -206,6 +306,19 @@ namespace akarnokd.reactive_extensions
             {
                 msg += ", disposed!";
             }
+            if (queue != null)
+            {
+                msg += ", fuseable!";
+            }
+            if (fusionRequested > FusionSupport.None)
+            {
+                msg += ", fusion-requested: " + FusionModeToString(fusionRequested);
+            }
+            if (fusionEstablished > FusionSupport.None)
+            {
+                msg += ", fusion-established: " + FusionModeToString(fusionEstablished);
+            }
+
             if (tag != null)
             {
                 msg += ", tag=" + tag;
@@ -702,5 +815,66 @@ namespace akarnokd.reactive_extensions
         /// </summary>
         /// <remarks>Since 0.0.15</remarks>
         public int CompletionCount { get { return Volatile.Read(ref completions); } }
+
+        /// <summary>
+        /// Assert that the upstream called <see cref="OnSubscribe(IDisposable)"/>
+        /// with a fuseable <see cref="IFuseableDisposable{T}"/> instance.
+        /// </summary>
+        /// <returns>this</returns>
+        /// <remarks>Since 0.0.17</remarks>
+        public TestObserver<T> AssertFuseable()
+        {
+            if (queue == null)
+            {
+                throw Fail("Upstream not fuseable");
+            }
+            return this;
+        }
+
+        /// <summary>
+        /// Assert that the upstream called <see cref="OnSubscribe(IDisposable)"/>
+        /// with a non-fuseable <see cref="IDisposable"/> instance.
+        /// </summary>
+        /// <returns>this</returns>
+        /// <remarks>Since 0.0.17</remarks>
+        public TestObserver<T> AssertNotFuseable()
+        {
+            if (queue != null)
+            {
+                throw Fail("Upstream is fuseable");
+            }
+            return this;
+        }
+
+        private string FusionModeToString(int mode)
+        {
+            switch (mode)
+            {
+                case 0: return "None";
+                case 1: return "Sync";
+                case 2: return "Async";
+                case 3: return "Any";
+                case 5: return "Sync+Boundary";
+                case 6: return "Async+Boundary";
+                case 7: return "Any+Boundary";
+                default: return "Unknown: " + mode;
+            }
+        }
+
+        /// <summary>
+        /// Assert that the specified fusion mode has been established.
+        /// See the <see cref="FusionSupport"/> constants.
+        /// </summary>
+        /// <param name="mode">The expected established fusion mode.</param>
+        /// <returns>this</returns>
+        /// <remarks>Since 0.0.17</remarks>
+        public TestObserver<T> AssertFusionMode(int mode)
+        {
+            if (fusionEstablished != mode)
+            {
+                throw Fail("Wrong fusion mode. Expected: " + FusionModeToString(mode) + ", Actual: " + FusionModeToString(fusionEstablished));
+            }
+            return this;
+        }
     }
 }
