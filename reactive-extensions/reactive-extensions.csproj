@@ -16,8 +16,10 @@
   - Defer
   - Empty
   - Error
+  - Filter
   - FromArray
   - Just
+  - Map
   - Never
   - Range
   - RangeLong

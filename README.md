@@ -851,6 +851,8 @@ Main differences:
 ### Instance methods
 
 - `Compose`
+- `Filter`
+- `Map`
 - `Skip`
 - `Take`
 - `Timeout`

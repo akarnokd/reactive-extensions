@@ -211,22 +211,22 @@ namespace akarnokd.reactive_extensions
         /// which would break the thread confinement of user callbacks upstream
         /// of the operator.
         /// </summary>
-        public static readonly int Barrier = 4;
+        public static readonly int Boundary = 4;
         /// <summary>
-        /// Combines the sync fusion request with the barrier indicator to
+        /// Combines the sync fusion request with the boundary indicator to
         /// request a sync boundary fusion mode.
         /// </summary>
-        public static readonly int SyncBarrier = Sync | Barrier;
+        public static readonly int SyncBoundary = Sync | Boundary;
         /// <summary>
-        /// Combines the async fusion request with the barrier indicator to
+        /// Combines the async fusion request with the boundary indicator to
         /// request an async boundary fusion mode.
         /// </summary>
-        public static readonly int AsyncBarrier = Async | Barrier;
+        public static readonly int AsyncBoundary = Async | Boundary;
         /// <summary>
         /// Combines both the sync and async fusion modes with the barrier indicator
         /// to request any type of boundary-limited fusion mode.
         /// </summary>
-        public static readonly int AnyBarrier = Any | Barrier;
+        public static readonly int AnyBoundary = Any | Boundary;
     }
 
     /// <summary>
