@@ -25,7 +25,7 @@ namespace akarnokd.reactive_extensions_test.observablesource
                 scalar.GetValue(out var success);
                 Assert.Fail();
             }
-            catch (InvalidOperationException expected)
+            catch (InvalidOperationException)
             {
                 // okay
             }
