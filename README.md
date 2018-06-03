@@ -871,13 +871,16 @@ Main differences:
 - `Hide`
 - `IgnoreElements`
 - `Map`
+- `ObserveOn`
 - `OnErrorResumeNext`
 - `Skip`
 - `SkipUntil`
+- `SubscribeOn`
 - `SwitchIfEmpty`
 - `Take`
 - `TakeUntil`
 - `Timeout`
+- `UnsubscribeOn`
 
 ### Consumer methods
 

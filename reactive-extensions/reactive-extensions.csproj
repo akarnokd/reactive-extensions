@@ -29,13 +29,16 @@
   - IgnoreElements
   - Interval
   - IntervalRange
+  - ObserveOn
   - OnErrorResumeNext
   - SkipUntil
   - SwitchIfEmpty
+  - SubscribeOn
   - TakeUntil
   - Timer
   - ToObservableSource (on IObservable, IEnumerable)
-  - ToObservable (on IObservableSource)</PackageReleaseNotes>
+  - ToObservable (on IObservableSource)
+  - UnsubscribeOn</PackageReleaseNotes>
     <PackageTags>reactive extensions</PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

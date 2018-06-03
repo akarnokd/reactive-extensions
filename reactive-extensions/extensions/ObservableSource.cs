@@ -682,6 +682,64 @@ namespace akarnokd.reactive_extensions
             return new ObservableSourceSwitchIfEmpty<T>(source, fallbacks);
         }
 
+        /// <summary>
+        /// Subscribes to the source observable sequence on the
+        /// given scheduler.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source to subscribe to on a given scheduler.</param>
+        /// <param name="scheduler">The scheduler to use to subscribe to the <paramref name="source"/> sequence.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Sincel 0.0.18</remarks>
+        public static IObservableSource<T> SubscribeOn<T>(this IObservableSource<T> source, IScheduler scheduler)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(scheduler, nameof(scheduler));
+
+            return new ObservableSourceSubscribeOn<T>(source, scheduler);
+        }
+
+        /// <summary>
+        /// When the downstream disposes the sequence
+        /// the dispose signal is signaled towards the upstream
+        /// from the given scheduler.
+        /// Note that OnError and OnCompleted don't trigger unsubscription
+        /// with observable sources.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequences.</typeparam>
+        /// <param name="source">The source observable to dispose on a scheduler.</param>
+        /// <param name="scheduler">The scheduler to dispose the upstream connection on.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.18</remarks>
+        public static IObservableSource<T> UnsubscribeOn<T>(this IObservableSource<T> source, IScheduler scheduler)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(scheduler, nameof(scheduler));
+
+            return new ObservableSourceUnsubscribeOn<T>(source, scheduler);
+        }
+
+        /// <summary>
+        /// Takes signals from the upstream and re-emits them on
+        /// the given scheduler.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source to observe signals of on a scheduler.</param>
+        /// <param name="scheduler">The scheduler to use to re-emit signals from <paramref name="source"/>.</param>
+        /// <param name="delayError">If true, errors are re-emitted after normal items. If false, errors may cut ahead of normal items.</param>
+        /// <param name="capacityHint">The expected number of items to be temporarily cached until the scheduler thread can emit them.</param>
+        /// <param name="fair">If true, the task to re-emit the upstream signal is renewed after each item emitted. If false, the scheduler will be used as long as there are items to re-emit at a time, potentially preventing other tasks on the same scheduler from executing for a longer period of time.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.18</remarks>
+        public static IObservableSource<T> ObserveOn<T>(this IObservableSource<T> source, IScheduler scheduler, bool delayError = true, int capacityHint = 128, bool fair = false)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(scheduler, nameof(scheduler));
+            RequirePositive(capacityHint, nameof(capacityHint));
+
+            return new ObservableSourceObserveOn<T>(source, scheduler, delayError, capacityHint, fair);
+        }
+
         // --------------------------------------------------------------
         // Consumer methods
         // --------------------------------------------------------------

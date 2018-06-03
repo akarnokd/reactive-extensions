@@ -118,6 +118,26 @@ namespace akarnokd.reactive_extensions_test
             subject.OnError(error);
         }
 
+        internal static void Emit<T>(this ISignalObserver<T> subject, params T[] items)
+        {
+            foreach (var t in items)
+            {
+                subject.OnNext(t);
+            }
+        }
+
+        internal static void EmitAll<T>(this ISignalObserver<T> subject, params T[] items)
+        {
+            Emit(subject, items);
+            subject.OnCompleted();
+        }
+
+        public static void EmitError<T>(this ISignalObserver<T> subject, Exception error, params T[] items)
+        {
+            Emit(subject, items);
+            subject.OnError(error);
+        }
+
         public static bool IsAssignableFrom<T>(this Type type, T item)
         {
             return type.GetTypeInfo().IsAssignableFrom(item.GetType().GetTypeInfo());
