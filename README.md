@@ -869,9 +869,12 @@ Main differences:
 - `DoOnTerminate`
 - `Filter`
 - `Hide`
+- `IgnoreElements`
 - `Map`
+- `OnErrorResumeNext`
 - `Skip`
 - `SkipUntil`
+- `SwitchIfEmpty`
 - `Take`
 - `TakeUntil`
 - `Timeout`

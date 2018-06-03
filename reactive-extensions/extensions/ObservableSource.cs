@@ -631,6 +631,57 @@ namespace akarnokd.reactive_extensions
             return new ObservableSourceSkipUntil<T, U>(source, other);
         }
 
+        /// <summary>
+        /// Ignores OnNext items and only relays the terminal events.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source sequence to ignore elements of.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.18</remarks>
+        public static IObservableSource<T> IgnoreElements<T>(this IObservableSource<T> source)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return new ObservableSourceIgnoreElements<T>(source);
+        }
+
+        /// <summary>
+        /// When the upstream source fails, the handler function
+        /// is invoked to return an observable source to resume
+        /// the flow.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The upstream source that can fail.</param>
+        /// <param name="handler">The function receiving the upstream error
+        /// and should return a fallback observable source to resume with.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.18</remarks>
+        public static IObservableSource<T> OnErrorResumeNext<T>(this IObservableSource<T> source, Func<Exception, IObservableSource<T>> handler)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
+
+            return new ObservableSourceOnErrorResumeNext<T>(source, handler);
+        }
+
+        /// <summary>
+        /// Keeps switching to the next fallback source if the
+        /// main source or the previous fallback source is empty.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequences.</typeparam>
+        /// <param name="source">The main source that may be empty.</param>
+        /// <param name="fallbacks">The fallback sources to switch to if
+        /// the main source or the previous fallback is empty.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.18</remarks>
+        public static IObservableSource<T> SwitchIfEmpty<T>(this IObservableSource<T> source, params IObservableSource<T>[] fallbacks)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(fallbacks, nameof(fallbacks));
+
+            return new ObservableSourceSwitchIfEmpty<T>(source, fallbacks);
+        }
+
         // --------------------------------------------------------------
         // Consumer methods
         // --------------------------------------------------------------

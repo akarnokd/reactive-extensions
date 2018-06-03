@@ -26,9 +26,12 @@
   - FromEnumerable
   - FromFunc
   - Hide
+  - IgnoreElements
   - Interval
   - IntervalRange
+  - OnErrorResumeNext
   - SkipUntil
+  - SwitchIfEmpty
   - TakeUntil
   - Timer
   - ToObservableSource (on IObservable, IEnumerable)
