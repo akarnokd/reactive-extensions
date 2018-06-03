@@ -254,6 +254,168 @@ namespace akarnokd.reactive_extensions
             return new ObservableSourceFilter<T>(source, predicate);
         }
 
+
+        /// <summary>
+        /// Calls the given <paramref name="handler"/> whenever the
+        /// upstream observable <paramref name="source"/> signals an OnNext item.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <param name="source">The observable source to peek into.</param>
+        /// <param name="handler">The handler to call.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.18</remarks>
+        public static IObservableSource<T> DoOnNext<T>(this IObservableSource<T> source, Action<T> handler)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
+
+            return ObservableSourcePeek<T>.Create(source, onNext: handler);
+        }
+
+        /// <summary>
+        /// Calls the given <paramref name="handler"/> after the
+        /// upstream observable <paramref name="source"/>'s signaled an
+        /// OnNext.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <param name="source">The observable source to peek into.</param>
+        /// <param name="handler">The handler to call.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.18</remarks>
+        public static IObservableSource<T> DoAfterNext<T>(this IObservableSource<T> source, Action<T> handler)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
+
+            return ObservableSourcePeek<T>.Create(source, onAfterNext: handler);
+        }
+
+        /// <summary>
+        /// Calls the given <paramref name="handler"/> whenever a
+        /// signal observer subscribes to the observable <paramref name="source"/>.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <param name="source">The observable source to peek into.</param>
+        /// <param name="handler">The handler to call.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.18</remarks>
+        public static IObservableSource<T> DoOnSubscribe<T>(this IObservableSource<T> source, Action<IDisposable> handler)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
+
+            return ObservableSourcePeek<T>.Create(source, onSubscribe: handler);
+        }
+
+        /// <summary>
+        /// Calls the given <paramref name="handler"/> whenever a
+        /// signal observer disposes to the connection to
+        /// the observable <paramref name="source"/>.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <param name="source">The observable source to peek into.</param>
+        /// <param name="handler">The handler to call.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.18</remarks>
+        public static IObservableSource<T> DoOnDispose<T>(this IObservableSource<T> source, Action handler)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
+
+            return ObservableSourcePeek<T>.Create(source, onDispose: handler);
+        }
+
+        /// <summary>
+        /// Calls the given <paramref name="handler"/> before a
+        /// signal observer gets completed by
+        /// the observable <paramref name="source"/>.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <param name="source">The observable source to peek into.</param>
+        /// <param name="handler">The handler to call.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.18</remarks>
+        public static IObservableSource<T> DoOnCompleted<T>(this IObservableSource<T> source, Action handler)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
+
+            return ObservableSourcePeek<T>.Create(source, onCompleted: handler);
+        }
+
+        /// <summary>
+        /// Calls the given <paramref name="handler"/> before a
+        /// signal observer receives the error signal from
+        /// the observable <paramref name="source"/>.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <param name="source">The observable source to peek into.</param>
+        /// <param name="handler">The handler to call.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.18</remarks>
+        public static IObservableSource<T> DoOnError<T>(this IObservableSource<T> source, Action<Exception> handler)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
+
+            return ObservableSourcePeek<T>.Create(source, onError: handler);
+        }
+
+        /// <summary>
+        /// Calls the given <paramref name="handler"/> before a
+        /// signal observer gets terminated normally or with an error by
+        /// the observable <paramref name="source"/>.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <param name="source">The observable source to peek into.</param>
+        /// <param name="handler">The handler to call.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.18</remarks>
+        public static IObservableSource<T> DoOnTerminate<T>(this IObservableSource<T> source, Action handler)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
+
+            return ObservableSourcePeek<T>.Create(source, onTerminate: handler);
+        }
+
+        /// <summary>
+        /// Calls the given <paramref name="handler"/> after a
+        /// signal observer gets terminated normally or exceptionally by
+        /// the observable <paramref name="source"/>.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <param name="source">The observable source to peek into.</param>
+        /// <param name="handler">The handler to call.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.18</remarks>
+        public static IObservableSource<T> DoAfterTerminate<T>(this IObservableSource<T> source, Action handler)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
+
+            return ObservableSourcePeek<T>.Create(source, onAfterTerminate: handler);
+        }
+
+        /// <summary>
+        /// Calls the given <paramref name="handler"/> exactly once per observable
+        /// observer and after the signal observer gets terminated normally
+        /// or exceptionally or the observer disposes the connection to the
+        /// the observable <paramref name="source"/>.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <param name="source">The observable source to peek into.</param>
+        /// <param name="handler">The handler to call.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.18</remarks>
+        public static IObservableSource<T> DoFinally<T>(this IObservableSource<T> source, Action handler)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
+
+            return ObservableSourcePeek<T>.Create(source, doFinally: handler);
+        }
+
         // --------------------------------------------------------------
         // Consumer methods
         // --------------------------------------------------------------
