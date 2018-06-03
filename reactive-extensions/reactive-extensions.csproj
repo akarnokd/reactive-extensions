@@ -22,8 +22,11 @@
   - DoOnNext
   - DoOnSubscribe
   - DoOnTerminate
+  - FromAction
+  - FromEnumerable
+  - FromFunc
   - Hide
-  - ToObservableSource (on IObservable)
+  - ToObservableSource (on IObservable, IEnumerable)
   - ToObservable (on IObservableSource)</PackageReleaseNotes>
     <PackageTags>reactive extensions</PackageTags>
   </PropertyGroup>

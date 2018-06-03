@@ -843,7 +843,9 @@ Main differences:
 - `Defer`
 - `Empty`
 - `Error`
+- `FromAction`
 - `FromArray`
+- `FromFunc`
 - `Just`
 - `Never`
 - `Range`
@@ -876,7 +878,7 @@ Main differences:
 
 ### Interoperation with other types
 
-- `ToObservableSource` (on `T[]`, `IObservable`)
+- `ToObservableSource` (on `T[]`, `IObservable`, `IEnumerable`)
 - `ToObservable` (into `IObservable`)
 
 ### PublishSubject

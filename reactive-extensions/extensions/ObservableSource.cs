@@ -149,6 +149,54 @@ namespace akarnokd.reactive_extensions
             return ConcatMap(source, v => v, delayErrors, capacityHint);
         }
 
+        /// <summary>
+        /// Convert an enumerable sequence into an observable source.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The enumerable to convert into an observable source.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.18</remarks>
+        public static IObservableSource<T> FromEnumerable<T>(IEnumerable<T> source)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return new ObservableSourceEnumerable<T>(source);
+        }
+
+        /// <summary>
+        /// Emits the value returned by the supplier function
+        /// or signals its exception if the supplier crashes.
+        /// </summary>
+        /// <typeparam name="T">The output value type.</typeparam>
+        /// <param name="supplier">The function called for each
+        /// individual observer to generate a single result value or
+        /// an exception.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.18</remarks>
+        public static IObservableSource<T> FromFunc<T>(Func<T> supplier)
+        {
+            RequireNonNull(supplier, nameof(supplier));
+
+            return new ObservableSourceFromFunc<T>(supplier);
+        }
+
+        /// <summary>
+        /// Runs the action for each individual observer and
+        /// signals OnCompleted or OnError based on the success
+        /// or failure of the action.
+        /// </summary>
+        /// <typeparam name="T">The output value type.</typeparam>
+        /// <param name="action">The action called for each
+        /// individual observer.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.18</remarks>
+        public static IObservableSource<T> FromAction<T>(Action action)
+        {
+            RequireNonNull(action, nameof(action));
+
+            return new ObservableSourceFromAction<T>(action);
+        }
+
         // --------------------------------------------------------------
         // Instance methods
         // --------------------------------------------------------------
@@ -567,6 +615,20 @@ namespace akarnokd.reactive_extensions
             RequireNonNull(source, nameof(source));
 
             return new ObservableSourceToObservable<T>(source);
+        }
+
+        /// <summary>
+        /// Convert an enumerable sequence into an observable source.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The enumerable to convert into an observable source.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.18</remarks>
+        public static IObservableSource<T> ToObservableSource<T>(this IEnumerable<T> source)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return new ObservableSourceEnumerable<T>(source);
         }
     }
 }
