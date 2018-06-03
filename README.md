@@ -868,7 +868,9 @@ Main differences:
 - `Hide`
 - `Map`
 - `Skip`
+- `SkipUntil`
 - `Take`
+- `TakeUntil`
 - `Timeout`
 
 ### Consumer methods

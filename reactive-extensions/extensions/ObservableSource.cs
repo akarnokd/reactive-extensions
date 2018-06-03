@@ -523,6 +523,44 @@ namespace akarnokd.reactive_extensions
             return new ObservableSourceHide<T>(source);
         }
 
+        /// <summary>
+        /// Relays signals from the main source until the
+        /// other source signals an item or completes, completing
+        /// the downstream immediately.
+        /// </summary>
+        /// <typeparam name="T">The main and result sequence type.</typeparam>
+        /// <typeparam name="U">The element type of the other source sequence.</typeparam>
+        /// <param name="source">The main source sequence.</param>
+        /// <param name="other">The stop indicator sequence.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.18</remarks>
+        public static IObservableSource<T> TakeUntil<T, U>(this IObservableSource<T> source, IObservableSource<U> other)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(other, nameof(other));
+
+            return new ObservableSourceTakeUntil<T, U>(source, other);
+        }
+
+        /// <summary>
+        /// Skips signals from the main source until the
+        /// other source signals an item or completes, relaying
+        /// items then on.
+        /// </summary>
+        /// <typeparam name="T">The main and result sequence type.</typeparam>
+        /// <typeparam name="U">The element type of the other source sequence.</typeparam>
+        /// <param name="source">The main source sequence.</param>
+        /// <param name="other">The indicator sequence.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.18</remarks>
+        public static IObservableSource<T> SkipUntil<T, U>(this IObservableSource<T> source, IObservableSource<U> other)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(other, nameof(other));
+
+            return new ObservableSourceSkipUntil<T, U>(source, other);
+        }
+
         // --------------------------------------------------------------
         // Consumer methods
         // --------------------------------------------------------------

@@ -26,6 +26,8 @@
   - FromEnumerable
   - FromFunc
   - Hide
+  - SkipUntil
+  - TakeUntil
   - ToObservableSource (on IObservable, IEnumerable)
   - ToObservable (on IObservableSource)</PackageReleaseNotes>
     <PackageTags>reactive extensions</PackageTags>
