@@ -241,5 +241,20 @@ namespace akarnokd.reactive_extensions_test.observablesource
             to
                 .AssertFailure(typeof(InvalidOperationException));
         }
+
+        [Test]
+        public void Concat_Basic()
+        {
+            ObservableSource.FromArray(
+                    ObservableSource.Just(1),
+                    ObservableSource.Just(2),
+                    ObservableSource.Just(3),
+                    ObservableSource.Just(4),
+                    ObservableSource.Just(5)
+                )
+                .Concat()
+                .Test()
+                .AssertResult(1, 2, 3, 4, 5);
+        }
     }
 }

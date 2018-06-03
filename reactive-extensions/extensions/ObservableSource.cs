@@ -132,6 +132,23 @@ namespace akarnokd.reactive_extensions
             return new ObservableSourceArray<T>(array);
         }
 
+        /// <summary>
+        /// Concatenates a sequence of observable sources, in order, one
+        /// after the other and optionally delays errors until all of
+        /// them terminate.
+        /// </summary>
+        /// <typeparam name="T">The element type of the source sequence.</typeparam>
+        /// <param name="source">The source sequence to map into observables.</param>
+        /// <param name="delayErrors">If true, errors are delayed until all sequences terminate. If false, error is signaled once the current inner source terminates.</param>
+        /// <param name="capacityHint">The number of upstream items expected to be cached until
+        /// the current observer terminates.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.18</remarks>
+        public static IObservableSource<T> Concat<T>(this IObservableSource<IObservableSource<T>> source, bool delayErrors = false, int capacityHint = 32)
+        {
+            return ConcatMap(source, v => v, delayErrors, capacityHint);
+        }
+
         // --------------------------------------------------------------
         // Instance methods
         // --------------------------------------------------------------
@@ -522,6 +539,34 @@ namespace akarnokd.reactive_extensions
             // TODO handle corner cases of Length == 0 and Length == 1
 
             return new ObservableSourceArray<T>(array);
+        }
+
+        /// <summary>
+        /// Convert a legacy IObservable into an observable source.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequences.</typeparam>
+        /// <param name="source">The observable to convert into an observable source.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.18</remarks>
+        public static IObservableSource<T> ToObservableSource<T>(this IObservable<T> source)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return new ObservableSourceFromObservable<T>(source);
+        }
+
+        /// <summary>
+        /// Convert an IObservableSource into a legacy IObservable.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequences.</typeparam>
+        /// <param name="source">The observable source to convert into a legacy observable sequence.</param>
+        /// <returns>The new legacy observable instance.</returns>
+        /// <remarks>Since 0.0.18</remarks>
+        public static IObservable<T> ToObservable<T>(this IObservableSource<T> source)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return new ObservableSourceToObservable<T>(source);
         }
     }
 }

@@ -23,7 +23,8 @@
   - DoOnSubscribe
   - DoOnTerminate
   - Hide
-</PackageReleaseNotes>
+  - ToObservableSource (on IObservable)
+  - ToObservable (on IObservableSource)</PackageReleaseNotes>
     <PackageTags>reactive extensions</PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

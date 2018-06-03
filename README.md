@@ -839,16 +839,8 @@ Main differences:
 
 ### Factory methods
 
+- `Concat`
 - `Defer`
-- `DoAfterNext`
-- `DoAfterTerminate`
-- `DoFinally`
-- `DoOnCompleted`
-- `DoOnDispose`
-- `DoOnError`
-- `DoOnNext`
-- `DoOnSubscribe`
-- `DoOnTerminate`
 - `Empty`
 - `Error`
 - `FromArray`
@@ -861,6 +853,15 @@ Main differences:
 
 - `Compose`
 - `ConcatMap`
+- `DoAfterNext`
+- `DoAfterTerminate`
+- `DoFinally`
+- `DoOnCompleted`
+- `DoOnDispose`
+- `DoOnError`
+- `DoOnNext`
+- `DoOnSubscribe`
+- `DoOnTerminate`
 - `Filter`
 - `Hide`
 - `Map`
@@ -875,7 +876,8 @@ Main differences:
 
 ### Interoperation with other types
 
-- `ToObservableSource` (on `T[]`)
+- `ToObservableSource` (on `T[]`, `IObservable`)
+- `ToObservable` (into `IObservable`)
 
 ### PublishSubject
 
