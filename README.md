@@ -846,10 +846,13 @@ Main differences:
 - `FromAction`
 - `FromArray`
 - `FromFunc`
+- `Interval`
+- `IntervalRange`
 - `Just`
 - `Never`
 - `Range`
 - `RangeLong`
+- `Timer`
 
 ### Instance methods
 

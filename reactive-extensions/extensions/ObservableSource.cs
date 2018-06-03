@@ -197,6 +197,76 @@ namespace akarnokd.reactive_extensions
             return new ObservableSourceFromAction<T>(action);
         }
 
+        /// <summary>
+        /// Signals a 0L after the specified delay and completes.
+        /// </summary>
+        /// <param name="delay">The time delay.</param>
+        /// <param name="scheduler">The target scheduler where to emit 0L.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.18</remarks>
+        public static IObservableSource<long> Timer(TimeSpan delay, IScheduler scheduler)
+        {
+            RequireNonNull(scheduler, nameof(scheduler));
+
+            return new ObservableSourceTimer(delay, scheduler);
+        }
+
+        /// <summary>
+        /// Emits a long values, starting from 0, over time.
+        /// </summary>
+        /// <param name="period">The time between emitting subsequent values.</param>
+        /// <param name="scheduler">The scheduler used for emission and timing.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.18</remarks>
+        public static IObservableSource<long> Interval(TimeSpan period, IScheduler scheduler)
+        {
+            return IntervalRange(0, long.MaxValue, period, period, scheduler);
+        }
+
+        /// <summary>
+        /// Emits a long values, starting from 0, over time.
+        /// </summary>
+        /// <param name="initialDelay">The delay befor signaling the start value.</param>
+        /// <param name="period">The time between emitting subsequent values.</param>
+        /// <param name="scheduler">The scheduler used for emission and timing.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.18</remarks>
+        public static IObservableSource<long> Interval(TimeSpan initialDelay, TimeSpan period, IScheduler scheduler)
+        {
+            return IntervalRange(0, long.MaxValue, initialDelay, period, scheduler);
+        }
+
+        /// <summary>
+        /// Emits a range of long values over time.
+        /// </summary>
+        /// <param name="start">The start value.</param>
+        /// <param name="count">The number of items to emit.</param>
+        /// <param name="period">The time between emitting subsequent values.</param>
+        /// <param name="scheduler">The scheduler used for emission and timing.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.18</remarks>
+        public static IObservableSource<long> IntervalRange(long start, long count, TimeSpan period, IScheduler scheduler)
+        {
+            return IntervalRange(start, count, period, period, scheduler);
+        }
+
+        /// <summary>
+        /// Emits a range of long values over time.
+        /// </summary>
+        /// <param name="start">The start value.</param>
+        /// <param name="count">The number of items to emit.</param>
+        /// <param name="initialDelay">The delay befor signaling the start value.</param>
+        /// <param name="period">The time between emitting subsequent values.</param>
+        /// <param name="scheduler">The scheduler used for emission and timing.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.18</remarks>
+        public static IObservableSource<long> IntervalRange(long start, long count, TimeSpan initialDelay, TimeSpan period, IScheduler scheduler)
+        {
+            RequireNonNull(scheduler, nameof(scheduler));
+
+            return new ObservableSourceIntervalRange(start, start + count, initialDelay, period, scheduler);
+        }
+
         // --------------------------------------------------------------
         // Instance methods
         // --------------------------------------------------------------

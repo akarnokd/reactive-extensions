@@ -26,17 +26,22 @@
   - FromEnumerable
   - FromFunc
   - Hide
+  - Interval
+  - IntervalRange
   - SkipUntil
   - TakeUntil
+  - Timer
   - ToObservableSource (on IObservable, IEnumerable)
   - ToObservable (on IObservableSource)</PackageReleaseNotes>
     <PackageTags>reactive extensions</PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>bin\Debug\netstandard2.0\reactive-extensions.xml</DocumentationFile>
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DocumentationFile>bin\Release\netstandard2.0\reactive-extensions.xml</DocumentationFile>
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
