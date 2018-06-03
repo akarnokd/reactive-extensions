@@ -94,5 +94,10 @@ namespace akarnokd.reactive_extensions
             }
             return FusionSupport.None;
         }
+
+        public bool TryOffer(R item)
+        {
+            throw new InvalidOperationException("Should not be called!");
+        }
     }
 }

@@ -860,7 +860,9 @@ Main differences:
 ### Instance methods
 
 - `Compose`
+- `ConcatMap`
 - `Filter`
+- `Hide`
 - `Map`
 - `Skip`
 - `Take`

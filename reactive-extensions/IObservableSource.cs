@@ -118,13 +118,20 @@ namespace akarnokd.reactive_extensions
     }
 
     /// <summary>
-    /// A basic queue interface for getting out items,
-    /// checking for emptyness and clearing the queue.
+    /// A basic queue implementation with production
+    /// and consumption options.
     /// </summary>
-    /// <typeparam name="T">The element type queued.</typeparam>
+    /// <typeparam name="T">The element type of the queue.</typeparam>
     /// <remarks>Since 0.0.17</remarks>
-    public interface IQueueConsumer<out T>
+    public interface ISimpleQueue<T>
     {
+        /// <summary>
+        /// Try enqueueing an item in the queue.
+        /// </summary>
+        /// <param name="item">The item to enqueue.</param>
+        /// <returns>True if the operation succeeded, false if the queue is full.</returns>
+        bool TryOffer(T item);
+
         /// <summary>
         /// Try getting the next available item from the queue.
         /// </summary>
@@ -146,27 +153,11 @@ namespace akarnokd.reactive_extensions
     }
 
     /// <summary>
-    /// A basic queue implementation with production
-    /// and consumption options.
-    /// </summary>
-    /// <typeparam name="T">The element type of the queue.</typeparam>
-    /// <remarks>Since 0.0.17</remarks>
-    public interface ISimpleQueue<T> : IQueueConsumer<T>
-    {
-        /// <summary>
-        /// Try enqueueing an item in the queue.
-        /// </summary>
-        /// <param name="item">The item to enqueue.</param>
-        /// <returns>True if the operation succeeded, false if the queue is full.</returns>
-        bool TryOffer(T item);
-    }
-
-    /// <summary>
     /// Represents a fuseable source.
     /// </summary>
     /// <typeparam name="T">The element type</typeparam>
     /// <remarks>Since 0.0.17</remarks>
-    public interface IFuseableDisposable<out T> : IQueueConsumer<T>, IDisposable
+    public interface IFuseableDisposable<T> : ISimpleQueue<T>, IDisposable
     {
         /// <summary>
         /// Request a fusion mode from the implementing source operator.
@@ -192,14 +183,14 @@ namespace akarnokd.reactive_extensions
         /// <summary>
         /// Either requested as fusion mode or returned as the established fusion
         /// mode. Producers in this mode should never call the OnXXX methods
-        /// and consumers polling via <see cref="IQueueConsumer{T}.TryPoll(out bool)"/> have to stop if the queue becomes empty.
+        /// and consumers polling via <see cref="ISimpleQueue{T}.TryPoll(out bool)"/> have to stop if the queue becomes empty.
         /// </summary>
         public static readonly int Sync = 1;
         /// <summary>
         /// Either requested as fusion mode or returned as the established fusion
         /// mode. Producers should call OnNext with the default value for the sequence
         /// element type T and consumers should ignore this value, polling only via
-        /// <see cref="IQueueConsumer{T}.TryPoll(out bool)"/>. The producer has to signal OnError/OnCompleted as normal. 
+        /// <see cref="ISimpleQueue{T}.TryPoll(out bool)"/>. The producer has to signal OnError/OnCompleted as normal. 
         /// </summary>
         public static readonly int Async = 2;
         /// <summary>

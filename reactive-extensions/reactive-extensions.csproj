@@ -12,16 +12,17 @@
     <Copyright>Copyright 2018, David Karnok</Copyright>
     <PackageReleaseNotes>New operators:
 - IObservableSource operators:
-- DoAfterNext
-- DoAfterTerminate
-- DoFinally
-- DoOnCompleted
-- DoOnDispose
-- DoOnError
-- DoOnNext
-- DoOnSubscribe
-- DoOnTerminate
-
+  - ConcatMap
+  - DoAfterNext
+  - DoAfterTerminate
+  - DoFinally
+  - DoOnCompleted
+  - DoOnDispose
+  - DoOnError
+  - DoOnNext
+  - DoOnSubscribe
+  - DoOnTerminate
+  - Hide
 </PackageReleaseNotes>
     <PackageTags>reactive extensions</PackageTags>
   </PropertyGroup>

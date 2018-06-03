@@ -416,6 +416,48 @@ namespace akarnokd.reactive_extensions
             return ObservableSourcePeek<T>.Create(source, doFinally: handler);
         }
 
+        /// <summary>
+        /// Maps the source observable sequence into inner observable
+        /// sources and relays their items in order, one after the other
+        /// until all sequences terminate.
+        /// </summary>
+        /// <typeparam name="T">The element type of the source sequence.</typeparam>
+        /// <typeparam name="R">The element type of the inner and output sequence.</typeparam>
+        /// <param name="source">The source sequence to map into observables.</param>
+        /// <param name="mapper">The function taking the upstream item
+        /// and should return an inner observable sequence to relay signals of.</param>
+        /// <param name="delayErrors">If true, errors are delayed until all sequences terminate. If false, error is signaled once the current inner source terminates.</param>
+        /// <param name="capacityHint">The number of upstream items expected to be cached until
+        /// the current observer terminates.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.18</remarks>
+        public static IObservableSource<R> ConcatMap<T, R>(this IObservableSource<T> source, Func<T, IObservableSource<R>> mapper, bool delayErrors = false, int capacityHint = 32)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(mapper, nameof(mapper));
+            RequirePositive(capacityHint, nameof(capacityHint));
+
+            return new ObservableSourceConcatMap<T, R>(source, mapper, delayErrors, capacityHint);
+        }
+
+        /// <summary>
+        /// Hides the identity of the source observable sequence, including
+        /// its disposable connection as well as prevents identity-based
+        /// optimizations (such as fusion).
+        /// The returned observable sequence does not and should not
+        /// support any optimizations.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source sequence to hide.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.18</remarks>
+        public static IObservableSource<T> Hide<T>(this IObservableSource<T> source)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return new ObservableSourceHide<T>(source);
+        }
+
         // --------------------------------------------------------------
         // Consumer methods
         // --------------------------------------------------------------

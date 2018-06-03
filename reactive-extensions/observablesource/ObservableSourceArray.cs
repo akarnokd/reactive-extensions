@@ -104,6 +104,12 @@ namespace akarnokd.reactive_extensions
                 }
                 downstream.OnCompleted();
             }
+
+
+            public bool TryOffer(T item)
+            {
+                throw new InvalidOperationException("Should not be called!");
+            }
         }
     }
 }

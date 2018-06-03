@@ -105,6 +105,11 @@ namespace akarnokd.reactive_extensions
                 success = false;
                 return default(int);
             }
+
+            public bool TryOffer(int item)
+            {
+                throw new InvalidOperationException("Should not be called!");
+            }
         }
     }
 
@@ -207,6 +212,11 @@ namespace akarnokd.reactive_extensions
                 }
                 success = false;
                 return default(int);
+            }
+
+            public bool TryOffer(long item)
+            {
+                throw new InvalidOperationException("Should not be called!");
             }
         }
     }
