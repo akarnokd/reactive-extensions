@@ -856,6 +856,7 @@ Main differences:
 
 ### Instance methods
 
+- `Collect`
 - `Compose`
 - `ConcatMap`
 - `DoAfterNext`
@@ -880,6 +881,9 @@ Main differences:
 - `Take`
 - `TakeUntil`
 - `Timeout`
+- `ToDictionary`
+- `ToList`
+- `ToLookup`
 - `UnsubscribeOn`
 
 ### Consumer methods

@@ -3,7 +3,7 @@ using NUnit.Framework;
 using akarnokd.reactive_extensions;
 using System.Threading;
 
-namespace akarnokd.reactive_extensions_test.observable
+namespace akarnokd.reactive_extensions_test
 {
     [TestFixture]
     public class SpscLinkedArrayQueueTest

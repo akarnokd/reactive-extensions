@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reactive.Concurrency;
 using System.Text;
 using static akarnokd.reactive_extensions.ValidationHelper;
@@ -226,7 +227,7 @@ namespace akarnokd.reactive_extensions
         /// <summary>
         /// Emits a long values, starting from 0, over time.
         /// </summary>
-        /// <param name="initialDelay">The delay befor signaling the start value.</param>
+        /// <param name="initialDelay">The delay before signaling the start value.</param>
         /// <param name="period">The time between emitting subsequent values.</param>
         /// <param name="scheduler">The scheduler used for emission and timing.</param>
         /// <returns>The new observable source instance.</returns>
@@ -255,7 +256,7 @@ namespace akarnokd.reactive_extensions
         /// </summary>
         /// <param name="start">The start value.</param>
         /// <param name="count">The number of items to emit.</param>
-        /// <param name="initialDelay">The delay befor signaling the start value.</param>
+        /// <param name="initialDelay">The delay before signaling the start value.</param>
         /// <param name="period">The time between emitting subsequent values.</param>
         /// <param name="scheduler">The scheduler used for emission and timing.</param>
         /// <returns>The new observable source instance.</returns>
@@ -690,7 +691,7 @@ namespace akarnokd.reactive_extensions
         /// <param name="source">The source to subscribe to on a given scheduler.</param>
         /// <param name="scheduler">The scheduler to use to subscribe to the <paramref name="source"/> sequence.</param>
         /// <returns>The new observable source instance.</returns>
-        /// <remarks>Sincel 0.0.18</remarks>
+        /// <remarks>Since 0.0.18</remarks>
         public static IObservableSource<T> SubscribeOn<T>(this IObservableSource<T> source, IScheduler scheduler)
         {
             RequireNonNull(source, nameof(source));
@@ -740,6 +741,177 @@ namespace akarnokd.reactive_extensions
             return new ObservableSourceObserveOn<T>(source, scheduler, delayError, capacityHint, fair);
         }
 
+        /// <summary>
+        /// Collects items from the upstream via a collector action into
+        /// a collection provided for each individual observer and signals
+        /// this collection to the downstream.
+        /// </summary>
+        /// <typeparam name="T">The element type of the upstream sequence.</typeparam>
+        /// <typeparam name="C">The collection type.</typeparam>
+        /// <param name="source">The source sequence to collect.</param>
+        /// <param name="collectionSupplier">The function providing a collection to each
+        /// individual observer.</param>
+        /// <param name="collector">The action receiving the collection and the current upstream
+        /// item to be combined in some fashion.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.19</remarks>
+        public static IObservableSource<C> Collect<T, C>(this IObservableSource<T> source, Func<C> collectionSupplier, Action<C, T> collector)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(collectionSupplier, nameof(collectionSupplier));
+            RequireNonNull(collector, nameof(collector));
+
+            return new ObservableSourceCollect<T, C>(source, collectionSupplier, collector);
+        }
+
+        /// <summary>
+        /// Collects all upstream items into a list and emits that upon
+        /// completion.
+        /// </summary>
+        /// <typeparam name="T">The element type of the source sequence.</typeparam>
+        /// <param name="source">The source of items to collect into a list.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.19</remarks>
+        public static IObservableSource<IList<T>> ToList<T>(this IObservableSource<T> source)
+        {
+            return Collect(source, () => new List<T>(), (a, b) => a.Add(b));
+        }
+
+        /// <summary>
+        /// Collects all upstream items into a list and emits that upon
+        /// completion.
+        /// </summary>
+        /// <typeparam name="T">The element type of the source sequence.</typeparam>
+        /// <param name="source">The source of items to collect into a list.</param>
+        /// <param name="capacityHint">The expected number of items to be stored in the resulting
+        /// list.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.19</remarks>
+        public static IObservableSource<IList<T>> ToList<T>(this IObservableSource<T> source, int capacityHint)
+        {
+            RequirePositive(capacityHint, nameof(capacityHint));
+
+            return Collect(source, () => new List<T>(capacityHint), (a, b) => a.Add(b));
+        }
+
+        /// <summary>
+        /// Collects all upstream items into a dictionary and emits that upon
+        /// completion.
+        /// </summary>
+        /// <typeparam name="T">The element type of the source sequence.</typeparam>
+        /// <typeparam name="K">The key type</typeparam>
+        /// <param name="source">The source of items to collect into a list.</param>
+        /// <param name="keySelector">The function receiving the upstream item and
+        /// returning the key for the map.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.19</remarks>
+        public static IObservableSource<IDictionary<K, T>> ToDictionary<T, K>(this IObservableSource<T> source, Func<T, K> keySelector)
+        {
+            return ToDictionary(source, keySelector, v => v, EqualityComparer<K>.Default);
+        }
+
+        /// <summary>
+        /// Collects and projects all upstream items into a dictionary and emits that upon
+        /// completion.
+        /// </summary>
+        /// <typeparam name="T">The element type of the source sequence.</typeparam>
+        /// <typeparam name="K">The key type.</typeparam>
+        /// <typeparam name="V">The value type of the dictionary.</typeparam>
+        /// <param name="source">The source of items to collect into a list.</param>
+        /// <param name="keySelector">The function receiving the upstream item and
+        /// returns the key for the dictionary.</param>
+        /// <param name="valueSelector">The function receiving the upstream item and
+        /// returns the value for the dictionary.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.19</remarks>
+        public static IObservableSource<IDictionary<K, V>> ToDictionary<T, K, V>(this IObservableSource<T> source, Func<T, K> keySelector, Func<T, V> valueSelector)
+        {
+            return ToDictionary(source, keySelector, valueSelector, EqualityComparer<K>.Default);
+        }
+
+        /// <summary>
+        /// Collects and projects all upstream items into a dictionary and emits that upon
+        /// completion.
+        /// </summary>
+        /// <typeparam name="T">The element type of the source sequence.</typeparam>
+        /// <typeparam name="K">The key type.</typeparam>
+        /// <typeparam name="V">The value type of the dictionary.</typeparam>
+        /// <param name="source">The source of items to collect into a list.</param>
+        /// <param name="keySelector">The function receiving the upstream item and
+        /// returns the key for the dictionary.</param>
+        /// <param name="valueSelector">The function receiving the upstream item and
+        /// returns the value for the dictionary.</param>
+        /// <param name="keyComparer">The custom comparer for the keys</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.19</remarks>
+        public static IObservableSource<IDictionary<K, V>> ToDictionary<T, K, V>(this IObservableSource<T> source, Func<T, K> keySelector, Func<T, V> valueSelector, IEqualityComparer<K> keyComparer)
+        {
+            RequireNonNull(keySelector, nameof(keySelector));
+            RequireNonNull(valueSelector, nameof(valueSelector));
+            RequireNonNull(keyComparer, nameof(keyComparer));
+
+            return Collect(source, () => new Dictionary<K, V>(keyComparer), (a, b) => a.Add(keySelector(b), valueSelector(b)));
+        }
+
+        /// <summary>
+        /// Collects and projects all upstream items into a lookup (multimap) and emits that upon
+        /// completion.
+        /// </summary>
+        /// <typeparam name="T">The element type of the source sequence.</typeparam>
+        /// <typeparam name="K">The key type.</typeparam>
+        /// <param name="source">The source of items to collect into a list.</param>
+        /// <param name="keySelector">The function receiving the upstream item and
+        /// returns the key for the dictionary.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.19</remarks>
+        public static IObservableSource<ILookup<K, T>> ToLookup<T, K>(this IObservableSource<T> source, Func<T, K> keySelector)
+        {
+            return ToLookup(source, keySelector, v => v, EqualityComparer<K>.Default);
+        }
+
+        /// <summary>
+        /// Collects and projects all upstream items into a lookup (multimap) and emits that upon
+        /// completion.
+        /// </summary>
+        /// <typeparam name="T">The element type of the source sequence.</typeparam>
+        /// <typeparam name="K">The key type.</typeparam>
+        /// <typeparam name="V">The value type of the dictionary.</typeparam>
+        /// <param name="source">The source of items to collect into a list.</param>
+        /// <param name="keySelector">The function receiving the upstream item and
+        /// returns the key for the dictionary.</param>
+        /// <param name="valueSelector">The function receiving the upstream item and
+        /// returns the value for the dictionary.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.19</remarks>
+        public static IObservableSource<ILookup<K, V>> ToLookup<T, K, V>(this IObservableSource<T> source, Func<T, K> keySelector, Func<T, V> valueSelector)
+        {
+            return ToLookup(source, keySelector, valueSelector, EqualityComparer<K>.Default);
+        }
+
+        /// <summary>
+        /// Collects and projects all upstream items into a lookup (multimap) and emits that upon
+        /// completion.
+        /// </summary>
+        /// <typeparam name="T">The element type of the source sequence.</typeparam>
+        /// <typeparam name="K">The key type.</typeparam>
+        /// <typeparam name="V">The value type of the dictionary.</typeparam>
+        /// <param name="source">The source of items to collect into a list.</param>
+        /// <param name="keySelector">The function receiving the upstream item and
+        /// returns the key for the dictionary.</param>
+        /// <param name="valueSelector">The function receiving the upstream item and
+        /// returns the value for the dictionary.</param>
+        /// <param name="keyComparer">The custom comparer for the keys.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.19</remarks>
+        public static IObservableSource<ILookup<K, V>> ToLookup<T, K, V>(this IObservableSource<T> source, Func<T, K> keySelector, Func<T, V> valueSelector, IEqualityComparer<K> keyComparer)
+        {
+            RequireNonNull(keySelector, nameof(keySelector));
+            RequireNonNull(valueSelector, nameof(valueSelector));
+            RequireNonNull(keyComparer, nameof(keyComparer));
+
+            return Collect(source, () => new Lookup<K, V>(keyComparer), (a, b) => a.Add(keySelector(b), valueSelector(b)));
+        }
+
         // --------------------------------------------------------------
         // Consumer methods
         // --------------------------------------------------------------
@@ -775,7 +947,7 @@ namespace akarnokd.reactive_extensions
         /// <typeparam name="T">The element type of the source sequence.</typeparam>
         /// <typeparam name="S">The consumer subtype.</typeparam>
         /// <param name="source">The source sequence to observe.</param>
-        /// <param name="observer">The observer to subscibe with and return.</param>
+        /// <param name="observer">The observer to subscribe with and return.</param>
         /// <returns>The <paramref name="observer"/> itself.</returns>
         /// <remarks>Since 0.0.17</remarks>
         public static S SubscribeWith<T, S>(this IObservableSource<T> source, S observer) where S : ISignalObserver<T>
