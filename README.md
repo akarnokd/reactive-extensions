@@ -885,10 +885,12 @@ Main differences:
 - `Single`
 - `Skip`
 - `SkipUntil`
+- `SkipWhile`
 - `SubscribeOn`
 - `SwitchIfEmpty`
 - `Take`
 - `TakeUntil`
+- `TakeWhile`
 - `Timeout`
 - `ToDictionary`
 - `ToList`

@@ -1260,6 +1260,63 @@ namespace akarnokd.reactive_extensions
             return new ObservableSourceLastDefault<T>(source, defaultItem);
         }
 
+        /// <summary>
+        /// Relay items from the source sequence while the predicate returns true
+        /// (checked before emission).
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="predicate">The function receiving the current item and should
+        /// return true if that item may pass, false to complete the sequence.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.20</remarks>
+        public static IObservableSource<T> TakeWhile<T>(this IObservableSource<T> source, Func<T, bool> predicate)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(predicate, nameof(predicate));
+
+            return new ObservableSourceTakeWhile<T>(source, predicate);
+
+        }
+
+        /// <summary>
+        /// Relay items from the source sequence until the predicate returns false
+        /// (checked after emission).
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="predicate">The function receiving the current item and should
+        /// return false if that item may pass, true to complete the sequence.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.20</remarks>
+        public static IObservableSource<T> TakeUntil<T>(this IObservableSource<T> source, Func<T, bool> predicate)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(predicate, nameof(predicate));
+
+            return new ObservableSourceTakeUntil<T>(source, predicate);
+
+        }
+
+        /// <summary>
+        /// Skip items from the source sequence while the predicate returns true
+        /// (checked before emission).
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="predicate">The function receiving the current item and should
+        /// return false if that item and any subsequent item may pass, true to keep skipping.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.20</remarks>
+        public static IObservableSource<T> SkipWhile<T>(this IObservableSource<T> source, Func<T, bool> predicate)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(predicate, nameof(predicate));
+
+            return new ObservableSourceSkipWhile<T>(source, predicate);
+
+        }
+
         // --------------------------------------------------------------
         // Consumer methods
         // --------------------------------------------------------------

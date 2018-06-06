@@ -15,7 +15,10 @@
   - ElementAt
   - First
   - Last
-  - Single</PackageReleaseNotes>
+  - Single
+  - SkipWhile
+  - TakeWhile
+  - TakeUntil (predicate)</PackageReleaseNotes>
     <PackageTags>reactive extensions</PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
