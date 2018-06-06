@@ -858,6 +858,7 @@ Main differences:
 
 - `All`
 - `Any`
+- `Buffer`
 - `Collect`
 - `Compose`
 - `ConcatMap`
@@ -877,6 +878,7 @@ Main differences:
 - `Map`
 - `ObserveOn`
 - `OnErrorResumeNext`
+- `Reduce`
 - `Skip`
 - `SkipUntil`
 - `SubscribeOn`
@@ -891,12 +893,14 @@ Main differences:
 
 ### Consumer methods
 
+- `Subscribe`
 - `SubscribeWith`
 - `Test`
 
-### Interoperation with other types
+### Interoperation with other async types
 
-- `ToObservableSource` (on `T[]`, `IObservable`, `IEnumerable`)
+- `FromTask`
+- `ToObservableSource` (on `T[]`, `IObservable`, `IEnumerable`, `Task`)
 - `ToObservable` (into `IObservable`)
 
 ### PublishSubject

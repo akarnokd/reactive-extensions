@@ -14,11 +14,16 @@
 - IObservableSource operators:
   - All
   - Any
+  - Buffer
   - Collect
+  - FromTask
   - IsEmpty
+  - Reduce
+  - Subscribe
   - ToDictionary
   - ToList
   - ToLookup
+  - ToObservableSource (Task)
 </PackageReleaseNotes>
     <PackageTags>reactive extensions</PackageTags>
   </PropertyGroup>

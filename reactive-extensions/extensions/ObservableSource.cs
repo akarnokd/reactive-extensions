@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Text;
+using System.Threading.Tasks;
 using static akarnokd.reactive_extensions.ValidationHelper;
 
 namespace akarnokd.reactive_extensions
@@ -266,6 +267,34 @@ namespace akarnokd.reactive_extensions
             RequireNonNull(scheduler, nameof(scheduler));
 
             return new ObservableSourceIntervalRange(start, start + count, initialDelay, period, scheduler);
+        }
+
+        /// <summary>
+        /// Wraps a Task and signals its terminal event to observers.
+        /// </summary>
+        /// <typeparam name="T">The target element type.</typeparam>
+        /// <param name="task">The task to wrap and signal terminal events of.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.19</remarks>
+        public static IObservableSource<T> FromTask<T>(Task task)
+        {
+            RequireNonNull(task, nameof(task));
+
+            return new ObservableSourceFromTask<T>(task);
+        }
+
+        /// <summary>
+        /// Wraps a Task and signals its terminal value or error to observers.
+        /// </summary>
+        /// <typeparam name="T">The target element type.</typeparam>
+        /// <param name="task">The task to wrap and signal terminal events of.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.19</remarks>
+        public static IObservableSource<T> FromTask<T>(Task<T> task)
+        {
+            RequireNonNull(task, nameof(task));
+
+            return new ObservableSourceFromTaskValue<T>(task);
         }
 
         // --------------------------------------------------------------
@@ -962,6 +991,150 @@ namespace akarnokd.reactive_extensions
             return new ObservableSourceIsEmpty<T>(source);
         }
 
+        /// <summary>
+        /// Reduce the upstream into a single value by applying a function to
+        /// the initial or previous reduced value and the current upstream value
+        /// to produce the next or last value to be finally emitted.
+        /// </summary>
+        /// <typeparam name="T">The element type of the upstream.</typeparam>
+        /// <typeparam name="C">The result type.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="initialSupplier">The function to generate an initial value for
+        /// each individual observer.</param>
+        /// <param name="reducer">The function called with the first or previous reduced
+        /// value and should return a new reduced value.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.19</remarks>
+        public static IObservableSource<C> Reduce<T, C>(this IObservableSource<T> source, Func<C> initialSupplier, Func<C, T, C> reducer)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(initialSupplier, nameof(initialSupplier));
+            RequireNonNull(reducer, nameof(reducer));
+
+            return new ObservableSourceReduce<T, C>(source, initialSupplier, reducer);
+        }
+
+        /// <summary>
+        /// Reduce the upstream into a single value by applying a function to the 
+        /// previously reduced and current item to produce the next reduced item
+        /// and emit the last of such reduced item to the downstream.
+        /// </summary>
+        /// <typeparam name="T">The element and result type of the sequences.</typeparam>
+        /// <param name="source">The source sequence to reduce into a single item.</param>
+        /// <param name="reducer">The function that takes the previous reduced item, the
+        /// current upstream item and should produce the next reduced item.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.19</remarks>
+        public static IObservableSource<T> Reduce<T>(this IObservableSource<T> source, Func<T, T, T> reducer)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(reducer, nameof(reducer));
+
+            return new ObservableSourceReducePlain<T>(source, reducer);
+        }
+
+        /// <summary>
+        /// Buffer items into non-overlapping, non-skipping lists and emit those lists
+        /// as they become full.
+        /// </summary>
+        /// <typeparam name="T">The upstream sequence type.</typeparam>
+        /// <param name="source">The source sequence to buffer.</param>
+        /// <param name="size">The number of items per buffer.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.19</remarks>
+        public static IObservableSource<IList<T>> Buffer<T>(this IObservableSource<T> source, int size)
+        {
+            RequireNonNull(source, nameof(source));
+            RequirePositive(size, nameof(size));
+
+            return new ObservableSourceBuffer<T, IList<T>>(source, () => new List<T>(), size, size);
+        }
+
+        /// <summary>
+        /// Buffer items into lists, possibly overlapping (skip &lt; size),
+        /// possibly skipping (skip &gt; size) or exact chunks (skip == size).
+        /// </summary>
+        /// <typeparam name="T">The upstream sequence type.</typeparam>
+        /// <param name="source">The source sequence to buffer.</param>
+        /// <param name="size">The number of items per buffer.</param>
+        /// <param name="skip">The items to skip before starting a new buffer.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.19</remarks>
+        public static IObservableSource<IList<T>> Buffer<T>(this IObservableSource<T> source, int size, int skip)
+        {
+            RequireNonNull(source, nameof(source));
+            RequirePositive(size, nameof(size));
+
+            return new ObservableSourceBuffer<T, IList<T>>(source, () => new List<T>(), size, skip);
+        }
+
+        /// <summary>
+        /// Buffer items into custom collections, possibly overlapping (skip &lt; size),
+        /// possibly skipping (skip &gt; size) or exact chunks (skip == size).
+        /// </summary>
+        /// <typeparam name="T">The element type of the upstream.</typeparam>
+        /// <typeparam name="B">The buffer type.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="size">The number of items to put into each buffer.</param>
+        /// <param name="skip">The items to skip before starting a new buffer.</param>
+        /// <param name="bufferSupplier">The function returning a fresh buffer when a previous buffer became full.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.19</remarks>
+        public static IObservableSource<B> Buffer<T, B>(this IObservableSource<T> source, int size, int skip, Func<B> bufferSupplier) where B : ICollection<T>
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(bufferSupplier, nameof(bufferSupplier));
+            RequirePositive(size, nameof(size));
+            RequirePositive(skip, nameof(skip));
+
+            return new ObservableSourceBuffer<T, B>(source, bufferSupplier, size, skip);
+        }
+
+        /// <summary>
+        /// Buffer the upstream elements into a list
+        /// (no skipping, no overlapping) until the boundary
+        /// signals an item, at which point the buffer is emitted and a new buffer is
+        /// started.
+        /// </summary>
+        /// <typeparam name="T">The upstream sequence type.</typeparam>
+        /// <typeparam name="U">The element type of the boundary sequence.</typeparam>
+        /// <param name="source">The source to buffer.</param>
+        /// <param name="boundary">The sequence to signal the end of the previous buffer and
+        /// the start of a new buffer.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.19</remarks>
+        public static IObservableSource<IList<T>> Buffer<T, U>(this IObservableSource<T> source, IObservableSource<U> boundary)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(boundary, nameof(boundary));
+
+            return new ObservableSourceBufferBoundary<T, IList<T>, U>(source, boundary, () => new List<T>());
+        }
+
+        /// <summary>
+        /// Buffer the upstream elements into a custom collection
+        /// (no skipping, no overlapping) until the boundary
+        /// signals an item, at which point the buffer is emitted and a new buffer is
+        /// started.
+        /// </summary>
+        /// <typeparam name="T">The upstream sequence type.</typeparam>
+        /// <typeparam name="B">The custom collection type.</typeparam>
+        /// <typeparam name="U">The element type of the boundary sequence.</typeparam>
+        /// <param name="source">The source to buffer.</param>
+        /// <param name="boundary">The sequence to signal the end of the previous buffer and
+        /// the start of a new buffer.</param>
+        /// <param name="bufferSupplier">The function returning a custom collection on demand.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.19</remarks>
+        public static IObservableSource<B> Buffer<T, B, U>(this IObservableSource<T> source, IObservableSource<U> boundary, Func<B> bufferSupplier) where B : ICollection<T>
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(boundary, nameof(boundary));
+            RequireNonNull(bufferSupplier, nameof(bufferSupplier));
+
+            return new ObservableSourceBufferBoundary<T, B, U>(source, boundary, bufferSupplier);
+        }
+
         // --------------------------------------------------------------
         // Consumer methods
         // --------------------------------------------------------------
@@ -1005,6 +1178,26 @@ namespace akarnokd.reactive_extensions
             RequireNonNull(source, nameof(source));
             RequireNonNull(observer, nameof(observer));
 
+            source.Subscribe(observer);
+            return observer;
+        }
+
+        /// <summary>
+        /// Consume the upstream source sequence via (optional) lambda callbacks.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source sequence to consume.</param>
+        /// <param name="onNext">Called with the next source item.</param>
+        /// <param name="onError">Called with the exception of the upstream or the <paramref name="onNext"/> failure.</param>
+        /// <param name="onCompleted">Called when the upstream terminates.</param>
+        /// <param name="onSubscribe">Called with a disposable to allow disposing the sequence.</param>
+        /// <returns>The disposable to stop the consumption.</returns>
+        /// <remarks>Since 0.0.19</remarks>
+        public static IDisposable Subscribe<T>(this IObservableSource<T> source, Action<T> onNext = null, Action<Exception> onError = null, Action onCompleted = null, Action<IDisposable> onSubscribe = null)
+        {
+            RequireNonNull(source, nameof(source));
+
+            var observer = new LambdaSignalObserver<T>(onSubscribe, onNext, onError, onCompleted);
             source.Subscribe(observer);
             return observer;
         }
@@ -1068,6 +1261,34 @@ namespace akarnokd.reactive_extensions
             RequireNonNull(source, nameof(source));
 
             return new ObservableSourceEnumerable<T>(source);
+        }
+
+        /// <summary>
+        /// Converts a Task and signals its terminal event to observers.
+        /// </summary>
+        /// <typeparam name="T">The target element type.</typeparam>
+        /// <param name="task">The task to wrap and signal terminal events of.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.19</remarks>
+        public static IObservableSource<T> ToObservableSource<T>(this Task task)
+        {
+            RequireNonNull(task, nameof(task));
+
+            return new ObservableSourceFromTask<T>(task);
+        }
+
+        /// <summary>
+        /// Converts a Task and signals its terminal value or error to observers.
+        /// </summary>
+        /// <typeparam name="T">The target element type.</typeparam>
+        /// <param name="task">The task to wrap and signal terminal events of.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.19</remarks>
+        public static IObservableSource<T> ToObservableSource<T>(this Task<T> task)
+        {
+            RequireNonNull(task, nameof(task));
+
+            return new ObservableSourceFromTaskValue<T>(task);
         }
     }
 }
