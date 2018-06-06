@@ -1317,6 +1317,50 @@ namespace akarnokd.reactive_extensions
 
         }
 
+        /// <summary>
+        /// Takes the last <paramref name="n"/> items from the upstream and
+        /// ignores items before that.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source to keep only the last items.</param>
+        /// <param name="n">The number of last items to keep.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.20</remarks>
+        public static IObservableSource<T> TakeLast<T>(this IObservableSource<T> source, int n)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNegative(n, nameof(n));
+
+            if (n == 0)
+            {
+                return new ObservableSourceIgnoreElements<T>(source);
+            }
+
+            return new ObservableSourceTakeLast<T>(source, n);
+        }
+
+        /// <summary>
+        /// Skips the last <paramref name="n"/> items from the upstream and
+        /// relays items before that.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source to skip some last items.</param>
+        /// <param name="n">The number of last items to skip.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.20</remarks>
+        public static IObservableSource<T> SkipLast<T>(this IObservableSource<T> source, int n)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNegative(n, nameof(n));
+
+            if (n == 0)
+            {
+                return source;
+            }
+
+            return new ObservableSourceSkipLast<T>(source, n);
+        }
+
         // --------------------------------------------------------------
         // Consumer methods
         // --------------------------------------------------------------

@@ -16,7 +16,9 @@
   - First
   - Last
   - Single
+  - SkipLast
   - SkipWhile
+  - TakeLast
   - TakeWhile
   - TakeUntil (predicate)</PackageReleaseNotes>
     <PackageTags>reactive extensions</PackageTags>

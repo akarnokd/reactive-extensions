@@ -884,11 +884,13 @@ Main differences:
 - `Reduce`
 - `Single`
 - `Skip`
+- `SkipLast`
 - `SkipUntil`
 - `SkipWhile`
 - `SubscribeOn`
 - `SwitchIfEmpty`
 - `Take`
+- `TakeLast`
 - `TakeUntil`
 - `TakeWhile`
 - `Timeout`
@@ -911,5 +913,8 @@ Main differences:
 
 ### PublishSubject
 
+Multicasts the same items to one or more currently subscribed observers (same as an Rx.NET `Subject`).
 
 ### MonocastSubject
+
+Buffers items until a single observer subscribes and replays/relays all items to it.
