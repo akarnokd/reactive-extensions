@@ -1135,6 +1135,131 @@ namespace akarnokd.reactive_extensions
             return new ObservableSourceBufferBoundary<T, B, U>(source, boundary, bufferSupplier);
         }
 
+        /// <summary>
+        /// Signals the element with the given index or signals an
+        /// IndexOutOfBoundsException if the source sequence is shorter.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source sequence to get an element from.</param>
+        /// <param name="index">The index of the item to return (zero-based).</param>
+        /// <returns>The new observable source sequence.</returns>
+        /// <remarks>Since 0.0.20</remarks>
+        public static IObservableSource<T> ElementAt<T>(this IObservableSource<T> source, long index)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNegative(index, nameof(index));
+
+            return new ObservableSourceElementAt<T>(source, index);
+        }
+
+        /// <summary>
+        /// Signals the element with the given index or signals the
+        /// given default item if the source sequence is shorter.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source sequence to get an element from.</param>
+        /// <param name="index">The index of the item to return (zero-based).</param>
+        /// <param name="defaultItem">The item to emit if the source is shorter.</param>
+        /// <returns>The new observable source sequence.</returns>
+        /// <remarks>Since 0.0.20</remarks>
+        public static IObservableSource<T> ElementAt<T>(this IObservableSource<T> source, long index, T defaultItem)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNegative(index, nameof(index));
+
+            return new ObservableSourceElementAtDefault<T>(source, index, defaultItem);
+        }
+
+        /// <summary>
+        /// Signals the first element from the source sequence or
+        /// IndexOutOfBoundsException if the source is empty.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source sequence to get the first element from.</param>
+        /// <returns>The new observable source sequence.</returns>
+        /// <remarks>Since 0.0.20</remarks>
+        public static IObservableSource<T> First<T>(this IObservableSource<T> source)
+        {
+            return ElementAt(source, 0L);
+        }
+
+        /// <summary>
+        /// Signals the first element from the source sequence or
+        /// the given default item if the source is empty.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source sequence to get the first element from.</param>
+        /// <param name="defaultItem">The default item to emit if the source is empty.</param>
+        /// <returns>The new observable source sequence.</returns>
+        /// <remarks>Since 0.0.20</remarks>
+        public static IObservableSource<T> First<T>(this IObservableSource<T> source, T defaultItem)
+        {
+            return ElementAt(source, 0L, defaultItem);
+        }
+
+        /// <summary>
+        /// Signals the single item of the sequence or an IndexOutOfBoundsException
+        /// if the source is empty or contains more than one item.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source sequence that should contain one item.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.20</remarks>
+        public static IObservableSource<T> Single<T>(this IObservableSource<T> source)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return new ObservableSourceSingle<T>(source);
+        }
+
+        /// <summary>
+        /// Signals the single item of the sequence, the given default item
+        /// if the source is empty or an IndexOutOfBoundsException
+        /// if the source contains more than one item.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source sequence that should contain one item.</param>
+        /// <param name="defaultItem">The item to emit if the source is empty.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.20</remarks>
+        public static IObservableSource<T> Single<T>(this IObservableSource<T> source, T defaultItem)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return new ObservableSourceSingleDefault<T>(source, defaultItem);
+        }
+
+        /// <summary>
+        /// Signals the last item of the sequence or an IndexOutOfBoundsException
+        /// if the source is empty.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source sequence to get the last item of.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.20</remarks>
+        public static IObservableSource<T> Last<T>(this IObservableSource<T> source)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return new ObservableSourceLast<T>(source);
+        }
+
+        /// <summary>
+        /// Signals the last item of the sequence or the given default item
+        /// if the source is empty.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source sequence to get the last item of.</param>
+        /// <param name="defaultItem">The item to emit if the source is empty.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.20</remarks>
+        public static IObservableSource<T> Last<T>(this IObservableSource<T> source, T defaultItem)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return new ObservableSourceLastDefault<T>(source, defaultItem);
+        }
+
         // --------------------------------------------------------------
         // Consumer methods
         // --------------------------------------------------------------

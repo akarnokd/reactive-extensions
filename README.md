@@ -9,7 +9,7 @@ Extensions to the [dotnet/reactive](https://github.com/dotnet/reactive) library.
 ### Setup
 
 ```
-Install-Package akarnokd.reactive_extensions -Version 0.0.18-alpha
+Install-Package akarnokd.reactive_extensions -Version 0.0.20-alpha
 ```
 
 ### Dependencies
@@ -871,14 +871,18 @@ Main differences:
 - `DoOnNext`
 - `DoOnSubscribe`
 - `DoOnTerminate`
+- `ElementAt`
 - `Filter`
+- `First`
 - `Hide`
 - `IgnoreElements`
 - `IsEmpty`
+- `Last`
 - `Map`
 - `ObserveOn`
 - `OnErrorResumeNext`
 - `Reduce`
+- `Single`
 - `Skip`
 - `SkipUntil`
 - `SubscribeOn`
