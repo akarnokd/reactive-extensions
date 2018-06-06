@@ -912,6 +912,56 @@ namespace akarnokd.reactive_extensions
             return Collect(source, () => new Lookup<K, V>(keyComparer), (a, b) => a.Add(keySelector(b), valueSelector(b)));
         }
 
+        /// <summary>
+        /// Signals true if any of the upstream source item passes the predicate (short circuit),
+        /// false otherwise.
+        /// </summary>
+        /// <typeparam name="T">The element type of the source sequence.</typeparam>
+        /// <param name="source">The source to find an item passing the predicate.</param>
+        /// <param name="predicate">The predicate receiving the upstream item and should
+        /// return true to stop and indicate true as the outcome of the sequence.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.19</remarks>
+        public static IObservableSource<bool> Any<T>(this IObservableSource<T> source, Func<T, bool> predicate)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(predicate, nameof(predicate));
+
+            return new ObservableSourceAny<T>(source, predicate);
+        }
+
+        /// <summary>
+        /// Signals true if all of the upstream source item passes the predicate,
+        /// false otherwise (short circuit).
+        /// </summary>
+        /// <typeparam name="T">The element type of the source sequence.</typeparam>
+        /// <param name="source">The source to find an item passing the predicate.</param>
+        /// <param name="predicate">The predicate receiving the upstream item and should
+        /// return false to stop and indicate false as the outcome of the sequence.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.19</remarks>
+        public static IObservableSource<bool> All<T>(this IObservableSource<T> source, Func<T, bool> predicate)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(predicate, nameof(predicate));
+
+            return new ObservableSourceAll<T>(source, predicate);
+        }
+
+        /// <summary>
+        /// Signals true if the source sequence has no items, false otherwise (short circuit).
+        /// </summary>
+        /// <typeparam name="T">The element type of the source sequence.</typeparam>
+        /// <param name="source">The source to find an item passing the predicate.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.19</remarks>
+        public static IObservableSource<bool> IsEmpty<T>(this IObservableSource<T> source)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return new ObservableSourceIsEmpty<T>(source);
+        }
+
         // --------------------------------------------------------------
         // Consumer methods
         // --------------------------------------------------------------

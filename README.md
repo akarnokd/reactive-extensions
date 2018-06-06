@@ -856,6 +856,8 @@ Main differences:
 
 ### Instance methods
 
+- `All`
+- `Any`
 - `Collect`
 - `Compose`
 - `ConcatMap`
@@ -871,6 +873,7 @@ Main differences:
 - `Filter`
 - `Hide`
 - `IgnoreElements`
+- `IsEmpty`
 - `Map`
 - `ObserveOn`
 - `OnErrorResumeNext`

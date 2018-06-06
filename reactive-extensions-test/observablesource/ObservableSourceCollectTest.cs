@@ -59,7 +59,7 @@ namespace akarnokd.reactive_extensions_test.observablesource
         [Test]
         public void Dispose()
         {
-            TestHelper.VerifyDisposeObservable<int, List<int>>(m => m.Collect(() => new List<int>(), (a, b) => a.Add(b)));
+            TestHelper.VerifyDisposeObservableSource<int, List<int>>(m => m.Collect(() => new List<int>(), (a, b) => a.Add(b)));
         }
 
         [Test]

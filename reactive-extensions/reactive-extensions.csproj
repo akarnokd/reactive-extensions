@@ -12,7 +12,10 @@
     <Copyright>Copyright 2018, David Karnok</Copyright>
     <PackageReleaseNotes>New operators:
 - IObservableSource operators:
+  - All
+  - Any
   - Collect
+  - IsEmpty
   - ToDictionary
   - ToList
   - ToLookup

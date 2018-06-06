@@ -27,7 +27,7 @@ namespace akarnokd.reactive_extensions_test
         /// <param name="transform">The function to map a source into another source.</param>
         /// <param name="waitSeconds">How many seconds to wait at most till the dispose reaches the upstream.</param>
         /// <remarks>Since 0.0.11</remarks>
-        public static void VerifyDisposeObservable<T, R>(Func<IObservableSource<T>, IMaybeSource<R>> transform, int waitSeconds = 1)
+        public static void VerifyDisposeObservableSource<T, R>(Func<IObservableSource<T>, IMaybeSource<R>> transform, int waitSeconds = 1)
         {
             var ms = new PublishSubject<T>();
 
@@ -66,7 +66,7 @@ namespace akarnokd.reactive_extensions_test
         /// <param name="transform">The function to map a source into another source.</param>
         /// <param name="waitSeconds">How many seconds to wait at most till the dispose reaches the upstream.</param>
         /// <remarks>Since 0.0.11</remarks>
-        public static void VerifyDisposeObservable<T, R>(Func<IObservableSource<T>, IObservable<R>> transform, int waitSeconds = 1)
+        public static void VerifyDisposeObservableSource<T, R>(Func<IObservableSource<T>, IObservable<R>> transform, int waitSeconds = 1)
         {
             var ms = new PublishSubject<T>();
 
@@ -105,7 +105,7 @@ namespace akarnokd.reactive_extensions_test
         /// <param name="transform">The function to map a source into another source.</param>
         /// <param name="waitSeconds">How many seconds to wait at most till the dispose reaches the upstream.</param>
         /// <remarks>Since 0.0.11</remarks>
-        public static void VerifyDisposeObservable<T, R>(Func<IObservableSource<T>, IObservableSource<R>> transform, int waitSeconds = 1)
+        public static void VerifyDisposeObservableSource<T, R>(Func<IObservableSource<T>, IObservableSource<R>> transform, int waitSeconds = 1)
         {
             var ms = new PublishSubject<T>();
 
@@ -144,7 +144,7 @@ namespace akarnokd.reactive_extensions_test
         /// <param name="transform">The function to map a source into another source.</param>
         /// <param name="waitSeconds">How many seconds to wait at most till the dispose reaches the upstream.</param>
         /// <remarks>Since 0.0.11</remarks>
-        public static void VerifyDisposeObservable<T, R>(Func<IObservableSource<T>, ISingleSource<R>> transform, int waitSeconds = 1)
+        public static void VerifyDisposeObservableSource<T, R>(Func<IObservableSource<T>, ISingleSource<R>> transform, int waitSeconds = 1)
         {
             var ms = new PublishSubject<T>();
 
@@ -184,7 +184,7 @@ namespace akarnokd.reactive_extensions_test
         /// <param name="transform">The function to map a source into another source.</param>
         /// <param name="waitSeconds">How many seconds to wait at most till the dispose reaches the upstream.</param>
         /// <remarks>Since 0.0.11</remarks>
-        public static void VerifyDisposeObservable<T>(Func<IObservableSource<T>, ICompletableSource> transform, int waitSeconds = 1)
+        public static void VerifyDisposeObservableSource<T>(Func<IObservableSource<T>, ICompletableSource> transform, int waitSeconds = 1)
         {
             var ms = new PublishSubject<T>();
 
