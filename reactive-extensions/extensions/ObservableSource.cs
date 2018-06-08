@@ -297,6 +297,30 @@ namespace akarnokd.reactive_extensions
             return new ObservableSourceFromTaskValue<T>(task);
         }
 
+        /// <summary>
+        /// Generates a resource for each individual observer, then
+        /// creates an observable source sequence based on this resource
+        /// and relays its signals to the same observer.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <typeparam name="S">The resource type.</typeparam>
+        /// <param name="resourceSupplier">Called for each individual observer to create a resource.</param>
+        /// <param name="sourceSelector">The function receiving the resource and should return
+        /// an observable source sequence.</param>
+        /// <param name="resourceCleanup">Called when the resource is no longer needed upon
+        /// cancellation or when the sequence terminates.</param>
+        /// <param name="eager">If true, the resourceCleanup will be called before signaling
+        /// the terminal event.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.21</remarks>
+        public static IObservableSource<T> Using<T, S>(Func<S> resourceSupplier, Func<S, IObservableSource<T>> sourceSelector, Action<S> resourceCleanup = null, bool eager = true)
+        {
+            RequireNonNull(resourceSupplier, nameof(resourceSupplier));
+            RequireNonNull(sourceSelector, nameof(sourceSelector));
+
+            return new ObservableSourceUsing<T, S>(resourceSupplier, sourceSelector, resourceCleanup, eager);
+        }
+
         // --------------------------------------------------------------
         // Instance methods
         // --------------------------------------------------------------
