@@ -839,7 +839,9 @@ Main differences:
 
 ### Factory methods
 
+- `CombineLatest`
 - `Concat`
+- `ConcatEager`
 - `Defer`
 - `Empty`
 - `Error`
@@ -852,8 +854,10 @@ Main differences:
 - `Never`
 - `Range`
 - `RangeLong`
+- `Switch`
 - `Timer`
 - `Using`
+- `Zip`
 
 ### Instance methods
 
@@ -863,6 +867,7 @@ Main differences:
 - `Collect`
 - `Compose`
 - `ConcatMap`
+- `ConcatMapEager`
 - `DoAfterNext`
 - `DoAfterTerminate`
 - `DoFinally`
@@ -883,6 +888,8 @@ Main differences:
 - `ObserveOn`
 - `OnErrorResumeNext`
 - `Reduce`
+- `RepeatWhen`
+- `RetryWhen`
 - `Single`
 - `Skip`
 - `SkipLast`
@@ -890,6 +897,7 @@ Main differences:
 - `SkipWhile`
 - `SubscribeOn`
 - `SwitchIfEmpty`
+- `SwitchMap`
 - `Take`
 - `TakeLast`
 - `TakeUntil`
@@ -899,6 +907,7 @@ Main differences:
 - `ToList`
 - `ToLookup`
 - `UnsubscribeOn`
+- `WithLatestFrom`
 
 ### Consumer methods
 

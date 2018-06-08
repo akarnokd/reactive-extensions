@@ -148,5 +148,10 @@ namespace akarnokd.reactive_extensions_test
             return source.Concat(Observable.Throw<T>(ex));
         }
 
+        public static IObservableSource<T> ConcatError<T>(this IObservableSource<T> source, Exception ex)
+        {
+            return source.Concat(ObservableSource.Error<T>(ex));
+        }
+
     }
 }

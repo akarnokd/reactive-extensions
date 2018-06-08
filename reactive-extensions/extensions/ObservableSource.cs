@@ -321,6 +321,177 @@ namespace akarnokd.reactive_extensions
             return new ObservableSourceUsing<T, S>(resourceSupplier, sourceSelector, resourceCleanup, eager);
         }
 
+        /// <summary>
+        /// Combines the latest items of each source observable through
+        /// a mapper function.
+        /// </summary>
+        /// <typeparam name="T">The element type of the observables.</typeparam>
+        /// <typeparam name="R">The result type.</typeparam>
+        /// <param name="mapper">The function that receives the latest values and should return an item to be emitted.</param>
+        /// <param name="sources">The array of observables to combine.</param>
+        /// <returns>The new observable sequence.</returns>
+        /// <remarks>Since 0.0.21</remarks>
+        public static IObservableSource<R> CombineLatest<T, R>(Func<T[], R> mapper, params IObservableSource<T>[] sources)
+        {
+            return CombineLatest(mapper, false, sources);
+        }
+
+        /// <summary>
+        /// Combines the latest items of each source observable through
+        /// a mapper function, optionally delaying errors until all
+        /// of them terminates.
+        /// </summary>
+        /// <typeparam name="T">The element type of the observables.</typeparam>
+        /// <typeparam name="R">The result type.</typeparam>
+        /// <param name="mapper">The function that receives the latest values and should return an item to be emitted.</param>
+        /// <param name="delayErrors">If true, errors from all sources are delayed until all sources terminate.</param>
+        /// <param name="sources">The array of observables to combine.</param>
+        /// <returns>The new observable sequence.</returns>
+        /// <remarks>Since 0.0.21</remarks>
+        public static IObservableSource<R> CombineLatest<T, R>(Func<T[], R> mapper, bool delayErrors, params IObservableSource<T>[] sources)
+        {
+            RequireNonNull(mapper, nameof(mapper));
+            RequireNonNull(sources, nameof(sources));
+
+            return new ObservableSourceCombineLatest<T, R>(sources, mapper, delayErrors);
+        }
+
+        /// <summary>
+        /// Combines the latest items of each source observable through
+        /// a mapper function, optionally delaying errors until all
+        /// of them terminates.
+        /// </summary>
+        /// <typeparam name="T">The element type of the observables.</typeparam>
+        /// <typeparam name="R">The result type.</typeparam>
+        /// <param name="sources">The array of observables to combine.</param>
+        /// <param name="mapper">The function that receives the latest values and should return an item to be emitted.</param>
+        /// <param name="delayErrors">If true, errors from all sources are delayed until all sources terminate.</param>
+        /// <returns>The new observable sequence.</returns>
+        /// <remarks>Since 0.0.21</remarks>
+        public static IObservableSource<R> CombineLatest<T, R>(this IObservableSource<T>[] sources, Func<T[], R> mapper, bool delayErrors = false)
+        {
+            return CombineLatest(mapper, delayErrors, sources);
+        }
+
+        /// <summary>
+        /// Combines the next item of each source observable (a row of values) through
+        /// a mapper function.
+        /// </summary>
+        /// <typeparam name="T">The element type of the observables.</typeparam>
+        /// <typeparam name="R">The result type.</typeparam>
+        /// <param name="mapper">The function that receives the latest values and should return an item to be emitted.</param>
+        /// <param name="sources">The array of observables to combine.</param>
+        /// <returns>The new observable sequence.</returns>
+        /// <remarks>Since 0.0.21</remarks>
+        public static IObservableSource<R> Zip<T, R>(Func<T[], R> mapper, params IObservableSource<T>[] sources)
+        {
+            return Zip(sources, mapper, false);
+        }
+
+        /// <summary>
+        /// Combines the next item of each source observable (a row of values) through
+        /// a mapper function.
+        /// </summary>
+        /// <typeparam name="T">The element type of the observables.</typeparam>
+        /// <typeparam name="R">The result type.</typeparam>
+        /// <param name="mapper">The function that receives the latest values and should return an item to be emitted.</param>
+        /// <param name="capacityHint">The expected number of items to be buffered by each source.</param>
+        /// <param name="sources">The array of observables to combine.</param>
+        /// <returns>The new observable sequence.</returns>
+        /// <remarks>Since 0.0.21</remarks>
+        public static IObservableSource<R> Zip<T, R>(Func<T[], R> mapper, int capacityHint, params IObservableSource<T>[] sources)
+        {
+            return Zip(mapper, false, capacityHint, sources);
+        }
+
+        /// <summary>
+        /// Combines the next item of each source observable (a row of values) through
+        /// a mapper function, optionally delaying errors until no more rows
+        /// can be consumed.
+        /// </summary>
+        /// <typeparam name="T">The element type of the observables.</typeparam>
+        /// <typeparam name="R">The result type.</typeparam>
+        /// <param name="mapper">The function that receives the latest values and should return an item to be emitted.</param>
+        /// <param name="delayErrors">If true, errors from all sources are delayed until all sources terminate.</param>
+        /// <param name="sources">The array of observables to combine.</param>
+        /// <returns>The new observable sequence.</returns>
+        /// <remarks>Since 0.0.21</remarks>
+        public static IObservableSource<R> Zip<T, R>(Func<T[], R> mapper, bool delayErrors, params IObservableSource<T>[] sources)
+        {
+            return Zip<T, R>(sources, mapper, delayErrors);
+        }
+
+        /// <summary>
+        /// Combines the next item of each source observable (a row of values) through
+        /// a mapper function, optionally delaying errors until no more rows
+        /// can be consumed.
+        /// </summary>
+        /// <typeparam name="T">The element type of the observables.</typeparam>
+        /// <typeparam name="R">The result type.</typeparam>
+        /// <param name="mapper">The function that receives the latest values and should return an item to be emitted.</param>
+        /// <param name="delayErrors">If true, errors from all sources are delayed until all sources terminate.</param>
+        /// <param name="capacityHint">The expected number of items to be buffered by each source.</param>
+        /// <param name="sources">The array of observables to combine.</param>
+        /// <returns>The new observable sequence.</returns>
+        /// <remarks>Since 0.0.21</remarks>
+        public static IObservableSource<R> Zip<T, R>(Func<T[], R> mapper, bool delayErrors, int capacityHint = 32, params IObservableSource<T>[] sources)
+        {
+            RequireNonNull(mapper, nameof(mapper));
+            RequireNonNull(sources, nameof(sources));
+            RequirePositive(capacityHint, nameof(capacityHint));
+
+            return new ObservableSourceZip<T, R>(sources, mapper, delayErrors, capacityHint);
+        }
+
+        /// <summary>
+        /// Combines the next item of each source observable (a row of values) through
+        /// a mapper function, optionally delaying errors until no more rows
+        /// can be consumed.
+        /// </summary>
+        /// <typeparam name="T">The element type of the observables.</typeparam>
+        /// <typeparam name="R">The result type.</typeparam>
+        /// <param name="sources">The array of observables to combine.</param>
+        /// <param name="mapper">The function that receives the latest values and should return an item to be emitted.</param>
+        /// <param name="delayErrors">If true, errors from all sources are delayed until all sources terminate.</param>
+        /// <param name="capacityHint">The expected number of items to be buffered by each source.</param>
+        /// <returns>The new observable sequence.</returns>
+        /// <remarks>Since 0.0.21</remarks>
+        public static IObservableSource<R> Zip<T, R>(this IObservableSource<T>[] sources, Func<T[], R> mapper, bool delayErrors = false, int capacityHint = 32)
+        {
+            return Zip(mapper, delayErrors, capacityHint, sources);
+        }
+
+        /// <summary>
+        /// Concatenates a sequence of observables eagerly by running some
+        /// or all of them at once and emitting their items in order.
+        /// </summary>
+        /// <typeparam name="T">The value type of the inner observables.</typeparam>
+        /// <param name="sources">The sequence of observables to concatenate eagerly.</param>
+        /// <param name="maxConcurrency">The maximum number of observables to run at a time.</param>
+        /// <param name="capacityHint">The number of items expected from each observable.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.21</remarks>
+        public static IObservableSource<T> ConcatEager<T>(this IObservableSource<IObservableSource<T>> sources, int maxConcurrency = int.MaxValue, int capacityHint = 128)
+        {
+            return ConcatMapEager(sources, v => v, maxConcurrency, capacityHint);
+        }
+
+
+        /// <summary>
+        /// Switches to a new inner observable when the upstream emits it,
+        /// disposing the previous active observable.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sources">The sequence of observables to switch between.</param>
+        /// <param name="delayErrors">If true, all errors are delayed until all observables have terminated or got disposed.</param>
+        /// <param name="capacityHint">The expected number of items to buffer per inner observable</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.21</remarks>
+        public static IObservableSource<T> Switch<T>(this IObservableSource<IObservableSource<T>> sources, bool delayErrors = false, int capacityHint = 128)
+        {
+            return SwitchMap(sources, v => v, delayErrors, capacityHint);
+        }
+
         // --------------------------------------------------------------
         // Instance methods
         // --------------------------------------------------------------
@@ -1385,6 +1556,210 @@ namespace akarnokd.reactive_extensions
             return new ObservableSourceSkipLast<T>(source, n);
         }
 
+        /// <summary>
+        /// Maps the upstream items into observables, runs some or all of them at once, emits items from one
+        /// of the observables until it completes, then switches to the next observable.
+        /// </summary>
+        /// <typeparam name="T">The value type of the upstream.</typeparam>
+        /// <typeparam name="R">The output value type.</typeparam>
+        /// <param name="source">The source observable to be mapper and concatenated eagerly.</param>
+        /// <param name="mapper">The function that returns an observable for an upstream item.</param>
+        /// <param name="maxConcurrency">The maximum number of observables to run at a time.</param>
+        /// <param name="capacityHint">The number of items expected from each observable.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.21</remarks>
+        public static IObservableSource<R> ConcatMapEager<T, R>(this IObservableSource<T> source, Func<T, IObservableSource<R>> mapper, int maxConcurrency = int.MaxValue, int capacityHint = 128)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(mapper, nameof(mapper));
+            RequirePositive(maxConcurrency, nameof(maxConcurrency));
+            RequirePositive(capacityHint, nameof(capacityHint));
+
+            return new ObservableSourceConcatMapEager<T, R>(source, mapper, maxConcurrency, capacityHint);
+        }
+
+        /// <summary>
+        /// Maps the upstream items to <see cref="IEnumerable{T}"/>s and emits their items in order.
+        /// </summary>
+        /// <typeparam name="T">The upstream value type.</typeparam>
+        /// <typeparam name="R">The result value type</typeparam>
+        /// <param name="source">The source observable.</param>
+        /// <param name="mapper">The function that turns an upstream item into an enumerable sequence.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.21</remarks>
+        public static IObservableSource<R> ConcatMap<T, R>(this IObservableSource<T> source, Func<T, IEnumerable<R>> mapper)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(mapper, nameof(mapper));
+
+            return new ObservableSourceConcatMapEnumerable<T, R>(source, mapper);
+        }
+
+        /// <summary>
+        /// Switches to a new observable mapped via a function in response to
+        /// an new upstream item, disposing the previous active observable.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="R"></typeparam>
+        /// <param name="source">The source sequence to turn into the inner observables.</param>
+        /// <param name="mapper">The function that given an upstream item returns the inner observable to continue
+        /// relaying events from.</param>
+        /// <param name="delayErrors">If true, all errors are delayed until all observables have terminated or got disposed.</param>
+        /// <param name="capacityHint">The expected number of items to buffer per inner observable</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.21</remarks>
+        public static IObservableSource<R> SwitchMap<T, R>(this IObservableSource<T> source, Func<T, IObservableSource<R>> mapper, bool delayErrors = false, int capacityHint = 128)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(mapper, nameof(mapper));
+            RequirePositive(capacityHint, nameof(capacityHint));
+
+            return new ObservableSourceSwitchMap<T, R>(source, mapper, delayErrors, capacityHint);
+        }
+
+        /// <summary>
+        /// Combines the latest values of multiple alternate observables with 
+        /// the value of the main observable sequence through a function.
+        /// </summary>
+        /// <typeparam name="T">The element type of the main source.</typeparam>
+        /// <typeparam name="U">The common type of the alternate observables.</typeparam>
+        /// <typeparam name="R">The result type of the flow.</typeparam>
+        /// <param name="source">The main source observable of items.</param>
+        /// <param name="mapper">The function that takes the upstream item and the
+        /// latest values from each <paramref name="others"/> observable if any.
+        /// if not all other observable has a latest value, the mapper is not invoked.</param>
+        /// <param name="others">The parameter array of alternate observables to use the latest values of.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.21</remarks>
+        public static IObservableSource<R> WithLatestFrom<T, U, R>(
+            this IObservableSource<T> source,
+            Func<T, U[], R> mapper,
+            params IObservableSource<U>[] others)
+        {
+            return WithLatestFrom(source, mapper, false, false, others);
+        }
+
+        /// <summary>
+        /// Combines the latest values of multiple alternate observables with 
+        /// the value of the main observable sequence through a function.
+        /// </summary>
+        /// <typeparam name="T">The element type of the main source.</typeparam>
+        /// <typeparam name="U">The common type of the alternate observables.</typeparam>
+        /// <typeparam name="R">The result type of the flow.</typeparam>
+        /// <param name="source">The main source observable of items.</param>
+        /// <param name="mapper">The function that takes the upstream item and the
+        /// latest values from each <paramref name="others"/> observable if any.
+        /// if not all other observable has a latest value, the mapper is not invoked.</param>
+        /// <param name="delayErrors">If true, errors from the <paramref name="others"/> will be delayed until the main sequence terminates.</param>
+        /// <param name="others">The parameter array of alternate observables to use the latest values of.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.21</remarks>
+        public static IObservableSource<R> WithLatestFrom<T, U, R>(
+            this IObservableSource<T> source,
+            Func<T, U[], R> mapper,
+            bool delayErrors,
+            params IObservableSource<U>[] others)
+        {
+            return WithLatestFrom(source, mapper, delayErrors, false, others);
+        }
+
+        /// <summary>
+        /// Combines the latest values of multiple alternate observables with 
+        /// the value of the main observable sequence through a function.
+        /// </summary>
+        /// <typeparam name="T">The element type of the main source.</typeparam>
+        /// <typeparam name="U">The common type of the alternate observables.</typeparam>
+        /// <typeparam name="R">The result type of the flow.</typeparam>
+        /// <param name="source">The main source observable of items.</param>
+        /// <param name="mapper">The function that takes the upstream item and the
+        /// latest values from each <paramref name="others"/> observable if any.
+        /// if not all other observable has a latest value, the mapper is not invoked.</param>
+        /// <param name="delayErrors">If true, errors from the <paramref name="others"/> will be delayed until the main sequence terminates.</param>
+        /// <param name="sourceFirst">If true, the <paramref name="source"/> is subscribed first,
+        /// if false, the <paramref name="others"/> are subscribed to first.</param>
+        /// <param name="others">The parameter array of alternate observables to use the latest values of.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.21</remarks>
+        public static IObservableSource<R> WithLatestFrom<T, U, R>(
+            this IObservableSource<T> source,
+            Func<T, U[], R> mapper,
+            bool delayErrors,
+            bool sourceFirst,
+            params IObservableSource<U>[] others)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(mapper, nameof(mapper));
+            RequireNonNull(others, nameof(others));
+            RequirePositive(others.Length, nameof(others) + ".Length");
+
+            return new ObservableSourceWithLatestFrom<T, U, R>(source, others, mapper, delayErrors, sourceFirst);
+        }
+
+        /// <summary>
+        /// Concatenates (appends) the other observable source after the
+        /// main source.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequences.</typeparam>
+        /// <param name="source">The main source to run first.</param>
+        /// <param name="other">The main source to run next.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.21</remarks>
+        public static IObservableSource<T> Concat<T>(this IObservableSource<T> source, IObservableSource<T> other)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(other, nameof(other));
+
+            return new ObservableSourceConcatWith<T>(source, other);
+        }
+
+
+        /// <summary>
+        /// Retries (resubscribes to) the source observable after a failure and when the observable
+        /// returned by a handler produces an arbitrary item.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in the source sequence.</typeparam>
+        /// <typeparam name="U">The arbitrary element type signaled by the handler observable.</typeparam>
+        /// <param name="source">Observable sequence to repeat until it successfully terminates.</param>
+        /// <param name="handler">The function that is called for each observer and takes an observable sequence of
+        /// errors. It should return an observable of arbitrary items that should signal that arbitrary item in
+        /// response to receiving the failure Exception from the source observable. If this observable signals
+        /// a terminal event, the sequence is terminated with that signal instead.</param>
+        /// <returns>An observable sequence producing the elements of the given sequence repeatedly until it terminates successfully.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="handler"/> is null.</exception>
+        /// <remarks>Since 0.0.21</remarks>
+        public static IObservableSource<T> RetryWhen<T, U>(this IObservableSource<T> source, Func<IObservableSource<Exception>, IObservableSource<U>> handler)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
+
+            return new ObservableSourceRetryWhen<T, U>(source, handler);
+        }
+
+        /// <summary>
+        /// Repeats (resubscribes to) the source observable after a completion and when the observable
+        /// returned by a handler produces an arbitrary item.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in the source sequence.</typeparam>
+        /// <typeparam name="U">The arbitrary element type signaled by the handler observable.</typeparam>
+        /// <param name="source">Observable sequence to repeat while it successfully terminates.</param>
+        /// <param name="handler">The function that is called for each observer and takes an observable sequence of
+        /// errors. It should return an observable of arbitrary items that should signal that arbitrary item in
+        /// response to receiving the completion signal from the source observable. If this observable signals
+        /// a terminal event, the sequence is terminated with that signal instead.</param>
+        /// <returns>An observable sequence producing the elements of the given sequence repeatedly while it terminates successfully.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="handler"/> is null.</exception>
+        /// <remarks>Since 0.0.21</remarks>
+        public static IObservableSource<T> RepeatWhen<T, U>(this IObservableSource<T> source, Func<IObservableSource<object>, IObservableSource<U>> handler)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(handler, nameof(handler));
+
+            return new ObservableSourceRepeatWhen<T, U>(source, handler);
+        }
+
+
         // --------------------------------------------------------------
         // Consumer methods
         // --------------------------------------------------------------
@@ -1450,6 +1825,25 @@ namespace akarnokd.reactive_extensions
             var observer = new LambdaSignalObserver<T>(onSubscribe, onNext, onError, onCompleted);
             source.Subscribe(observer);
             return observer;
+        }
+
+        /// <summary>
+        /// Wraps the given <paramref name="observer"/> so that concurrent
+        /// calls to the returned observer's OnNext, OnError or OnCompleted methods are serialized.
+        /// </summary>
+        /// <typeparam name="T">The element type of the flow</typeparam>
+        /// <param name="observer">The observer to wrap and serialize signals for.</param>
+        /// <returns>The serialized signal observer instance.</returns>
+        public static ISignalObserver<T> ToSerialized<T>(this ISignalObserver<T> observer)
+        {
+            RequireNonNull(observer, nameof(observer));
+
+            if (observer is SerializedSignalObserver<T> o)
+            {
+                return o;
+            }
+
+            return new SerializedSignalObserver<T>(observer);
         }
 
         // --------------------------------------------------------------

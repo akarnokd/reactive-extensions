@@ -2,19 +2,19 @@
 using NUnit.Framework;
 using akarnokd.reactive_extensions;
 
-namespace akarnokd.reactive_extensions_test.observable
+namespace akarnokd.reactive_extensions_test.observablesource
 {
     [TestFixture]
-    public class SerializedObserverTest
+    public class SerializedSignalObserverTest
     {
         [Test]
         public void Basic()
         {
-            var up = new UnicastSubject<int>();
+            var up = new MonocastSubject<int>();
 
             var to = new TestObserver<int>();
 
-            up.Subscribe(ReactiveExtensions.ToSerialized(to));
+            up.Subscribe(ObservableSource.ToSerialized(to));
 
             up.EmitAll(1, 2, 3, 4, 5);
 
@@ -24,11 +24,11 @@ namespace akarnokd.reactive_extensions_test.observable
         [Test]
         public void Basic_With_Error()
         {
-            var up = new UnicastSubject<int>();
+            var up = new MonocastSubject<int>();
 
             var to = new TestObserver<int>();
 
-            up.Subscribe(ReactiveExtensions.ToSerialized(to));
+            up.Subscribe(ObservableSource.ToSerialized(to));
 
             up.EmitError(new InvalidOperationException(), 1, 2, 3, 4, 5);
 
@@ -42,7 +42,7 @@ namespace akarnokd.reactive_extensions_test.observable
             {
                 var to = new TestObserver<int>();
 
-                var s = ReactiveExtensions.ToSerialized(to);
+                var s = ObservableSource.ToSerialized(to);
 
                 Action emit = () => {
                     for (int j = 0; j < 500; j++)
@@ -64,7 +64,7 @@ namespace akarnokd.reactive_extensions_test.observable
             {
                 var to = new TestObserver<int>();
 
-                var s = ReactiveExtensions.ToSerialized(to);
+                var s = ObservableSource.ToSerialized(to);
 
                 Action emit = () => {
                     for (int j = 0; j < 500; j++)
@@ -92,7 +92,6 @@ namespace akarnokd.reactive_extensions_test.observable
             }
         }
 
-
         [Test]
         public void OnNext_OnError_Race()
         {
@@ -100,7 +99,7 @@ namespace akarnokd.reactive_extensions_test.observable
             {
                 var to = new TestObserver<int>();
 
-                var s = ReactiveExtensions.ToSerialized(to);
+                var s = ObservableSource.ToSerialized(to);
 
                 var ex = new InvalidOperationException();
 

@@ -12,7 +12,17 @@
     <Copyright>Copyright 2018, David Karnok</Copyright>
     <PackageReleaseNotes>New operators:
 - IObservableSource operators:
-  - Using</PackageReleaseNotes>
+  - ConcatEager
+  - ConcatMap (with IEnumerable)
+  - ConcatMapEager
+  - CombineLatest
+  - RepeatWhen
+  - RetryWhen
+  - Switch
+  - SwitchMap
+  - Using
+  - WithLatestFrom
+  - Zip</PackageReleaseNotes>
     <PackageTags>reactive extensions</PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
