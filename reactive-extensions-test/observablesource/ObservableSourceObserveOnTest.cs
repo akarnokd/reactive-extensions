@@ -27,18 +27,18 @@ namespace akarnokd.reactive_extensions_test.observablesource
         {
             for (int i = 0; i < 4; i++)
             {
-                var name = "";
+                var name = -1;
 
                 ObservableSource.Range(1, 5).Hide()
                     .ObserveOn(ThreadPoolScheduler.Instance, delayError: i / 2 == 0, fair: i % 2 == 0)
-                    .DoOnNext(v => name = Thread.CurrentThread.Name)
+                    .DoOnNext(v => name = Thread.CurrentThread.ManagedThreadId)
                     .Test()
                     .WithTag($"delayError={i / 2}, fair={i % 2}")
                     .AwaitDone(TimeSpan.FromSeconds(5))
                     .AssertResult(1, 2, 3, 4, 5);
 
-                Assert.AreNotEqual("", name);
-                Assert.AreNotEqual(Thread.CurrentThread.Name, name);
+                Assert.AreNotEqual(-1, name);
+                Assert.AreNotEqual(Thread.CurrentThread.ManagedThreadId, name);
             }
         }
 
@@ -129,18 +129,18 @@ namespace akarnokd.reactive_extensions_test.observablesource
         {
             for (int i = 0; i < 4; i++)
             {
-                var name = "";
+                var name = -1;
 
                 ObservableSource.Range(1, 5)
                     .ObserveOn(ThreadPoolScheduler.Instance, delayError: i / 2 == 0, fair: i % 2 == 0)
-                    .DoOnNext(v => name = Thread.CurrentThread.Name)
+                    .DoOnNext(v => name = Thread.CurrentThread.ManagedThreadId)
                     .Test()
                     .WithTag($"delayError={i / 2}, fair={i % 2}")
                     .AwaitDone(TimeSpan.FromSeconds(5))
                     .AssertResult(1, 2, 3, 4, 5);
 
-                Assert.AreNotEqual("", name);
-                Assert.AreNotEqual(Thread.CurrentThread.Name, name);
+                Assert.AreNotEqual(-1, name);
+                Assert.AreNotEqual(Thread.CurrentThread.ManagedThreadId, name);
             }
         }
 
@@ -178,21 +178,21 @@ namespace akarnokd.reactive_extensions_test.observablesource
         {
             for (int i = 0; i < 4; i++)
             {
-                var name = "";
+                var name = -1;
 
                 var ms = new MonocastSubject<int>();
                 ms.EmitAll(1, 2, 3, 4, 5);
 
                 ms
                     .ObserveOn(ThreadPoolScheduler.Instance, delayError: i / 2 == 0, fair: i % 2 == 0)
-                    .DoOnNext(v => name = Thread.CurrentThread.Name)
+                    .DoOnNext(v => name = Thread.CurrentThread.ManagedThreadId)
                     .Test()
                     .WithTag($"delayError={i / 2}, fair={i % 2}")
                     .AwaitDone(TimeSpan.FromSeconds(5))
                     .AssertResult(1, 2, 3, 4, 5);
 
-                Assert.AreNotEqual("", name);
-                Assert.AreNotEqual(Thread.CurrentThread.Name, name);
+                Assert.AreNotEqual(-1, name);
+                Assert.AreNotEqual(Thread.CurrentThread.ManagedThreadId, name);
             }
         }
 
@@ -288,11 +288,11 @@ namespace akarnokd.reactive_extensions_test.observablesource
         {
             for (int i = 0; i < 4; i++)
             {
-                var name = "";
+                var name = -1;
 
                 ObservableSource.Range(1, 5).Hide()
                     .ObserveOn(ThreadPoolScheduler.Instance, delayError: i / 2 == 0, fair: i % 2 == 0)
-                    .Map(v => { name = Thread.CurrentThread.Name; return v; })
+                    .Map(v => { name = Thread.CurrentThread.ManagedThreadId; return v; })
                     .Test(fusionMode: FusionSupport.Any)
                     .AssertFuseable()
                     .AssertFusionMode(FusionSupport.Async)
@@ -300,8 +300,8 @@ namespace akarnokd.reactive_extensions_test.observablesource
                     .AwaitDone(TimeSpan.FromSeconds(5))
                     .AssertResult(1, 2, 3, 4, 5);
 
-                Assert.AreNotEqual("", name);
-                Assert.AreNotEqual(Thread.CurrentThread.Name, name);
+                Assert.AreNotEqual(-1, name);
+                Assert.AreNotEqual(Thread.CurrentThread.ManagedThreadId, name);
             }
         }
 

@@ -12,49 +12,49 @@ namespace akarnokd.reactive_extensions_test.maybe
         [Test]
         public void Basic()
         {
-            var name = "";
+            var name = -1;
 
             MaybeSource.Empty<int>()
                 .ObserveOn(NewThreadScheduler.Default)
-                .DoOnCompleted(() => name = Thread.CurrentThread.Name)
+                .DoOnCompleted(() => name = Thread.CurrentThread.ManagedThreadId)
                 .Test()
                 .AwaitDone(TimeSpan.FromSeconds(5))
                 .AssertResult();
 
-            Assert.AreNotEqual("", name);
-            Assert.AreNotEqual(Thread.CurrentThread.Name, name);
+            Assert.AreNotEqual(-1, name);
+            Assert.AreNotEqual(Thread.CurrentThread.ManagedThreadId, name);
         }
 
         [Test]
         public void Success()
         {
-            var name = "";
+            var name = -1;
 
             MaybeSource.Just(1)
                 .ObserveOn(NewThreadScheduler.Default)
-                .DoOnSuccess(v => name = Thread.CurrentThread.Name)
+                .DoOnSuccess(v => name = Thread.CurrentThread.ManagedThreadId)
                 .Test()
                 .AwaitDone(TimeSpan.FromSeconds(5))
                 .AssertResult(1);
 
-            Assert.AreNotEqual("", name);
-            Assert.AreNotEqual(Thread.CurrentThread.Name, name);
+            Assert.AreNotEqual(-1, name);
+            Assert.AreNotEqual(Thread.CurrentThread.ManagedThreadId, name);
         }
 
         [Test]
         public void Error()
         {
-            var name = "";
+            var name = -1;
 
             MaybeSource.Error<int>(new InvalidOperationException())
                 .ObserveOn(NewThreadScheduler.Default)
-                .DoOnError(e => name = Thread.CurrentThread.Name)
+                .DoOnError(e => name = Thread.CurrentThread.ManagedThreadId)
                 .Test()
                 .AwaitDone(TimeSpan.FromSeconds(5))
                 .AssertFailure(typeof(InvalidOperationException));
 
-            Assert.AreNotEqual("", name);
-            Assert.AreNotEqual(Thread.CurrentThread.Name, name);
+            Assert.AreNotEqual(-1, name);
+            Assert.AreNotEqual(Thread.CurrentThread.ManagedThreadId, name);
         }
 
         [Test]

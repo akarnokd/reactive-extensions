@@ -40,13 +40,13 @@ namespace akarnokd.reactive_extensions_test.completable
         [Test]
         public void Dispose()
         {
-            var name = "";
+            var name = -1;
             var cdl = new CountdownEvent(1);
 
             CompletableSource.Never()
                 .DoOnDispose(() =>
                 {
-                    name = Thread.CurrentThread.Name;
+                    name = Thread.CurrentThread.ManagedThreadId;
                     cdl.Signal();
                 })
                 .UnsubscribeOn(NewThreadScheduler.Default)
@@ -55,8 +55,8 @@ namespace akarnokd.reactive_extensions_test.completable
 
             Assert.True(cdl.Wait(5000));
 
-            Assert.AreNotEqual("", name);
-            Assert.AreNotEqual(Thread.CurrentThread.Name, name);
+            Assert.AreNotEqual(-1, name);
+            Assert.AreNotEqual(Thread.CurrentThread.ManagedThreadId, name);
         }
 
 

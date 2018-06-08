@@ -12,29 +12,29 @@ namespace akarnokd.reactive_extensions_test.completable
         [Test]
         public void Basic()
         {
-            var name = "";
+            var name = -1;
 
             CompletableSource.FromAction(() =>
             {
-                name = Thread.CurrentThread.Name;
+                name = Thread.CurrentThread.ManagedThreadId;
             })
             .SubscribeOn(NewThreadScheduler.Default)
             .Test()
             .AwaitDone(TimeSpan.FromSeconds(5))
             .AssertResult();
 
-            Assert.AreNotEqual("", name);
-            Assert.AreNotEqual(Thread.CurrentThread.Name, name);
+            Assert.AreNotEqual(-1, name);
+            Assert.AreNotEqual(Thread.CurrentThread.ManagedThreadId, name);
         }
 
         [Test]
         public void Error()
         {
-            var name = "";
+            var name = -1;
 
             CompletableSource.FromAction(() =>
             {
-                name = Thread.CurrentThread.Name;
+                name = Thread.CurrentThread.ManagedThreadId;
                 throw new InvalidOperationException();
             })
             .SubscribeOn(NewThreadScheduler.Default)
@@ -42,8 +42,8 @@ namespace akarnokd.reactive_extensions_test.completable
             .AwaitDone(TimeSpan.FromSeconds(5))
             .AssertFailure(typeof(InvalidOperationException));
 
-            Assert.AreNotEqual("", name);
-            Assert.AreNotEqual(Thread.CurrentThread.Name, name);
+            Assert.AreNotEqual(-1, name);
+            Assert.AreNotEqual(Thread.CurrentThread.ManagedThreadId, name);
         }
 
         [Test]

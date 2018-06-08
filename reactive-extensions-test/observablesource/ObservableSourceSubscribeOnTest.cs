@@ -22,13 +22,13 @@ namespace akarnokd.reactive_extensions_test.observablesource
         [Test]
         public void Different_Thread()
         {
-            var name = Thread.CurrentThread.Name;
+            var name = Thread.CurrentThread.ManagedThreadId;
 
-            var nameOn = "";
+            var nameOn = -1;
 
             ObservableSource.FromFunc<int>(() =>
             {
-                nameOn = Thread.CurrentThread.Name;
+                nameOn = Thread.CurrentThread.ManagedThreadId;
                 return 1;
             })
                 .SubscribeOn(ThreadPoolScheduler.Instance)
@@ -36,19 +36,20 @@ namespace akarnokd.reactive_extensions_test.observablesource
                 .AwaitDone(TimeSpan.FromSeconds(5))
                 .AssertResult(1);
 
+            Assert.AreNotEqual(-1, nameOn);
             Assert.AreNotEqual(name, nameOn);
         }
 
         [Test]
         public void Different_Thread_Error()
         {
-            var name = Thread.CurrentThread.Name;
+            var name = Thread.CurrentThread.ManagedThreadId;
 
-            var nameOn = "";
+            var nameOn = -1;
 
             ObservableSource.FromFunc<int>(() =>
             {
-                nameOn = Thread.CurrentThread.Name;
+                nameOn = Thread.CurrentThread.ManagedThreadId;
                 throw new InvalidOperationException();
             })
                 .SubscribeOn(ThreadPoolScheduler.Instance)
@@ -56,6 +57,7 @@ namespace akarnokd.reactive_extensions_test.observablesource
                 .AwaitDone(TimeSpan.FromSeconds(5))
                 .AssertFailure(typeof(InvalidOperationException));
 
+            Assert.AreNotEqual(-1, nameOn);
             Assert.AreNotEqual(name, nameOn);
         }
 

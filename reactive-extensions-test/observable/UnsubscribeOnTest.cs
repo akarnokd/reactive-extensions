@@ -14,15 +14,15 @@ namespace akarnokd.reactive_extensions_test.observable
         {
             var us = new UnicastSubject<int>();
 
-            var n0 = Thread.CurrentThread.Name;
+            var n0 = Thread.CurrentThread.ManagedThreadId;
 
             var cdl = new CountdownEvent(1);
 
-            var n1 = default(string);
+            var n1 = default(int);
 
             var to = us.DoOnDispose(() =>
             {
-                n1 = Thread.CurrentThread.Name;
+                n1 = Thread.CurrentThread.ManagedThreadId;
                 cdl.Signal();
             })
             .UnsubscribeOn(NewThreadScheduler.Default)
@@ -31,8 +31,6 @@ namespace akarnokd.reactive_extensions_test.observable
             us.OnNext(1);
 
             to.AssertValuesOnly(1);
-
-            Assert.Null(n1);
 
             to.Dispose();
 
@@ -46,15 +44,15 @@ namespace akarnokd.reactive_extensions_test.observable
         {
             var us = new UnicastSubject<int>();
 
-            var n0 = Thread.CurrentThread.Name;
+            var n0 = Thread.CurrentThread.ManagedThreadId;
 
             var cdl = new CountdownEvent(1);
 
-            var n1 = default(string);
+            var n1 = default(int);
 
             var to = us.DoOnDispose(() =>
             {
-                n1 = Thread.CurrentThread.Name;
+                n1 = Thread.CurrentThread.ManagedThreadId;
                 cdl.Signal();
             })
             .UnsubscribeOn(NewThreadScheduler.Default)
@@ -62,14 +60,11 @@ namespace akarnokd.reactive_extensions_test.observable
 
             us.OnNext(1);
 
-            Assert.Null(n1);
-
             us.OnCompleted();
 
             to.AssertResult(1);
 
             Assert.True(cdl.Wait(TimeSpan.FromSeconds(5)));
-
 
             Assert.AreNotEqual(n0, n1);
         }
@@ -79,23 +74,21 @@ namespace akarnokd.reactive_extensions_test.observable
         {
             var us = new UnicastSubject<int>();
 
-            var n0 = Thread.CurrentThread.Name;
+            var n0 = Thread.CurrentThread.ManagedThreadId;
 
             var cdl = new CountdownEvent(1);
 
-            var n1 = default(string);
+            var n1 = default(int);
 
             var to = us.DoOnDispose(() =>
             {
-                n1 = Thread.CurrentThread.Name;
+                n1 = Thread.CurrentThread.ManagedThreadId;
                 cdl.Signal();
             })
             .UnsubscribeOn(NewThreadScheduler.Default)
             .Test();
 
             us.OnNext(1);
-
-            Assert.Null(n1);
 
             us.OnError(new InvalidOperationException());
 
