@@ -12,6 +12,9 @@
     <Copyright>Copyright 2018, David Karnok</Copyright>
     <PackageReleaseNotes>New operators:
 - IObservableSource operators:
+  - BlockingEnumerable
+  - BlockingSubscribe
+  - BlockingSubscribeWhile
   - Repeat
   - Retry</PackageReleaseNotes>
     <PackageTags>reactive extensions</PackageTags>

@@ -1938,6 +1938,86 @@ namespace akarnokd.reactive_extensions
             return new SerializedSignalObserver<T>(observer);
         }
 
+
+        /// <summary>
+        /// Consumes the <paramref name="source"/> in a blocking fashion
+        /// through an IEnumerable.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source observable to consume.</param>
+        /// <returns>The new enumerable instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IEnumerable<T> BlockingEnumerable<T>(this IObservableSource<T> source)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return new ObservableSourceBlockingEnumerable<T>(source);
+        }
+
+        /// <summary>
+        /// Consumes the source observable in a blocking fashion on
+        /// the current thread and relays events to the given observer.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source observable to consume.</param>
+        /// <param name="observer">The observer to call the OnXXX methods</param>
+        /// <remarks>Since 0.0.22</remarks>
+        public static void BlockingSubscribe<T>(this IObservableSource<T> source, ISignalObserver<T> observer)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(observer, nameof(observer));
+
+            var consumer = new BlockingSubscribeSignalObserver<T>(observer);
+            source.Subscribe(consumer);
+            consumer.Run();
+        }
+
+        /// <summary>
+        /// Consumes the source observable in a blocking fashion on
+        /// the current thread and relays events to the given callback actions.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source observable to consume.</param>
+        /// <param name="onNext">The action called with the next item.</param>
+        /// <param name="onError">The action called with the error.</param>
+        /// <param name="onComplete">The action called when the sequence completes.</param>
+        /// <param name="dispose">The callback with the IDisposable to allow external cancellation.</param>
+        /// <remarks>Since 0.0.22</remarks>
+        public static void BlockingSubscribe<T>(this IObservableSource<T> source, Action<T> onNext, Action<Exception> onError = null, Action onComplete = null, Action<IDisposable> dispose = null)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(onNext, nameof(onNext));
+
+            var consumer = new BlockingSubscribeSignalAction<T>(onNext, onError, onComplete);
+            dispose?.Invoke(consumer);
+            source.Subscribe(consumer);
+            consumer.Run();
+        }
+
+        /// <summary>
+        /// Consumes the source observable in a blocking fashion on
+        /// the current thread and relays events to the given callback actions
+        /// while the <paramref name="onNext"/> predicate returns true.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source observable to consume.</param>
+        /// <param name="onNext">The action called with the next item and should return true to keep
+        /// the source running.</param>
+        /// <param name="onError">The action called with the error.</param>
+        /// <param name="onComplete">The action called when the sequence completes.</param>
+        /// <param name="dispose">The callback with the IDisposable to allow external cancellation.</param>
+        /// <remarks>Since 0.0.22</remarks>
+        public static void BlockingSubscribeWhile<T>(this IObservableSource<T> source, Func<T, bool> onNext, Action<Exception> onError = null, Action onComplete = null, Action<IDisposable> dispose = null)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(onNext, nameof(onNext));
+
+            var consumer = new BlockingSubscribeSignalPredicate<T>(onNext, onError, onComplete);
+            dispose?.Invoke(consumer);
+            source.Subscribe(consumer);
+            consumer.Run();
+        }
+
         // --------------------------------------------------------------
         // Interoperation methods
         // --------------------------------------------------------------
