@@ -19,6 +19,9 @@
   - BlockingEnumerable
   - BlockingSubscribe
   - BlockingSubscribeWhile
+  - Delay
+  - DelaySubscription
+  - GroupBy
   - Merge
   - Multicast
   - Publish

@@ -2124,6 +2124,148 @@ namespace akarnokd.reactive_extensions
             return new ObservableSourceReplay<T>(source);
         }
 
+        /// <summary>
+        /// Maps the upstream values onto a key and
+        /// creates/groups values of the upstream
+        /// together based on this key.
+        /// </summary>
+        /// <typeparam name="T">The upstream value type.</typeparam>
+        /// <typeparam name="K">The key type.</typeparam>
+        /// <param name="source">The observable source to group</param>
+        /// <param name="keySelector">The function receiving the upstream
+        /// value and should return a key value.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<IGroupedObservableSource<K, T>> GroupBy<T, K>(this IObservableSource<T> source, Func<T, K> keySelector)
+        {
+            return new ObservableSourceGroupBy<T, K, T>(source, keySelector, v => v, EqualityComparer<K>.Default);
+        }
+
+        /// <summary>
+        /// Maps the upstream values onto a key and
+        /// creates/groups values of the upstream
+        /// together based on this key.
+        /// </summary>
+        /// <typeparam name="T">The upstream value type.</typeparam>
+        /// <typeparam name="K">The key type.</typeparam>
+        /// <param name="source">The observable source to group</param>
+        /// <param name="keySelector">The function receiving the upstream
+        /// value and should return a key value.</param>
+        /// <param name="keyComparer">The key equality comparer</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<IGroupedObservableSource<K, T>> GroupBy<T, K>(this IObservableSource<T> source, Func<T, K> keySelector, IEqualityComparer<K> keyComparer)
+        {
+            return new ObservableSourceGroupBy<T, K, T>(source, keySelector, v => v, keyComparer);
+        }
+
+        /// <summary>
+        /// Maps the upstream values onto a key and
+        /// creates/groups values of the upstream
+        /// together based on this key.
+        /// </summary>
+        /// <typeparam name="T">The upstream value type.</typeparam>
+        /// <typeparam name="K">The key type.</typeparam>
+        /// <typeparam name="V">The value type.</typeparam>
+        /// <param name="source">The observable source to group</param>
+        /// <param name="keySelector">The function receiving the upstream
+        /// value and should return a key value.</param>
+        /// <param name="valueSelector">The function receiving the upstream
+        /// value and should return the value to be emitted into the
+        /// respective group observable.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<IGroupedObservableSource<K, V>> GroupBy<T, K, V>(this IObservableSource<T> source, Func<T, K> keySelector, Func<T, V> valueSelector)
+        {
+            return GroupBy(source, keySelector, valueSelector, EqualityComparer<K>.Default);
+        }
+
+        /// <summary>
+        /// Maps the upstream values onto a key and
+        /// creates/groups values of the upstream
+        /// together based on this key.
+        /// </summary>
+        /// <typeparam name="T">The upstream value type.</typeparam>
+        /// <typeparam name="K">The key type.</typeparam>
+        /// <typeparam name="V">The value type.</typeparam>
+        /// <param name="source">The observable source to group</param>
+        /// <param name="keySelector">The function receiving the upstream
+        /// value and should return a key value.</param>
+        /// <param name="valueSelector">The function receiving the upstream
+        /// value and should return the value to be emitted into the
+        /// respective group observable.</param>
+        /// <param name="keyComparer">The key equality comparer</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<IGroupedObservableSource<K, V>> GroupBy<T, K, V>(this IObservableSource<T> source, Func<T, K> keySelector, Func<T, V> valueSelector, IEqualityComparer<K> keyComparer)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(keySelector, nameof(keySelector));
+            RequireNonNull(valueSelector, nameof(valueSelector));
+            RequireNonNull(keyComparer, nameof(keyComparer));
+
+            return new ObservableSourceGroupBy<T, K, V>(source, keySelector, valueSelector, keyComparer);
+        }
+
+        /// <summary>
+        /// Subscribe to the source when the other observable
+        /// sequence signals an item or completes.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <typeparam name="U">The element type of the other sequence.</typeparam>
+        /// <param name="source">The source observable to delay subscription for.</param>
+        /// <param name="other">The observable source to signal and trigger the actual subscription to the source.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<T> DelaySubscription<T, U>(this IObservableSource<T> source, IObservableSource<U> other)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(other, nameof(other));
+
+            return new ObservableSourceDelaySubscription<T, U>(source, other);
+        }
+
+        /// <summary>
+        /// Delays each item and the completion signal by
+        /// the given time amount.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The observable source to delay items of.</param>
+        /// <param name="delay">The time amount to delay items.</param>
+        /// <param name="scheduler">The scheduler to use to delay and emit signals.</param>
+        /// <param name="delayError">If true, delays are delayed by the same amount as the normal items.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<T> Delay<T>(this IObservableSource<T> source, TimeSpan delay, IScheduler scheduler, bool delayError = false)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(scheduler, nameof(scheduler));
+
+            return new ObservableSourceDelay<T>(source, delay, scheduler, delayError);
+        }
+
+        /// <summary>
+        /// Delay the delivery of the upstream items
+        /// until a sub-sequence generated for each of them
+        /// signals an item or completes.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequences.</typeparam>
+        /// <typeparam name="U">The element type of the delaying sequences.</typeparam>
+        /// <param name="source">The sequence to delay on an item-per-item basis.</param>
+        /// <param name="delaySelector">Function that receives an upstream
+        /// item and should produce a sequence that when signals an item
+        /// or completes, the original item is emitted to the downstream.</param>
+        /// <param name="delayErrors">If true, all errors are delayed until all observable sequences terminate.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<T> Delay<T, U>(this IObservableSource<T> source, Func<T, IObservableSource<U>> delaySelector, bool delayErrors = false)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(delaySelector, nameof(delaySelector));
+
+            return new ObservableSourceDelaySelector<T, U>(source, delaySelector, delayErrors);
+        }
+
         // --------------------------------------------------------------
         // Consumer methods
         // --------------------------------------------------------------

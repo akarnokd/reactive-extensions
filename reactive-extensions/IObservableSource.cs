@@ -285,8 +285,23 @@ namespace akarnokd.reactive_extensions
     /// is also a signal observer.
     /// </summary>
     /// <typeparam name="T">The element type of the sequence.</typeparam>
+    /// <remarks>Since 0.0.22</remarks>
     public interface IObservableSubject<T> : IObservableSource<T>, ISignalObserver<T>
     {
 
+    }
+
+    /// <summary>
+    /// An observable source with a key property.
+    /// </summary>
+    /// <typeparam name="K">The key type.</typeparam>
+    /// <typeparam name="V">The element type of the sequence.</typeparam>
+    /// <remarks>Since 0.0.22</remarks>
+    public interface IGroupedObservableSource<K, V> : IObservableSource<V>
+    {
+        /// <summary>
+        /// The key of this grouped observable source.
+        /// </summary>
+        K Key { get; }
     }
 }

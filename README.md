@@ -840,10 +840,10 @@ Main differences:
 ### Factory methods
 
 - `Amb`
-- `Create`
 - `CombineLatest`
 - `Concat`
 - `ConcatEager`
+- `Create`
 - `Defer`
 - `Empty`
 - `Error`
@@ -872,6 +872,8 @@ Main differences:
 - `Compose`
 - `ConcatMap`
 - `ConcatMapEager`
+- `Delay`
+- `DelaySubscription`
 - `DoAfterNext`
 - `DoAfterTerminate`
 - `DoFinally`
@@ -884,6 +886,7 @@ Main differences:
 - `ElementAt`
 - `Filter`
 - `First`
+- `GroupBy`
 - `Hide`
 - `IgnoreElements`
 - `IsEmpty`
