@@ -7,9 +7,9 @@ namespace akarnokd.reactive_extensions
 {
     internal sealed class ObservableSourceConcatWith<T> : IObservableSource<T>
     {
-        readonly IObservableSource<T> source;
+        internal readonly IObservableSource<T> source;
 
-        readonly IObservableSource<T> other;
+        internal readonly IObservableSource<T> other;
 
         public ObservableSourceConcatWith(IObservableSource<T> source, IObservableSource<T> other)
         {

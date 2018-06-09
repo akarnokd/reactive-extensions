@@ -839,6 +839,7 @@ Main differences:
 
 ### Factory methods
 
+- `Amb`
 - `Create`
 - `CombineLatest`
 - `Concat`

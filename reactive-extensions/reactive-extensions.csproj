@@ -12,7 +12,9 @@
     <Copyright>Copyright 2018, David Karnok</Copyright>
     <PackageReleaseNotes>New operators:
 - IObservableSource operators:
+  - Amb
   - Cache
+  - Concat (array, IEnumerable)
   - Create
   - BlockingEnumerable
   - BlockingSubscribe

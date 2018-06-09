@@ -531,6 +531,100 @@ namespace akarnokd.reactive_extensions
             return new ObservableSourceMergeMany<T>(sources, delayErrors, maxConcurrency, capacityHint);
         }
 
+        /// <summary>
+        /// Concatenates multiple sources in-order provided via
+        /// an array of observable sources
+        /// </summary>
+        /// <typeparam name="T">The element type of the inner and result sequences.</typeparam>
+        /// <param name="sources">The array of observable sources to concatenate.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<T> Concat<T>(params IObservableSource<T>[] sources)
+        {
+            return Concat(false, sources);
+        }
+
+        /// <summary>
+        /// Concatenates multiple sources in-order provided via
+        /// an array of observable sources, optionally delaying
+        /// errors until all sources terminate.
+        /// </summary>
+        /// <typeparam name="T">The element type of the inner and result sequences.</typeparam>
+        /// <param name="delayErrors">If true, errors will be delayed until all sources terminate.</param>
+        /// <param name="sources">The array of observable sources to concatenate.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<T> Concat<T>(bool delayErrors, params IObservableSource<T>[] sources)
+        {
+            RequireNonNull(sources, nameof(sources));
+
+            return new ObservableSourceConcatArray<T>(sources, delayErrors);
+        }
+
+        /// <summary>
+        /// Concatenates multiple sources in-order provided via
+        /// an array of observable sources, optionally delaying
+        /// errors until all sources terminate.
+        /// </summary>
+        /// <typeparam name="T">The element type of the inner and result sequences.</typeparam>
+        /// <param name="delayErrors">If true, errors will be delayed until all sources terminate.</param>
+        /// <param name="sources">The array of observable sources to concatenate.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<T> Concat<T>(this IObservableSource<T>[] sources, bool delayErrors = false)
+        {
+            RequireNonNull(sources, nameof(sources));
+
+            return new ObservableSourceConcatArray<T>(sources, delayErrors);
+        }
+
+        /// <summary>
+        /// Concatenates multiple sources in-order provided via
+        /// an enumerable of observable sources, optionally delaying
+        /// errors until all sources terminate.
+        /// </summary>
+        /// <typeparam name="T">The element type of the inner and result sequences.</typeparam>
+        /// <param name="sources">The enumerable sequence of observable sources to concatenate.</param>
+        /// <param name="delayErrors">If true, errors will be delayed until all sources terminate.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<T> Concat<T>(this IEnumerable<IObservableSource<T>> sources, bool delayErrors = false)
+        {
+            RequireNonNull(sources, nameof(sources));
+
+            return new ObservableSourceConcatEnumerable<T>(sources, delayErrors);
+        }
+
+        /// <summary>
+        /// Subscribes to all sources and relays the signals
+        /// of the fastest responding one.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequences.</typeparam>
+        /// <param name="sources">The array of sources to pick the fastest responding of.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<T> Amb<T>(params IObservableSource<T>[] sources)
+        {
+            RequireNonNull(sources, nameof(sources));
+
+            return new ObservableSourceAmbArray<T>(sources);
+        }
+
+        /// <summary>
+        /// Subscribes to all sources and relays the signals
+        /// of the fastest responding one.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequences.</typeparam>
+        /// <param name="sources">The array of sources to pick the fastest responding of.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<T> Amb<T>(this IEnumerable<IObservableSource<T>> sources)
+        {
+            RequireNonNull(sources, nameof(sources));
+
+            return new ObservableSourceAmbEnumerable<T>(sources);
+        }
+
         // --------------------------------------------------------------
         // Instance methods
         // --------------------------------------------------------------
