@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using static akarnokd.reactive_extensions.ValidationHelper;
 
@@ -2266,6 +2267,256 @@ namespace akarnokd.reactive_extensions
             return new ObservableSourceDelaySelector<T, U>(source, delaySelector, delayErrors);
         }
 
+        /// <summary>
+        /// Sums values of a numeric sequence and signals it as
+        /// a single result.
+        /// </summary>
+        /// <param name="source">The numerical sequence.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<int> Sum(this IObservableSource<int> source)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return Reduce(source, (a, b) => a + b);
+        }
+
+        /// <summary>
+        /// Sums values of a numeric sequence and signals it as
+        /// a single result.
+        /// </summary>
+        /// <param name="source">The numerical sequence.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<long> Sum(this IObservableSource<long> source)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return Reduce(source, (a, b) => a + b);
+        }
+
+        /// <summary>
+        /// Sums values of a numeric sequence and signals it as
+        /// a single result.
+        /// </summary>
+        /// <param name="source">The numerical sequence.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<float> Sum(this IObservableSource<float> source)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return Reduce(source, (a, b) => a + b);
+        }
+
+        /// <summary>
+        /// Sums values of a numeric sequence and signals it as
+        /// a single result.
+        /// </summary>
+        /// <param name="source">The numerical sequence.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<double> Sum(this IObservableSource<double> source)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return Reduce(source, (a, b) => a + b);
+        }
+
+        /// <summary>
+        /// Sums values of a numeric sequence and signals it as
+        /// a single result.
+        /// </summary>
+        /// <param name="source">The numerical sequence.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<decimal> Sum(this IObservableSource<decimal> source)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return Reduce(source, (a, b) => a + b);
+        }
+
+        /// <summary>
+        /// Signals the largest item of the sequence.
+        /// </summary>
+        /// <typeparam name="T">The sequence value type.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="comparer">The comparer for the elements</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<T> Max<T>(this IObservableSource<T> source, IComparer<T> comparer)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return Reduce(source, (a, b) => 
+            {
+                if (comparer.Compare(a, b) <= 0)
+                {
+                    return b;
+                }
+                return a;
+            });
+        }
+
+        /// <summary>
+        /// Signals the largest item of the sequence.
+        /// </summary>
+        /// <typeparam name="T">The sequence value type.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<T> Max<T>(this IObservableSource<T> source) where T : IComparable<T>
+        {
+            RequireNonNull(source, nameof(source));
+
+            return Reduce(source, (a, b) =>
+            {
+                if (a.CompareTo(b) <= 0)
+                {
+                    return b;
+                }
+                return a;
+            });
+        }
+
+        /// <summary>
+        /// Signals the smallest item of the sequence.
+        /// </summary>
+        /// <typeparam name="T">The sequence value type.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="comparer">The comparer for the elements</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<T> Min<T>(this IObservableSource<T> source, IComparer<T> comparer)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return Reduce(source, (a, b) =>
+            {
+                if (comparer.Compare(a, b) >= 0)
+                {
+                    return b;
+                }
+                return a;
+            });
+        }
+
+        /// <summary>
+        /// Signals the smallest item of the sequence.
+        /// </summary>
+        /// <typeparam name="T">The sequence value type.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<T> Min<T>(this IObservableSource<T> source) where T : IComparable<T>
+        {
+            RequireNonNull(source, nameof(source));
+
+            return Reduce(source, (a, b) =>
+            {
+                if (a.CompareTo(b) >= 0)
+                {
+                    return b;
+                }
+                return a;
+            });
+        }
+
+        /// <summary>
+        /// Signals the largest item of the sequence.
+        /// </summary>
+        /// <typeparam name="T">The sequence value type.</typeparam>
+        /// <typeparam name="K">The key value type.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="keySelector">Function that extracts the key for comparison from the upstream value.</param>
+        /// <param name="comparer">The comparer for the keys.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<T> Max<T, K>(this IObservableSource<T> source, Func<T, K> keySelector, IComparer<K> comparer)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return Reduce(source, (a, b) =>
+            {
+                if (comparer.Compare(keySelector(a), keySelector(b)) <= 0)
+                {
+                    return b;
+                }
+                return a;
+            });
+        }
+
+        /// <summary>
+        /// Signals the largest item of the sequence.
+        /// </summary>
+        /// <typeparam name="T">The sequence value type.</typeparam>
+        /// <typeparam name="K">The key value type.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="keySelector">Function that extracts the key for comparison from the upstream value.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<T> Max<T, K>(this IObservableSource<T> source, Func<T, K> keySelector) where K : IComparable<K>
+        {
+            RequireNonNull(source, nameof(source));
+
+            return Reduce(source, (a, b) =>
+            {
+                if (keySelector(a).CompareTo(keySelector(b)) <= 0)
+                {
+                    return b;
+                }
+                return a;
+            });
+        }
+
+        /// <summary>
+        /// Signals the smallest item of the sequence.
+        /// </summary>
+        /// <typeparam name="T">The sequence value type.</typeparam>
+        /// <typeparam name="K">The key value type.</typeparam>
+        /// <param name="source">The numerical sequence.</param>
+        /// <param name="keySelector">Function that extracts the key for comparison from the upstream value.</param>
+        /// <param name="comparer">The comparer for the elements</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<T> Min<T, K>(this IObservableSource<T> source, Func<T, K> keySelector, IComparer<K> comparer)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return Reduce(source, (a, b) =>
+            {
+                if (comparer.Compare(keySelector(a), keySelector(b)) >= 0)
+                {
+                    return b;
+                }
+                return a;
+            });
+        }
+
+        /// <summary>
+        /// Signals the smallest item of the sequence.
+        /// </summary>
+        /// <typeparam name="T">The sequence value type.</typeparam>
+        /// <typeparam name="K">The key value type.</typeparam>
+        /// <param name="source">The numerical sequence.</param>
+        /// <param name="keySelector">Function that extracts the key for comparison from the upstream value.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<T> Min<T, K>(this IObservableSource<T> source, Func<T, K> keySelector) where K : IComparable<K>
+        {
+            RequireNonNull(source, nameof(source));
+
+            return Reduce(source, (a, b) =>
+            {
+                if (keySelector(a).CompareTo(keySelector(b)) >= 0)
+                {
+                    return b;
+                }
+                return a;
+            });
+        }
+
         // --------------------------------------------------------------
         // Consumer methods
         // --------------------------------------------------------------
@@ -2541,6 +2792,96 @@ namespace akarnokd.reactive_extensions
                 return source;
             }
             return new ObservableSourceAutoConnect<T>(source, minObservers, onConnect);
+        }
+
+        /// <summary>
+        /// Returns a task that terminates when
+        /// the source terminates.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="cts">The optional cancellation token to cancel the flow.</param>
+        /// <returns>The Task for the running sequence.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static Task IgnoreElementsTask<T>(this IObservableSource<T> source, CancellationTokenSource cts = null)
+        {
+            RequireNonNull(source, nameof(source));
+
+            var parent = new ObservableSourceIgnoreElementsTask<T>(cts);
+            source.Subscribe(parent);
+            return parent.Task;
+        }
+
+        /// <summary>
+        /// Returns a task that completes with the first element
+        /// of the source sequence or an IndexOutOfBoundsException.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="cts">The optional cancellation token to cancel the flow.</param>
+        /// <returns>The Task for the running sequence.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static Task<T> FirstTask<T>(this IObservableSource<T> source, CancellationTokenSource cts = null)
+        {
+            return ElementAtTask(source, 0, cts);
+        }
+
+        /// <summary>
+        /// Returns a task that completes with the first element
+        /// of the source sequence or an IndexOutOfBoundsException
+        /// if the source is shorter.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="index">The element index to signal.</param>
+        /// <param name="cts">The optional cancellation token to cancel the flow.</param>
+        /// <returns>The Task for the running sequence.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static Task<T> ElementAtTask<T>(this IObservableSource<T> source, long index, CancellationTokenSource cts = null)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNegative(index, nameof(index));
+
+            var parent = new ObservableSourceElementAtTask<T>(index, cts);
+            source.Subscribe(parent);
+            return parent.Task;
+        }
+
+        /// <summary>
+        /// Returns a task that completes with the last element
+        /// of the source sequence or an IndexOutOfBoundsException.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="cts">The optional cancellation token to cancel the flow.</param>
+        /// <returns>The Task for the running sequence.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static Task<T> LastTask<T>(this IObservableSource<T> source, CancellationTokenSource cts = null)
+        {
+            RequireNonNull(source, nameof(source));
+
+            var parent = new ObservableSourceLastTask<T>(cts);
+            source.Subscribe(parent);
+            return parent.Task;
+        }
+
+        /// <summary>
+        /// Returns a task that completes with the single element
+        /// of the source sequence or an IndexOutOfBoundsException
+        /// if the source is empty or has more than one element.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="cts">The optional cancellation token to cancel the flow.</param>
+        /// <returns>The Task for the running sequence.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static Task<T> SingleTask<T>(this IObservableSource<T> source, CancellationTokenSource cts = null)
+        {
+            RequireNonNull(source, nameof(source));
+
+            var parent = new ObservableSourceSingleTask<T>(cts);
+            source.Subscribe(parent);
+            return parent.Task;
         }
     }
 }

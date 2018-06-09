@@ -13,21 +13,28 @@
     <PackageReleaseNotes>New operators:
 - IObservableSource operators:
   - Amb
-  - Cache
-  - Concat (array, IEnumerable)
-  - Create
   - BlockingEnumerable
   - BlockingSubscribe
   - BlockingSubscribeWhile
+  - Cache
+  - Concat (array, IEnumerable)
+  - Create
   - Delay
   - DelaySubscription
+  - ElementAtTask
+  - FirstTask
   - GroupBy
+  - LastTask
+  - Max
   - Merge
+  - Min
   - Multicast
   - Publish
   - Repeat
   - Replay
   - Retry
+  - SingleTask
+  - Sum
 - IConnectableObservableSource
   - AutoConnect
 

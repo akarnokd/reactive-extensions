@@ -892,6 +892,8 @@ Main differences:
 - `IsEmpty`
 - `Last`
 - `Map`
+- `Max`
+- `Min`
 - `Multicast`
 - `ObserveOn`
 - `OnErrorResumeNext`
@@ -908,6 +910,7 @@ Main differences:
 - `SkipUntil`
 - `SkipWhile`
 - `SubscribeOn`
+- `Sum`
 - `SwitchIfEmpty`
 - `SwitchMap`
 - `Take`
@@ -932,7 +935,12 @@ Main differences:
 
 ### Interoperation with other async types
 
+- `ElementAtTask`
+- `FirstTask`
 - `FromTask`
+- `IgnoreElementsTask`
+- `LastTask`
+- `SingleTask`
 - `ToObservableSource` (on `T[]`, `IObservable`, `IEnumerable`, `Task`)
 - `ToObservable` (into `IObservable`)
 
