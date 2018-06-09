@@ -476,7 +476,6 @@ namespace akarnokd.reactive_extensions
             return ConcatMapEager(sources, v => v, maxConcurrency, capacityHint);
         }
 
-
         /// <summary>
         /// Switches to a new inner observable when the upstream emits it,
         /// disposing the previous active observable.
@@ -492,6 +491,46 @@ namespace akarnokd.reactive_extensions
             return SwitchMap(sources, v => v, delayErrors, capacityHint);
         }
 
+        /// <summary>
+        /// Creates an observable sequence by providing an emitter
+        /// API to bridge the callback world with the reactive world.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="onSubscribe">The action called for each individual
+        /// observer and receives an <see cref="ISignalEmitter{T}"/> that
+        /// allows emitting events and registering a resource within the sequence
+        /// to be automatically disposed upon termination or cancellation.</param>
+        /// <param name="serialize">If true, the <see cref="ISignalEmitter{T}"/>'s
+        /// OnNext, OnError and OnCompleted will be thread-safe to call from multiple
+        /// threads.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<T> Create<T>(Action<ISignalEmitter<T>> onSubscribe, bool serialize = false)
+        {
+            RequireNonNull(onSubscribe, nameof(onSubscribe));
+
+            return new ObservableSourceCreate<T>(onSubscribe, serialize);
+        }
+
+
+        /// <summary>
+        /// Merge some or all observables provided by the outer observable.
+        /// </summary>
+        /// <typeparam name="T">The result and inner observable element type.</typeparam>
+        /// <param name="sources">The sequence of inner observable sequences</param>
+        /// <param name="delayErrors">If true, all errors are delayed until all sources terminate.</param>
+        /// <param name="maxConcurrency">The maximum number of sources to run at once.</param>
+        /// <param name="capacityHint">The expected number of items from the inner sources that will have to wait in a buffer.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<T> Merge<T>(this IObservableSource<IObservableSource<T>> sources, bool delayErrors = false, int maxConcurrency = int.MaxValue, int capacityHint = 128)
+        {
+            RequireNonNull(sources, nameof(sources));
+            RequirePositive(maxConcurrency, nameof(maxConcurrency));
+            RequirePositive(capacityHint, nameof(capacityHint));
+
+            return new ObservableSourceMergeMany<T>(sources, delayErrors, maxConcurrency, capacityHint);
+        }
         // --------------------------------------------------------------
         // Instance methods
         // --------------------------------------------------------------
@@ -1850,6 +1889,27 @@ namespace akarnokd.reactive_extensions
             RequireNonNegative(times, nameof(times));
 
             return new ObservableSourceRetryCount<T>(source, times);
+        }
+
+
+        /// <summary>
+        /// Caches all upstream events and relays/replays it to current or
+        /// late observers.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source"></param>
+        /// <param name="capacityHint">The items are stored internally in a linked-array structure for 
+        /// which this is the capacity hint for sizing those arrays: a trade-off between memory usage and
+        /// locality of memory.</param>
+        /// <param name="cancel">Called with the disposable when the source is subscribed on the first observer.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<T> Cache<T>(this IObservableSource<T> source, int capacityHint = 16, Action<IDisposable> cancel = null)
+        {
+            RequireNonNull(source, nameof(source));
+            RequirePositive(capacityHint, nameof(capacityHint));
+
+            return new ObservableSourceCache<T>(source, cancel, capacityHint);
         }
 
         // --------------------------------------------------------------

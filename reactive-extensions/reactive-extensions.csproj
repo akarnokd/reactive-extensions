@@ -12,9 +12,12 @@
     <Copyright>Copyright 2018, David Karnok</Copyright>
     <PackageReleaseNotes>New operators:
 - IObservableSource operators:
+  - Cache
+  - Create
   - BlockingEnumerable
   - BlockingSubscribe
   - BlockingSubscribeWhile
+  - Merge
   - Repeat
   - Retry</PackageReleaseNotes>
     <PackageTags>reactive extensions</PackageTags>

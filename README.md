@@ -839,6 +839,7 @@ Main differences:
 
 ### Factory methods
 
+- `Create`
 - `CombineLatest`
 - `Concat`
 - `ConcatEager`
@@ -851,6 +852,7 @@ Main differences:
 - `Interval`
 - `IntervalRange`
 - `Just`
+- `Merge`
 - `Never`
 - `Range`
 - `RangeLong`
@@ -864,6 +866,7 @@ Main differences:
 - `All`
 - `Any`
 - `Buffer`
+- `Cache`
 - `Collect`
 - `Compose`
 - `ConcatMap`
