@@ -888,11 +888,14 @@ Main differences:
 - `IsEmpty`
 - `Last`
 - `Map`
+- `Multicast`
 - `ObserveOn`
 - `OnErrorResumeNext`
+- `Publish`
 - `Reduce`
 - `Repeat`
 - `RepeatWhen`
+- `Replay`
 - `Retry`
 - `RetryWhen`
 - `Single`
@@ -929,6 +932,11 @@ Main differences:
 - `ToObservableSource` (on `T[]`, `IObservable`, `IEnumerable`, `Task`)
 - `ToObservable` (into `IObservable`)
 
+### IConnectableObservableSource
+
+Represents an observable source that can be connected and disconnected from, 
+allowing signal observers to gather up before the flow starts.
+
 ### PublishSubject
 
 Multicasts the same items to one or more currently subscribed observers (same as an Rx.NET `Subject`).
@@ -936,3 +944,8 @@ Multicasts the same items to one or more currently subscribed observers (same as
 ### MonocastSubject
 
 Buffers items until a single observer subscribes and replays/relays all items to it.
+
+
+### CacheSubject
+
+Caches some or all items and relays/replays it to current or future observers.

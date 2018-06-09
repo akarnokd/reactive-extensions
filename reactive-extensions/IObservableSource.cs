@@ -250,4 +250,43 @@ namespace akarnokd.reactive_extensions
     {
     }
 
+    /// <summary>
+    /// Represents an observable source that can be connected and
+    /// disconnected from, allowing signal observers to gather up
+    /// before the flow starts.
+    /// </summary>
+    /// <typeparam name="T">The element type of the sequence.</typeparam>
+    /// <remarks>Since 0.0.22</remarks>
+    public interface IConnectableObservableSource<out T> : IObservableSource<T>
+    {
+        /// <summary>
+        /// Connects this connectable observable source to its upstream,
+        /// optionally providing the means to dispose the connection
+        /// via a callback or the return value.
+        /// Note that a connectable observable remains in its terminal
+        /// state until the <see cref="Reset"/> or another <see cref="Connect(Action{IDisposable})"/>
+        /// is invoked.
+        /// </summary>
+        /// <param name="onConnect">Called with a IDisposable that can
+        /// be used to disconnect synchronously or asynchronously.</param>
+        /// <returns>The disposable that can be used to disconnect.</returns>
+        IDisposable Connect(Action<IDisposable> onConnect = null);
+
+        /// <summary>
+        /// Resets the connectable observable to its fresh state, allowing
+        /// signal observers to gather up again just like before the very
+        /// first Connect call.
+        /// </summary>
+        void Reset();
+    }
+
+    /// <summary>
+    /// Represents an observable source that
+    /// is also a signal observer.
+    /// </summary>
+    /// <typeparam name="T">The element type of the sequence.</typeparam>
+    public interface IObservableSubject<T> : IObservableSource<T>, ISignalObserver<T>
+    {
+
+    }
 }

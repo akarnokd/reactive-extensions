@@ -11,7 +11,7 @@ namespace akarnokd.reactive_extensions
     /// observer subscribes.
     /// </summary>
     /// <typeparam name="T">The element type of the sequence.</typeparam>
-    public sealed class MonocastSubject<T> : IObservableSource<T>, ISignalObserver<T>, ISubjectExtensions, IDisposable
+    public sealed class MonocastSubject<T> : IObservableSubject<T>, ISubjectExtensions, IDisposable
     {
         readonly SpscLinkedArrayQueue<T> queue;
 

@@ -512,7 +512,6 @@ namespace akarnokd.reactive_extensions
             return new ObservableSourceCreate<T>(onSubscribe, serialize);
         }
 
-
         /// <summary>
         /// Merge some or all observables provided by the outer observable.
         /// </summary>
@@ -531,6 +530,7 @@ namespace akarnokd.reactive_extensions
 
             return new ObservableSourceMergeMany<T>(sources, delayErrors, maxConcurrency, capacityHint);
         }
+
         // --------------------------------------------------------------
         // Instance methods
         // --------------------------------------------------------------
@@ -1912,6 +1912,124 @@ namespace akarnokd.reactive_extensions
             return new ObservableSourceCache<T>(source, cancel, capacityHint);
         }
 
+        /// <summary>
+        /// Multicasts the signals of the source observable sequence
+        /// with the help of an observable subject for the
+        /// duration of the handler function.
+        /// </summary>
+        /// <typeparam name="T">The upstream element type.</typeparam>
+        /// <typeparam name="R">The result element type.</typeparam>
+        /// <param name="source">The source to multicast.</param>
+        /// <param name="subjectFactory">Returns the subject used for multicasting signals.</param>
+        /// <param name="handler">Receives a shared observable
+        /// source sequence and should return an observable
+        /// sequence to be relayed to the downstream consumer.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<R> Multicast<T, R>(this IObservableSource<T> source, Func<IObservableSubject<T>> subjectFactory, Func<IObservableSource<T>, IObservableSource<R>> handler)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(subjectFactory, nameof(subjectFactory));
+            RequireNonNull(handler, nameof(handler));
+
+            return new ObservableSourceMulticast<T, R>(source, subjectFactory, handler);
+        }
+
+        /// <summary>
+        /// Multicasts the signals of the source observable sequence
+        /// with the help of a connectable observable source for the
+        /// duration of the handler function.
+        /// </summary>
+        /// <typeparam name="T">The upstream element type.</typeparam>
+        /// <typeparam name="U">The element type of the connectable observable source.</typeparam>
+        /// <typeparam name="R">The result element type.</typeparam>
+        /// <param name="source">The source to multicast.</param>
+        /// <param name="connectableSelector">Returns the connectable observable
+        /// source to multicast signals with.</param>
+        /// <param name="handler">Receives a shared observable
+        /// source sequence and should return an observable
+        /// sequence to be relayed to the downstream consumer.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<R> Multicast<T, U, R>(this IObservableSource<T> source, Func<IObservableSource<T>, IConnectableObservableSource<U>> connectableSelector, Func<IObservableSource<U>, IObservableSource<R>> handler)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(connectableSelector, nameof(connectableSelector));
+            RequireNonNull(handler, nameof(handler));
+
+            return new ObservableSourceMulticastConnect<T, U, R>(source, connectableSelector, handler);
+        }
+
+        /// <summary>
+        /// Shares a single connection to the source observable
+        /// and multicasts signals through a PublishSubject
+        /// for the duration of the handler function.
+        /// </summary>
+        /// <typeparam name="T">The source element type.</typeparam>
+        /// <typeparam name="R">The result element type.</typeparam>
+        /// <param name="source">The observable sequence to share and publish.</param>
+        /// <param name="handler">The function called for each
+        /// individual observer with a multicasting observable source
+        /// and should return an observable source sequence
+        /// to be relayed to the downstream.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<R> Publish<T, R>(this IObservableSource<T> source, Func<IObservableSource<T>, IObservableSource<R>> handler)
+        {
+            return Multicast(source, () => new PublishSubject<T>(), handler);
+        }
+
+        /// <summary>
+        /// Shares a single connection to the source observable
+        /// and replays signals through a CacheSubject
+        /// for the duration of the handler function.
+        /// </summary>
+        /// <typeparam name="T">The source element type.</typeparam>
+        /// <typeparam name="R">The result element type.</typeparam>
+        /// <param name="source">The observable sequence to share and publish.</param>
+        /// <param name="handler">The function called for each
+        /// individual observer with a multicasting observable source
+        /// and should return an observable source sequence
+        /// to be relayed to the downstream.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<R> Replay<T, R>(this IObservableSource<T> source, Func<IObservableSource<T>, IObservableSource<R>> handler)
+        {
+            return Multicast(source, () => new CacheSubject<T>(), handler);
+        }
+
+        /// <summary>
+        /// Wraps the observable source and exposes it as
+        /// a connectable observable source that multicasts
+        /// items of it to multiple observers.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequences.</typeparam>
+        /// <param name="source">The source to multicast via a connectable observable source.</param>
+        /// <returns>The new connectable observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IConnectableObservableSource<T> Publish<T>(this IObservableSource<T> source)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return new ObservableSourcePublish<T>(source);
+        }
+
+        /// <summary>
+        /// Wraps the observable source and exposes it as
+        /// a connectable observable source that replays
+        /// items of it to multiple observers.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequences.</typeparam>
+        /// <param name="source">The source to multicast via a connectable observable source.</param>
+        /// <returns>The new connectable observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IConnectableObservableSource<T> Replay<T>(this IObservableSource<T> source)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return new ObservableSourceReplay<T>(source);
+        }
+
         // --------------------------------------------------------------
         // Consumer methods
         // --------------------------------------------------------------
@@ -2165,6 +2283,28 @@ namespace akarnokd.reactive_extensions
             RequireNonNull(task, nameof(task));
 
             return new ObservableSourceFromTaskValue<T>(task);
+        }
+
+        /// <summary>
+        /// Automatically connect the upstream IConnectableObservable at most once when the
+        /// specified number of IObservers have subscribed to this IObservable.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in the source sequence.</typeparam>
+        /// <param name="source">The connectable observable sequence.</param>
+        /// <param name="minObservers">The number of observers required to subscribe before the connection to source happens, non-positive value will trigger an immediate subscription.</param>
+        /// <param name="onConnect">If not null, the connection's IDisposable is provided to it.</param>
+        /// <returns>An observable source sequence that connects to the source at most once when the given number of observers have subscribed to it.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
+        public static IObservableSource<T> AutoConnect<T>(this IConnectableObservableSource<T> source, int minObservers = 1, Action<IDisposable> onConnect = null)
+        {
+            RequireNonNull(source, nameof(source));
+            if (minObservers <= 0)
+            {
+                var d = source.Connect();
+                onConnect?.Invoke(d);
+                return source;
+            }
+            return new ObservableSourceAutoConnect<T>(source, minObservers, onConnect);
         }
     }
 }

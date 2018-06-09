@@ -11,7 +11,7 @@ namespace akarnokd.reactive_extensions
     /// </summary>
     /// <typeparam name="T">The element type of the sequence.</typeparam>
     /// <remarks>Since 0.0.17</remarks>
-    public sealed class PublishSubject<T> : IObservableSource<T>, ISignalObserver<T>, IDisposable, ISubjectExtensions
+    public sealed class PublishSubject<T> : IObservableSubject<T>, IDisposable, ISubjectExtensions
     {
         readonly bool refCount;
 
@@ -23,6 +23,8 @@ namespace akarnokd.reactive_extensions
 
         static readonly PublishDisposable[] Empty = new PublishDisposable[0];
         static readonly PublishDisposable[] Terminated = new PublishDisposable[0];
+
+        static readonly IDisposable Prepared = new BooleanDisposable();
 
         /// <summary>
         /// Returns true if this subject has any observers.
@@ -139,7 +141,31 @@ namespace akarnokd.reactive_extensions
         /// <param name="d">The upstream disposable.</param>
         public void OnSubscribe(IDisposable d)
         {
-            DisposableHelper.SetOnce(ref upstream, d);
+            for (; ; )
+            {
+                var curr = Volatile.Read(ref upstream);
+                if (curr != null && curr != Prepared)
+                {
+                    d?.Dispose();
+                    return;
+                }
+                if (Interlocked.CompareExchange(ref upstream, d, curr) == curr)
+                {
+                    break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Prepare this subject by trying to set the
+        /// prepared indicator (ignored by OnSubscribe)
+        /// and return true if succeeded.
+        /// </summary>
+        /// <returns>True if the prepared instance could be swapped in</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        internal bool Prepare()
+        {
+            return Interlocked.CompareExchange(ref upstream, Prepared, null) == null;
         }
 
         /// <summary>

@@ -18,8 +18,16 @@
   - BlockingSubscribe
   - BlockingSubscribeWhile
   - Merge
+  - Multicast
+  - Publish
   - Repeat
-  - Retry</PackageReleaseNotes>
+  - Replay
+  - Retry
+- IConnectableObservableSource
+  - AutoConnect
+
+- New classes
+  - CacheSubject</PackageReleaseNotes>
     <PackageTags>reactive extensions</PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
