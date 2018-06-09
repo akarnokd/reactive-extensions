@@ -21,7 +21,7 @@ namespace akarnokd.reactive_extensions
             source.Subscribe(new TakeObserver(observer, n));
         }
 
-        sealed class TakeObserver : ISignalObserver<T>, IDisposable
+        internal sealed class TakeObserver : ISignalObserver<T>, IDisposable
         {
             readonly ISignalObserver<T> downstream;
 

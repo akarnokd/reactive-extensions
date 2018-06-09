@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.0.21-alpha</Version>
+    <Version>0.0.22-alpha</Version>
     <Description>Extension methods and classes for the dotnet/reactive library.</Description>
     <Authors>David Karnok</Authors>
     <PackageId>akarnokd.reactive_extensions</PackageId>
@@ -12,17 +12,8 @@
     <Copyright>Copyright 2018, David Karnok</Copyright>
     <PackageReleaseNotes>New operators:
 - IObservableSource operators:
-  - ConcatEager
-  - ConcatMap (with IEnumerable)
-  - ConcatMapEager
-  - CombineLatest
-  - RepeatWhen
-  - RetryWhen
-  - Switch
-  - SwitchMap
-  - Using
-  - WithLatestFrom
-  - Zip</PackageReleaseNotes>
+  - Repeat
+  - Retry</PackageReleaseNotes>
     <PackageTags>reactive extensions</PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

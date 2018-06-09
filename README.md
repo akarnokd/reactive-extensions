@@ -888,7 +888,9 @@ Main differences:
 - `ObserveOn`
 - `OnErrorResumeNext`
 - `Reduce`
+- `Repeat`
 - `RepeatWhen`
+- `Retry`
 - `RetryWhen`
 - `Single`
 - `Skip`

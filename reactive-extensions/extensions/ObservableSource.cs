@@ -1759,6 +1759,98 @@ namespace akarnokd.reactive_extensions
             return new ObservableSourceRepeatWhen<T, U>(source, handler);
         }
 
+        /// <summary>
+        /// Repeatedly re-subscribes to the source observable if the predicate
+        /// function returns true upon the completion of the previous
+        /// subscription.
+        /// </summary>
+        /// <typeparam name="T">The value type of the sequence.</typeparam>
+        /// <param name="source">The upstream observable to repeat.</param>
+        /// <param name="predicate">Function to determine whether to repeat the <paramref name="source"/> or not.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<T> Repeat<T>(this IObservableSource<T> source, Func<bool> predicate)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(predicate, nameof(predicate));
+
+            return new ObservableSourceRepeatPredicate<T>(source, predicate);
+        }
+
+        /// <summary>
+        /// Repeatedly re-subscribes to the source observable if the predicate
+        /// function returns true upon the completion of the previous
+        /// subscription.
+        /// </summary>
+        /// <typeparam name="T">The value type of the sequence.</typeparam>
+        /// <param name="source">The upstream observable to repeat.</param>
+        /// <param name="predicate">Function receiving the repeat count to determine whether to repeat the <paramref name="source"/> or not.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<T> Repeat<T>(this IObservableSource<T> source, Func<long, bool> predicate)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(predicate, nameof(predicate));
+
+            return new ObservableSourceRepeatPredicateCount<T>(source, predicate);
+        }
+
+        /// <summary>
+        /// Repeatedly re-subscribes to the source observable if the predicate
+        /// function returns true upon the completion of the previous
+        /// subscription.
+        /// </summary>
+        /// <typeparam name="T">The value type of the sequence.</typeparam>
+        /// <param name="source">The upstream observable to repeat.</param>
+        /// <param name="times">The number of times to repeat, zero means no subscription at all.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<T> Repeat<T>(this IObservableSource<T> source, long times = long.MaxValue)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNegative(times, nameof(times));
+
+            return new ObservableSourceRepeatCount<T>(source, times);
+        }
+
+        /// <summary>
+        /// Repeatedly re-subscribes to the source observable if the predicate
+        /// function returns true upon the failure of the previous
+        /// subscription.
+        /// </summary>
+        /// <typeparam name="T">The value type of the sequence.</typeparam>
+        /// <param name="source">The upstream observable to repeat.</param>
+        /// <param name="predicate">Function to determine whether to retry the <paramref name="source"/> or not,
+        /// given the last Exception and the run count so far.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<T> Retry<T>(this IObservableSource<T> source, Func<Exception, long, bool> predicate)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(predicate, nameof(predicate));
+
+            return new ObservableSourceRetryPredicate<T>(source, predicate);
+        }
+
+
+        /// <summary>
+        /// Repeatedly re-subscribes to the source observable if the predicate
+        /// function returns true upon the failure of the previous
+        /// subscription.
+        /// </summary>
+        /// <typeparam name="T">The value type of the sequence.</typeparam>
+        /// <param name="source">The upstream observable to repeat.</param>
+        /// <param name="times">The number of times to resubscribe if the source failed,
+        /// zero means no retry on failure.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.22</remarks>
+        public static IObservableSource<T> Retry<T>(this IObservableSource<T> source, long times = long.MaxValue)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNegative(times, nameof(times));
+
+            return new ObservableSourceRetryCount<T>(source, times);
+        }
 
         // --------------------------------------------------------------
         // Consumer methods
