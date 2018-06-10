@@ -891,6 +891,7 @@ Main differences:
 - `Hide`
 - `IgnoreElements`
 - `IsEmpty`
+- `Join`
 - `Last`
 - `Map`
 - `Max`

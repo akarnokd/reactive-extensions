@@ -626,6 +626,86 @@ namespace akarnokd.reactive_extensions
             return new ObservableSourceAmbEnumerable<T>(sources);
         }
 
+        /// <summary>
+        /// Merges all observable sequences at once
+        /// provided via an array.
+        /// </summary>
+        /// <typeparam name="T">The element type of the inner and result sequences.</typeparam>
+        /// <param name="sources">The array of inner observable sources.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.23</remarks>
+        public static IObservableSource<T> Merge<T>(params IObservableSource<T>[] sources)
+        {
+            return Merge(false, int.MaxValue, sources);
+        }
+
+        /// <summary>
+        /// Merges all observable sequences at once
+        /// provided via an array, optionally
+        /// delaying errors until all sources terminate.
+        /// </summary>
+        /// <typeparam name="T">The element type of the inner and result sequences.</typeparam>
+        /// <param name="sources">The array of inner observable sources.</param>
+        /// <param name="delayErrors">If true, errors are delayed until all sources terminate.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.23</remarks>
+        public static IObservableSource<T> Merge<T>(bool delayErrors, params IObservableSource<T>[] sources)
+        {
+            return Merge(delayErrors, int.MaxValue, sources);
+        }
+
+        /// <summary>
+        /// Merges some or all observable sequences at once
+        /// provided via an array.
+        /// </summary>
+        /// <typeparam name="T">The element type of the inner and result sequences.</typeparam>
+        /// <param name="sources">The array of inner observable sources.</param>
+        /// <param name="maxConcurrency">The maximum number of inner sources to run at once.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.23</remarks>
+        public static IObservableSource<T> Merge<T>(int maxConcurrency, params IObservableSource<T>[] sources)
+        {
+            return Merge(false, maxConcurrency, sources);
+        }
+
+        /// <summary>
+        /// Merges some or all observable sequences at once
+        /// provided via an array, optionally
+        /// delaying errors until all sources terminate.
+        /// </summary>
+        /// <typeparam name="T">The element type of the inner and result sequences.</typeparam>
+        /// <param name="sources">The array of inner observable sources.</param>
+        /// <param name="delayErrors">If true, errors are delayed until all sources terminate.</param>
+        /// <param name="maxConcurrency">The maximum number of inner sources to run at once.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.23</remarks>
+        public static IObservableSource<T> Merge<T>(bool delayErrors, int maxConcurrency, params IObservableSource<T>[] sources)
+        {
+            RequireNonNull(sources, nameof(sources));
+            RequirePositive(maxConcurrency, nameof(maxConcurrency));
+
+            return new ObservableSourceMergeArray<T>(sources, delayErrors, maxConcurrency);
+        }
+
+        /// <summary>
+        /// Merges some or all observable sequences at once
+        /// provided via the enumerable sequence, optionally
+        /// delaying errors until all sources terminate.
+        /// </summary>
+        /// <typeparam name="T">The element type of the inner and result sequences.</typeparam>
+        /// <param name="sources">The enumerable sequence of inner observable sources.</param>
+        /// <param name="delayErrors">If true, errors are delayed until all sources terminate.</param>
+        /// <param name="maxConcurrency">The maximum number of inner sources to run at once.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.23</remarks>
+        public static IObservableSource<T> Merge<T>(this IEnumerable<IObservableSource<T>> sources, bool delayErrors = false, int maxConcurrency = int.MaxValue)
+        {
+            RequireNonNull(sources, nameof(sources));
+            RequirePositive(maxConcurrency, nameof(maxConcurrency));
+
+            return new ObservableSourceMergeEnumerable<T>(sources, delayErrors, maxConcurrency);
+        }
+
         // --------------------------------------------------------------
         // Instance methods
         // --------------------------------------------------------------
@@ -2628,6 +2708,43 @@ namespace akarnokd.reactive_extensions
             RequireNonNull(scheduler, nameof(scheduler));
 
             return new ObservableSourceTakeLastTimed<T>(source, timespan, scheduler);
+        }
+
+        /// <summary>
+        /// Combines items from the left and right observable sources
+        /// during overlapping windows of those elements as
+        /// determined by a per-item secondary observable sequence.
+        /// </summary>
+        /// <typeparam name="T">The element type of the left source.</typeparam>
+        /// <typeparam name="U">The element type of the right source.</typeparam>
+        /// <typeparam name="V">The element type of the left window end source.</typeparam>
+        /// <typeparam name="W">The element type of the right window end source.</typeparam>
+        /// <typeparam name="R">The result type.</typeparam>
+        /// <param name="left">The left source sequence.</param>
+        /// <param name="right">The right source sequence.</param>
+        /// <param name="leftSelector">The function receiving the left item and
+        /// should return an observable source that when signals an item or completes
+        /// will close the window for said item.</param>
+        /// <param name="rightSelector">The function receiving the right item and
+        /// should return an observable source that when signals an item or completes
+        /// will close the window for said item.</param>
+        /// <param name="resultSelector">The function receiving a left and a right item
+        /// and should return the result item.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.23</remarks>
+        public static IObservableSource<R> Join<T, U, V, W, R>(
+            this IObservableSource<T> left, IObservableSource<U> right,
+            Func<T, IObservableSource<V>> leftSelector, Func<U, IObservableSource<W>> rightSelector,
+            Func<T, U, R> resultSelector
+        )
+        {
+            RequireNonNull(left, nameof(left));
+            RequireNonNull(right, nameof(right));
+            RequireNonNull(leftSelector, nameof(leftSelector));
+            RequireNonNull(rightSelector, nameof(rightSelector));
+            RequireNonNull(resultSelector, nameof(resultSelector));
+
+            return new ObservableSourceJoin<T, U, V, W, R>(left, right, leftSelector, rightSelector, resultSelector);
         }
 
         // --------------------------------------------------------------

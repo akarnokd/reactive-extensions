@@ -19,6 +19,8 @@
   - BlockingTryLast
   - BlockingTrySingle
   - FlatMap
+  - Join
+  - Merge (array, IEnumerable)
   - SkipLast (time)
   - TakeLast (time)
   - Window
