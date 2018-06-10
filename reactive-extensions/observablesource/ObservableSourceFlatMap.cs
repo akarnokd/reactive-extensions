@@ -404,6 +404,8 @@ namespace akarnokd.reactive_extensions
                                     }
                                     success = false;
                                     noMoreSources = true;
+                                    srcs?.Clear();
+                                    continue;
                                 }
 
                                 if (success)

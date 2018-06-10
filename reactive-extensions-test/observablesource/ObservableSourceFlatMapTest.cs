@@ -230,6 +230,62 @@ namespace akarnokd.reactive_extensions_test.observablesource
         }
 
         [Test]
+        public void Max_Dispose()
+        {
+            var subj = new PublishSubject<int>();
+            var inner = new PublishSubject<int>();
+
+            var to = subj.FlatMap(v => inner).Test();
+
+            to.AssertEmpty();
+
+            Assert.True(subj.HasObservers);
+            Assert.False(inner.HasObservers);
+
+            subj.OnNext(1);
+
+            Assert.True(subj.HasObservers);
+            Assert.True(inner.HasObservers);
+
+            to.Dispose();
+
+            Assert.False(subj.HasObservers);
+            Assert.False(inner.HasObservers);
+        }
+
+        [Test]
+        public void Max_Mapper_Crash_Disposes()
+        {
+            var subj = new PublishSubject<int>();
+
+            var to = subj.FlatMap<int, int>(v => throw new InvalidOperationException()).Test();
+
+            to.AssertEmpty();
+
+            subj.OnNext(1);
+
+            Assert.False(subj.HasObservers);
+
+            to.AssertFailure(typeof(InvalidOperationException));
+        }
+
+        [Test]
+        public void Max_Scalar_Error_Disposes()
+        {
+            var subj = new PublishSubject<int>();
+
+            var to = subj.FlatMap<int, int>(v => ObservableSource.Error<int>(new InvalidOperationException())).Test();
+
+            to.AssertEmpty();
+
+            subj.OnNext(1);
+
+            Assert.False(subj.HasObservers);
+
+            to.AssertFailure(typeof(InvalidOperationException));
+        }
+
+        [Test]
         public void Limited_Basic()
         {
             for (int i = 1; i < 7; i++)
@@ -625,6 +681,74 @@ namespace akarnokd.reactive_extensions_test.observablesource
                 .Test()
                 .WithTag($"maxConcurrency: {i}")
                 .AssertFailure(typeof(InvalidOperationException), 1, 2, 4, 5);
+            }
+        }
+
+        [Test]
+        public void Limited_Dispose()
+        {
+            for (int i = 1; i < 7; i++)
+            {
+                var subj = new PublishSubject<int>();
+                var inner = new PublishSubject<int>();
+
+                var to = subj.FlatMap(v => inner, maxConcurrency: i).Test();
+
+                to.WithTag($"maxConcurrency: {i}")
+                    .AssertEmpty();
+
+                Assert.True(subj.HasObservers);
+                Assert.False(inner.HasObservers);
+
+                subj.OnNext(1);
+
+                Assert.True(subj.HasObservers);
+                Assert.True(inner.HasObservers);
+
+                to.Dispose();
+
+                Assert.False(subj.HasObservers);
+                Assert.False(inner.HasObservers);
+            }
+        }
+
+        [Test]
+        public void Limited_Mapper_Crash_Disposes()
+        {
+            for (int i = 1; i < 7; i++)
+            {
+                var subj = new PublishSubject<int>();
+
+                var to = subj.FlatMap<int, int>(v => throw new InvalidOperationException(), maxConcurrency: i).Test();
+
+                to.WithTag($"maxConcurrency: {i}")
+                    .AssertEmpty();
+
+                subj.OnNext(1);
+
+                Assert.False(subj.HasObservers);
+
+                to.AssertFailure(typeof(InvalidOperationException));
+            }
+        }
+
+        [Test]
+        public void Limited_Scalar_Error_Disposes()
+        {
+            for (int i = 1; i < 7; i++)
+            {
+                var subj = new PublishSubject<int>();
+
+                var to = subj.FlatMap<int, int>(v => ObservableSource.Error<int>(new InvalidOperationException()), maxConcurrency: i).Test();
+
+                to.WithTag($"maxConcurrency: {i}")
+                    .AssertEmpty();
+
+                subj.OnNext(1);
+
+                Assert.False(subj.HasObservers);
+
+                to.AssertFailure(typeof(InvalidOperationException));
             }
         }
     }
