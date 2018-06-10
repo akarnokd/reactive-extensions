@@ -2530,7 +2530,8 @@ namespace akarnokd.reactive_extensions
         /// <param name="delayErrors">If true, errors from all sources are delayed until all of them terminate.</param>
         /// <param name="maxConcurrency">The maximum number of mapped observable sources to run at once.</param>
         /// <param name="capacityHint">The number of items expected to be queued up from the inner sources.</param>
-        /// <returns></returns>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.23</remarks>
         public static IObservableSource<R> FlatMap<T, R>(this IObservableSource<T> source, Func<T, IObservableSource<R>> mapper, bool delayErrors = false, int maxConcurrency = int.MaxValue, int capacityHint = 128)
         {
             RequireNonNull(source, nameof(source));
@@ -2539,6 +2540,58 @@ namespace akarnokd.reactive_extensions
             RequirePositive(capacityHint, nameof(capacityHint));
 
             return new ObservableSourceFlatMap<T, R>(source, mapper, delayErrors, maxConcurrency, capacityHint);
+        }
+
+        /// <summary>
+        /// Splits the upstream sequence into non-overlapping windows
+        /// of the given size.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence and the windows.</typeparam>
+        /// <param name="source">The upstream observable source to split.</param>
+        /// <param name="size">The number of elements in each window.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.23</remarks>
+        public static IObservableSource<IObservableSource<T>> Window<T>(this IObservableSource<T> source, int size)
+        {
+            return Window(source, size, size);
+        }
+
+        /// <summary>
+        /// Splits the upstream sequence into potentially overlapping windows
+        /// of the given size.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence and the windows.</typeparam>
+        /// <param name="source">The upstream observable source to split.</param>
+        /// <param name="size">The number of elements in each window.</param>
+        /// <param name="skip">Specifies when to start a new window.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.23</remarks>
+        public static IObservableSource<IObservableSource<T>> Window<T>(this IObservableSource<T> source, int size, int skip)
+        {
+            RequireNonNull(source, nameof(source));
+            RequirePositive(size, nameof(size));
+            RequirePositive(skip, nameof(skip));
+
+            return new ObservableSourceWindow<T>(source, size, skip);
+        }
+
+        /// <summary>
+        /// Splits the upstream sequence into non-overlapping windows
+        /// when the boundary observable sequence signals an item.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence and the windows.</typeparam>
+        /// <typeparam name="B">The element type of the boundary sequence.</typeparam>
+        /// <param name="source">The upstream observable source to split.</param>
+        /// <param name="boundary">The sequence that indicates the end and start
+        /// of a new buffer.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.23</remarks>
+        public static IObservableSource<IObservableSource<T>> Window<T, B>(this IObservableSource<T> source, IObservableSource<B> boundary)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(boundary, nameof(boundary));
+
+            return new ObservableSourceWindowBoundary<T, B>(source, boundary);
         }
 
         // --------------------------------------------------------------

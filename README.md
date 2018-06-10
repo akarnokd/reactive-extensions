@@ -923,6 +923,7 @@ Main differences:
 - `ToList`
 - `ToLookup`
 - `UnsubscribeOn`
+- `Window`
 - `WithLatestFrom`
 
 ### Consumer methods

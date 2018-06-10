@@ -13,6 +13,7 @@
     <PackageReleaseNotes>New operators:
 - IObservableSource operators:
   - FlatMap
+  - Window
 - IConnectableObservableSource
 </PackageReleaseNotes>
     <PackageTags>reactive extensions</PackageTags>
