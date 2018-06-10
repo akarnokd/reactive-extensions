@@ -9,7 +9,7 @@ Extensions to the [dotnet/reactive](https://github.com/dotnet/reactive) library.
 ### Setup
 
 ```
-Install-Package akarnokd.reactive_extensions -Version 0.0.22-alpha
+Install-Package akarnokd.reactive_extensions -Version 0.0.23-alpha
 ```
 
 ### Dependencies
@@ -886,6 +886,7 @@ Main differences:
 - `ElementAt`
 - `Filter`
 - `First`
+- `FlatMap`
 - `GroupBy`
 - `Hide`
 - `IgnoreElements`

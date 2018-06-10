@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.0.22-alpha</Version>
+    <Version>0.0.23-alpha</Version>
     <Description>Extension methods and classes for the dotnet/reactive library.</Description>
     <Authors>David Karnok</Authors>
     <PackageId>akarnokd.reactive_extensions</PackageId>
@@ -12,34 +12,9 @@
     <Copyright>Copyright 2018, David Karnok</Copyright>
     <PackageReleaseNotes>New operators:
 - IObservableSource operators:
-  - Amb
-  - BlockingEnumerable
-  - BlockingSubscribe
-  - BlockingSubscribeWhile
-  - Cache
-  - Concat (array, IEnumerable)
-  - Create
-  - Delay
-  - DelaySubscription
-  - ElementAtTask
-  - FirstTask
-  - GroupBy
-  - LastTask
-  - Max
-  - Merge
-  - Min
-  - Multicast
-  - Publish
-  - Repeat
-  - Replay
-  - Retry
-  - SingleTask
-  - Sum
+  - FlatMap
 - IConnectableObservableSource
-  - AutoConnect
-
-- New classes
-  - CacheSubject</PackageReleaseNotes>
+</PackageReleaseNotes>
     <PackageTags>reactive extensions</PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

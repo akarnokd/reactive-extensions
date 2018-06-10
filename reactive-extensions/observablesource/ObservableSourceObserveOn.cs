@@ -223,11 +223,7 @@ namespace akarnokd.reactive_extensions
 
                 for (; ;)
                 {
-                    if (Volatile.Read(ref disposed))
-                    {
-                        queue.Clear();
-                    }
-                    else
+                    if (!Volatile.Read(ref disposed))
                     {
                         var d = Volatile.Read(ref done);
 
@@ -279,11 +275,7 @@ namespace akarnokd.reactive_extensions
 
                 for (; ; )
                 {
-                    if (Volatile.Read(ref disposed))
-                    {
-                        queue.Clear();
-                    }
-                    else
+                    if (!Volatile.Read(ref disposed))
                     {
                         var d = Volatile.Read(ref done);
 

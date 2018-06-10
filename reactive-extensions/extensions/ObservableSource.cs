@@ -2517,6 +2517,30 @@ namespace akarnokd.reactive_extensions
             });
         }
 
+        /// <summary>
+        /// Maps the upstream items onto observable sources and
+        /// merges some or all of them at once into an observable
+        /// source sequence, optionally delaying errors until all sources terminate.
+        /// </summary>
+        /// <typeparam name="T">The upstream element type.</typeparam>
+        /// <typeparam name="R">The result element type.</typeparam>
+        /// <param name="source">The source to map and then flatten.</param>
+        /// <param name="mapper">The function receiving the upstream item and should return
+        /// an observable source to flatten.</param>
+        /// <param name="delayErrors">If true, errors from all sources are delayed until all of them terminate.</param>
+        /// <param name="maxConcurrency">The maximum number of mapped observable sources to run at once.</param>
+        /// <param name="capacityHint">The number of items expected to be queued up from the inner sources.</param>
+        /// <returns></returns>
+        public static IObservableSource<R> FlatMap<T, R>(this IObservableSource<T> source, Func<T, IObservableSource<R>> mapper, bool delayErrors = false, int maxConcurrency = int.MaxValue, int capacityHint = 128)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(mapper, nameof(mapper));
+            RequirePositive(maxConcurrency, nameof(maxConcurrency));
+            RequirePositive(capacityHint, nameof(capacityHint));
+
+            return new ObservableSourceFlatMap<T, R>(source, mapper, delayErrors, maxConcurrency, capacityHint);
+        }
+
         // --------------------------------------------------------------
         // Consumer methods
         // --------------------------------------------------------------
