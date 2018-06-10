@@ -31,7 +31,7 @@ namespace akarnokd.reactive_extensions
                 }
                 else
                 {
-                    if (subject.HasException() || subject.HasCompleted())
+                    if (subject.HasException() || subject.HasCompleted() || subject.IsDisposed())
                     {
                         Interlocked.CompareExchange(ref connection, null, subject);
                         continue;
@@ -55,7 +55,7 @@ namespace akarnokd.reactive_extensions
         {
             var subject = Volatile.Read(ref connection);
             if (subject != null) {
-                if (subject.HasException() || subject.HasCompleted())
+                if (subject.HasException() || subject.HasCompleted() || subject.IsDisposed())
                 {
                     Interlocked.CompareExchange(ref connection, null, subject);
                 }

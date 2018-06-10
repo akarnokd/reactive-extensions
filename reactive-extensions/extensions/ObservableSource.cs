@@ -2594,6 +2594,42 @@ namespace akarnokd.reactive_extensions
             return new ObservableSourceWindowBoundary<T, B>(source, boundary);
         }
 
+        /// <summary>
+        /// Skips items that are younger than the specified timestamp
+        /// relative to the end of the sequence.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source sequence to skip last elements.</param>
+        /// <param name="timespan">The time window from the end of the sequence.</param>
+        /// <param name="scheduler">The source of timing information.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.23</remarks>
+        public static IObservableSource<T> SkipLast<T>(this IObservableSource<T> source, TimeSpan timespan, IScheduler scheduler)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(scheduler, nameof(scheduler));
+
+            return new ObservableSourceSkipLastTimed<T>(source, timespan, scheduler);
+        }
+
+        /// <summary>
+        /// Takes items that are younger than the specified timestamp
+        /// relative to the end of the sequence.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source sequence to take last elements of.</param>
+        /// <param name="timespan">The time window from the end of the sequence.</param>
+        /// <param name="scheduler">The source of timing information.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.23</remarks>
+        public static IObservableSource<T> TakeLast<T>(this IObservableSource<T> source, TimeSpan timespan, IScheduler scheduler)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(scheduler, nameof(scheduler));
+
+            return new ObservableSourceTakeLastTimed<T>(source, timespan, scheduler);
+        }
+
         // --------------------------------------------------------------
         // Consumer methods
         // --------------------------------------------------------------
@@ -2680,7 +2716,6 @@ namespace akarnokd.reactive_extensions
             return new SerializedSignalObserver<T>(observer);
         }
 
-
         /// <summary>
         /// Consumes the <paramref name="source"/> in a blocking fashion
         /// through an IEnumerable.
@@ -2758,6 +2793,184 @@ namespace akarnokd.reactive_extensions
             dispose?.Invoke(consumer);
             source.Subscribe(consumer);
             consumer.Run();
+        }
+
+        /// <summary>
+        /// Subscribes to the source and blocks until
+        /// its first element or throws an IndexOutOfRangeException if
+        /// the source is empty.
+        /// </summary>
+        /// <typeparam name="T">The element type of the source and result.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="cts">The cancellation token source to cancel the waiting and the subscription.</param>
+        /// <returns>The first element.</returns>
+        /// <remarks>Since 0.0.23</remarks>
+        public static T BlockingFirst<T>(this IObservableSource<T> source, CancellationTokenSource cts = null)
+        {
+            var consumer = new ObservableSourceBlockingFirst<T>();
+            source.Subscribe(consumer);
+
+            var v = consumer.GetValue(out var success, TimeSpan.MaxValue, cts);
+            if (success)
+            {
+                return v;
+            }
+            throw new IndexOutOfRangeException("The source is empty");
+        }
+
+        /// <summary>
+        /// Subscribes to the source and blocks until
+        /// its last element or throws an IndexOutOfRangeException if
+        /// the source is empty.
+        /// </summary>
+        /// <typeparam name="T">The element type of the source and result.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="cts">The cancellation token source to cancel the waiting and the subscription.</param>
+        /// <returns>The last element.</returns>
+        /// <remarks>Since 0.0.23</remarks>
+        public static T BlockingLast<T>(this IObservableSource<T> source, CancellationTokenSource cts = null)
+        {
+            var consumer = new ObservableSourceBlockingLast<T>();
+            source.Subscribe(consumer);
+
+            var v = consumer.GetValue(out var success, TimeSpan.MaxValue, cts);
+            if (success)
+            {
+                return v;
+            }
+            throw new IndexOutOfRangeException("The source is empty");
+        }
+
+        /// <summary>
+        /// Subscribes to the source and blocks until
+        /// its only element or throws an IndexOutOfRangeException if
+        /// the source is empty or has more than one element.
+        /// </summary>
+        /// <typeparam name="T">The element type of the source and result.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="cts">The cancellation token source to cancel the waiting and the subscription.</param>
+        /// <returns>The single element.</returns>
+        /// <remarks>Since 0.0.23</remarks>
+        public static T BlockingSingle<T>(this IObservableSource<T> source, CancellationTokenSource cts = null)
+        {
+            var consumer = new ObservableSourceBlockingSingle<T>();
+            source.Subscribe(consumer);
+
+            var v = consumer.GetValue(out var success, TimeSpan.MaxValue, cts);
+            if (success)
+            {
+                return v;
+            }
+            throw new IndexOutOfRangeException("The source is empty");
+        }
+
+        /// <summary>
+        /// Subscribes to the source and blocks until
+        /// its first element.
+        /// </summary>
+        /// <typeparam name="T">The element type of the source and result.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="success">Set to true if the source was not empty</param>
+        /// <param name="cts">The cancellation token source to cancel the waiting and the subscription.</param>
+        /// <returns>The first element.</returns>
+        /// <remarks>Since 0.0.23</remarks>
+        public static T BlockingTryFirst<T>(this IObservableSource<T> source, out bool success, CancellationTokenSource cts = null)
+        {
+            return BlockingTryFirst(source, out success, TimeSpan.MaxValue, cts);
+        }
+
+        /// <summary>
+        /// Subscribes to the source and blocks until
+        /// its last element or throws an IndexOutOfRangeException if
+        /// the source is empty.
+        /// </summary>
+        /// <typeparam name="T">The element type of the source and result.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="success">Set to true if the source was not empty</param>
+        /// <param name="cts">The cancellation token source to cancel the waiting and the subscription.</param>
+        /// <returns>The last element.</returns>
+        /// <remarks>Since 0.0.23</remarks>
+        public static T BlockingTryLast<T>(this IObservableSource<T> source, out bool success, CancellationTokenSource cts = null)
+        {
+            var consumer = new ObservableSourceBlockingLast<T>();
+            source.Subscribe(consumer);
+
+            return BlockingTryLast(source, out success, TimeSpan.MaxValue, cts);
+        }
+
+        /// <summary>
+        /// Subscribes to the source and blocks until
+        /// its only element or throws an IndexOutOfRangeException if
+        /// the source is empty or has more than one element.
+        /// </summary>
+        /// <typeparam name="T">The element type of the source and result.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="success">Set to true if the source was not empty</param>
+        /// <param name="cts">The cancellation token source to cancel the waiting and the subscription.</param>
+        /// <returns>The single element.</returns>
+        /// <remarks>Since 0.0.23</remarks>
+        public static T BlockingTrySingle<T>(this IObservableSource<T> source, out bool success, CancellationTokenSource cts = null)
+        {
+            return BlockingTrySingle(source, out success, TimeSpan.MaxValue, cts);
+        }
+
+        /// <summary>
+        /// Subscribes to the source and blocks until
+        /// its first element.
+        /// </summary>
+        /// <typeparam name="T">The element type of the source and result.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="success">Set to true if the source was not empty</param>
+        /// <param name="timeout">The timeout amount to wait for completion.</param>
+        /// <param name="cts">The cancellation token source to cancel the waiting and the subscription.</param>
+        /// <returns>The first element.</returns>
+        /// <remarks>Since 0.0.23</remarks>
+        public static T BlockingTryFirst<T>(this IObservableSource<T> source, out bool success, TimeSpan timeout, CancellationTokenSource cts = null)
+        {
+            var consumer = new ObservableSourceBlockingFirst<T>();
+            source.Subscribe(consumer);
+
+            return consumer.GetValue(out success, timeout, cts);
+        }
+
+        /// <summary>
+        /// Subscribes to the source and blocks until
+        /// its last element or throws an IndexOutOfRangeException if
+        /// the source is empty.
+        /// </summary>
+        /// <typeparam name="T">The element type of the source and result.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="success">Set to true if the source was not empty</param>
+        /// <param name="timeout">The timeout amount to wait for completion.</param>
+        /// <param name="cts">The cancellation token source to cancel the waiting and the subscription.</param>
+        /// <returns>The last element.</returns>
+        /// <remarks>Since 0.0.23</remarks>
+        public static T BlockingTryLast<T>(this IObservableSource<T> source, out bool success, TimeSpan timeout, CancellationTokenSource cts = null)
+        {
+            var consumer = new ObservableSourceBlockingLast<T>();
+            source.Subscribe(consumer);
+
+            return consumer.GetValue(out success, timeout, cts);
+        }
+
+        /// <summary>
+        /// Subscribes to the source and blocks until
+        /// its only element or throws an IndexOutOfRangeException if
+        /// the source is empty or has more than one element.
+        /// </summary>
+        /// <typeparam name="T">The element type of the source and result.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="success">Set to true if the source was not empty</param>
+        /// <param name="timeout">The timeout amount to wait for completion.</param>
+        /// <param name="cts">The cancellation token source to cancel the waiting and the subscription.</param>
+        /// <returns>The single element.</returns>
+        /// <remarks>Since 0.0.23</remarks>
+        public static T BlockingTrySingle<T>(this IObservableSource<T> source, out bool success, TimeSpan timeout, CancellationTokenSource cts = null)
+        {
+            var consumer = new ObservableSourceBlockingSingle<T>();
+            source.Subscribe(consumer);
+
+            return consumer.GetValue(out success, timeout, cts);
         }
 
         // --------------------------------------------------------------
@@ -2959,6 +3172,63 @@ namespace akarnokd.reactive_extensions
             var parent = new ObservableSourceSingleTask<T>(cts);
             source.Subscribe(parent);
             return parent.Task;
+        }
+
+        /// <summary>
+        /// Connects to the given connectable source when the given
+        /// number of observers subscribe and disconnects immediately
+        /// all observers unsubscribe.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source connectable to connect to.</param>
+        /// <param name="minObservers">The minimum number of observers required for
+        /// establishing a connection.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.23</remarks>
+        public static IObservableSource<T> RefCount<T>(this IConnectableObservableSource<T> source, int minObservers = 1)
+        {
+            RequireNonNull(source, nameof(source));
+            RequirePositive(minObservers, nameof(minObservers));
+
+            return new ObservableSourceRefCount<T>(source, minObservers, TimeSpan.Zero, null);
+        }
+
+        /// <summary>
+        /// Connects to the given connectable source when the first observer
+        /// subscribes and disconnects after 
+        /// a grace period when all observers unsubscribe.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source connectable to connect to.</param>
+        /// <param name="timeout">The grace period before disconnecting.</param>
+        /// <param name="scheduler">The scheduler used for the timed wait before disconnecting.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.23</remarks>
+        public static IObservableSource<T> RefCount<T>(this IConnectableObservableSource<T> source, TimeSpan timeout, IScheduler scheduler)
+        {
+            return RefCount(source, 1, timeout, scheduler);
+        }
+
+        /// <summary>
+        /// Connects to the given connectable source when the given
+        /// number of observers subscribe and disconnects after 
+        /// a grace period when all observers unsubscribe.
+        /// </summary>
+        /// <typeparam name="T">The element type of the sequence.</typeparam>
+        /// <param name="source">The source connectable to connect to.</param>
+        /// <param name="minObservers">The minimum number of observers required for
+        /// establishing a connection.</param>
+        /// <param name="timeout">The grace period before disconnecting.</param>
+        /// <param name="scheduler">The scheduler used for the timed wait before disconnecting.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.23</remarks>
+        public static IObservableSource<T> RefCount<T>(this IConnectableObservableSource<T> source, int minObservers, TimeSpan timeout, IScheduler scheduler)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(scheduler, nameof(scheduler));
+            RequirePositive(minObservers, nameof(minObservers));
+
+            return new ObservableSourceRefCount<T>(source, minObservers, timeout, scheduler);
         }
     }
 }

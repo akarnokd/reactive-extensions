@@ -12,10 +12,18 @@
     <Copyright>Copyright 2018, David Karnok</Copyright>
     <PackageReleaseNotes>New operators:
 - IObservableSource operators:
+  - BlockingFirst
+  - BlockingLast
+  - BlockingSingle
+  - BlockingTryFirst
+  - BlockingTryLast
+  - BlockingTrySingle
   - FlatMap
+  - SkipLast (time)
+  - TakeLast (time)
   - Window
 - IConnectableObservableSource
-</PackageReleaseNotes>
+  - RefCount</PackageReleaseNotes>
     <PackageTags>reactive extensions</PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

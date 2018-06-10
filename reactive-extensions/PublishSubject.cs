@@ -51,6 +51,15 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
+        /// Returns true if this subject has been disposed.
+        /// </summary>
+        /// <returns>True if this subject has been disposed</returns>
+        public bool IsDisposed()
+        {
+            return DisposableHelper.IsDisposed(ref upstream);
+        }
+
+        /// <summary>
         /// Returns the terminal exception if present.
         /// </summary>
         /// <returns>The terminal exception or null if not terminated

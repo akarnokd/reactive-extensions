@@ -931,6 +931,12 @@ Main differences:
 - `BlockingEnumerable`
 - `BlockingSubscribe`
 - `BlockingSubscribeWhile`
+- `BlockingFirst`
+- `BlockingLast`
+- `BlockingSingle`
+- `BlockingTryFirst`
+- `BlockingTryLast`
+- `BlockingTrySingle`
 - `Subscribe`
 - `SubscribeWith`
 - `Test`
@@ -950,6 +956,9 @@ Main differences:
 
 Represents an observable source that can be connected and disconnected from, 
 allowing signal observers to gather up before the flow starts.
+
+- `AutoConnect`
+- `RefCount`
 
 ### PublishSubject
 
