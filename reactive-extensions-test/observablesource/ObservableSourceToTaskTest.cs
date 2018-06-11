@@ -287,5 +287,63 @@ namespace akarnokd.reactive_extensions_test.observablesource
 
             Assert.True(task.IsCanceled);
         }
+
+        [Test]
+        public void LastTask_Basic()
+        {
+            var task = ObservableSource.Range(1, 5)
+                .LastTask();
+            Assert.True(task.Wait(5000));
+
+            Assert.AreEqual(5, task.Result);
+        }
+
+        [Test]
+        public void LastTask_Empty()
+        {
+            try
+            {
+                Assert.True(ObservableSource.Empty<int>()
+                    .LastTask()
+                    .Wait(5000));
+            }
+            catch (AggregateException ex)
+            {
+                Assert.True(typeof(IndexOutOfRangeException).IsAssignableFrom(ex.InnerExceptions[0]));
+            }
+        }
+
+        [Test]
+        public void LastTask_Error()
+        {
+            try
+            {
+                Assert.True(ObservableSource.Error<int>(new InvalidOperationException())
+                    .LastTask()
+                    .Wait(5000));
+            }
+            catch (AggregateException ex)
+            {
+                Assert.True(typeof(InvalidOperationException).IsAssignableFrom(ex.InnerExceptions[0]));
+            }
+        }
+
+        [Test]
+        public void LastTask_Dispose()
+        {
+            var subj = new PublishSubject<int>();
+
+            var cts = new CancellationTokenSource();
+
+            var task = subj.LastTask(cts);
+
+            Assert.True(subj.HasObservers);
+
+            cts.Cancel();
+
+            Assert.False(subj.HasObservers);
+
+            Assert.True(task.IsCanceled);
+        }
     }
 }

@@ -74,6 +74,34 @@ namespace akarnokd.reactive_extensions_test.observablesource
         }
 
         [Test]
+        public void Plain_Fused()
+        {
+            var ttc = new TaskCompletionSource<int>();
+
+            var to = ObservableSource.FromTask<int>((Task)ttc.Task)
+                .Test(fusionMode: FusionSupport.Any)
+                .AssertFuseable()
+                .AssertFusionMode(FusionSupport.Async);
+
+            to.AssertEmpty();
+
+            Assert.True(ttc.TrySetResult(default(int)));
+
+            to.AwaitDone(TimeSpan.FromSeconds(5))
+                .AssertResult();
+        }
+
+        [Test]
+        public void Plain_Fused_Api()
+        {
+            var ttc = new TaskCompletionSource<int>();
+
+            var src = ObservableSource.FromTask<int>((Task) ttc.Task);
+
+            TestHelper.AssertFuseableApi(src);
+        }
+
+        [Test]
         public void Value_Basic()
         {
             var count = 0;
@@ -147,5 +175,24 @@ namespace akarnokd.reactive_extensions_test.observablesource
                 .AwaitDone(TimeSpan.FromSeconds(5))
                 .AssertFailure(typeof(OperationCanceledException));
         }
+
+        [Test]
+        public void Value_Fused()
+        {
+            var ttc = new TaskCompletionSource<int>();
+
+            var to = ObservableSource.FromTask<int>(ttc.Task)
+                .Test(fusionMode: FusionSupport.Any)
+                .AssertFuseable()
+                .AssertFusionMode(FusionSupport.Async);
+
+            to.AssertEmpty();
+
+            Assert.True(ttc.TrySetResult(1));
+
+            to.AwaitDone(TimeSpan.FromSeconds(5))
+                .AssertResult(1);
+        }
+
     }
 }

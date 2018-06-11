@@ -110,6 +110,22 @@ namespace akarnokd.reactive_extensions_test.observablesource
         }
 
         [Test]
+        public void Enumerable_GetEnumerator_Crash()
+        {
+            ObservableSource.Amb<int>(new FailingEnumerable<IObservableSource<int>>(true, false, false))
+                .Test()
+                .AssertFailure(typeof(InvalidOperationException));
+        }
+
+        [Test]
+        public void Enumerable_MoveNext_Crash()
+        {
+            ObservableSource.Amb<int>(new FailingEnumerable<IObservableSource<int>>(false, true, false))
+                .Test()
+                .AssertFailure(typeof(InvalidOperationException));
+        }
+
+        [Test]
         public void Enumerable_Single()
         {
             ObservableSource.Amb(

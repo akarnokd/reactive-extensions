@@ -153,5 +153,88 @@ namespace akarnokd.reactive_extensions_test
             return source.Concat(ObservableSource.Error<T>(ex));
         }
 
+        public static void AssertFuseableApi<T>(IObservableSource<T> source, bool boundary = false)
+        {
+            var parent = new FusionMethodCalls<T>(boundary);
+
+            source.Subscribe(parent);
+
+            var ex = parent.error;
+            if (ex != null)
+            {
+                throw ex;
+            }
+        }
+
+        sealed class FusionMethodCalls<T> : ISignalObserver<T>
+        {
+            private bool boundary;
+
+            private IFuseableDisposable<T> upstream;
+
+            public Exception error;
+
+            public FusionMethodCalls(bool boundary)
+            {
+                this.boundary = boundary;
+            }
+
+            public void OnCompleted()
+            {
+                // ignored
+            }
+
+            public void OnError(Exception ex)
+            {
+                // ignored
+            }
+
+            public void OnNext(T item)
+            {
+                // ignored
+            }
+
+            public void OnSubscribe(IDisposable d)
+            {
+                upstream = d as IFuseableDisposable<T>;
+
+                if (upstream != null)
+                {
+                    try
+                    {
+                        var m = upstream.RequestFusion(boundary ? FusionSupport.AnyBoundary : FusionSupport.Any);
+                        if (m == FusionSupport.Sync)
+                        {
+                            upstream.IsEmpty();
+
+                            upstream.TryPoll(out var _);
+
+                            upstream.Clear();
+
+                            upstream.IsEmpty();
+
+                            upstream.TryPoll(out var _);
+
+                            try
+                            {
+                                upstream.TryOffer(default(T));
+                            }
+                            catch (InvalidOperationException)
+                            {
+                                // expected
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        error = ex;
+                    }
+                }
+                else
+                {
+                    error = new Exception("Upstream not fuseable");
+                }
+            }
+        }
     }
 }

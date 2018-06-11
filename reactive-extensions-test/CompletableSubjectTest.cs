@@ -12,7 +12,7 @@ namespace akarnokd.reactive_extensions_test
         {
             var cs = new CompletableSubject();
 
-            Assert.False(cs.HasObserver());
+            Assert.False(cs.HasObservers);
             Assert.False(cs.HasCompleted());
             Assert.False(cs.HasException());
             Assert.IsNull(cs.GetException());
@@ -34,7 +34,7 @@ namespace akarnokd.reactive_extensions_test
 
             to.AssertResult();
 
-            Assert.False(cs.HasObserver());
+            Assert.False(cs.HasObservers);
             Assert.True(cs.HasCompleted());
             Assert.False(cs.HasException());
             Assert.IsNull(cs.GetException());

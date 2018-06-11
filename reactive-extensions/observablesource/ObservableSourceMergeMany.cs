@@ -122,6 +122,7 @@ namespace akarnokd.reactive_extensions
                     }
                     all = disposables;
                     disposables = null;
+                    Volatile.Write(ref disposed, true);
                 }
 
                 foreach (var d in all)
@@ -132,7 +133,6 @@ namespace akarnokd.reactive_extensions
 
             public override void Dispose()
             {
-                Volatile.Write(ref disposed, true);
                 base.Dispose();
                 DisposeAll();
                 Drain();

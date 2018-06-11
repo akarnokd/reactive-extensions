@@ -539,6 +539,82 @@ namespace akarnokd.reactive_extensions_test.observablesource
 
             to.AssertResult(1, 2, 3);
         }
+
+        [Test]
+        public void Max_Dispose()
+        {
+            var subj1 = new PublishSubject<int>();
+            var subj2 = new PublishSubject<int>();
+
+            var to = ObservableSource.FromArray(subj1, subj2).Merge<int>().Test();
+
+            to.AssertEmpty();
+
+            Assert.True(subj1.HasObservers);
+            Assert.True(subj2.HasObservers);
+
+            to.Dispose();
+
+            Assert.False(subj1.HasObservers);
+            Assert.False(subj2.HasObservers);
+        }
+
+        [Test]
+        public void Limited_Dispose()
+        {
+            var subj1 = new PublishSubject<int>();
+            var subj2 = new PublishSubject<int>();
+
+            var to = ObservableSource.FromArray(subj1, subj2).Merge<int>(maxConcurrency: 2).Test();
+
+            to.AssertEmpty();
+
+            Assert.True(subj1.HasObservers);
+            Assert.True(subj2.HasObservers);
+
+            to.Dispose();
+
+            Assert.False(subj1.HasObservers);
+            Assert.False(subj2.HasObservers);
+        }
+
+        [Test]
+        public void Limited_Error_Main()
+        {
+            var to = ObservableSource.Error<IObservableSource<int>>(new InvalidOperationException())
+                .Merge()
+                .Test()
+                .AssertFailure(typeof(InvalidOperationException));
+        }
+
+        [Test]
+        public void Limited_Error_Main_Delayed()
+        {
+            var to = ObservableSource.Error<IObservableSource<int>>(new InvalidOperationException())
+                .Merge(true)
+                .Test()
+                .AssertFailure(typeof(InvalidOperationException));
+        }
+
+        [Test]
+        public void Limited_Error_Inner()
+        {
+            var to = ObservableSource.Just<IObservableSource<int>>(
+                    ObservableSource.Error<int>(new InvalidOperationException())).Hide()
+                .Merge(maxConcurrency: 1)
+                .Test()
+                .AssertFailure(typeof(InvalidOperationException));
+        }
+
+        [Test]
+        public void Limited_Error_Inner_Delayed()
+        {
+            var to = ObservableSource.Just<IObservableSource<int>>(
+                    ObservableSource.Error<int>(new InvalidOperationException())).Hide()
+                .Merge(true, 1)
+                .Test()
+                .AssertFailure(typeof(InvalidOperationException));
+        }
     }
 }
 

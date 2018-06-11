@@ -2,6 +2,7 @@
 using System;
 using akarnokd.reactive_extensions;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 
 namespace akarnokd.reactive_extensions_test.observable
 {
@@ -539,6 +540,83 @@ namespace akarnokd.reactive_extensions_test.observable
             Assert.False(us[2].HasObserver());
 
             to.AssertResult(1, 2, 3);
+        }
+
+
+        [Test]
+        public void Max_Dispose()
+        {
+            var subj1 = new Subject<int>();
+            var subj2 = new Subject<int>();
+
+            var to = new [] { subj1, subj2 }.ToObservable().MergeMany<int>().Test();
+
+            to.AssertEmpty();
+
+            Assert.True(subj1.HasObservers);
+            Assert.True(subj2.HasObservers);
+
+            to.Dispose();
+
+            Assert.False(subj1.HasObservers);
+            Assert.False(subj2.HasObservers);
+        }
+
+        [Test]
+        public void Limited_Dispose()
+        {
+            var subj1 = new Subject<int>();
+            var subj2 = new Subject<int>();
+
+            var to = new[] { subj1, subj2 }.ToObservable().MergeMany<int>(maxConcurrency: 2).Test();
+
+            to.AssertEmpty();
+
+            Assert.True(subj1.HasObservers);
+            Assert.True(subj2.HasObservers);
+
+            to.Dispose();
+
+            Assert.False(subj1.HasObservers);
+            Assert.False(subj2.HasObservers);
+        }
+
+        [Test]
+        public void Limited_Error_Main()
+        {
+            var to = Observable.Throw<IObservable<int>>(new InvalidOperationException())
+                .MergeMany()
+                .Test()
+                .AssertFailure(typeof(InvalidOperationException));
+        }
+
+        [Test]
+        public void Limited_Error_Main_Delayed()
+        {
+            var to = Observable.Throw<IObservable<int>>(new InvalidOperationException())
+                .MergeMany(true)
+                .Test()
+                .AssertFailure(typeof(InvalidOperationException));
+        }
+
+        [Test]
+        public void Limited_Error_Inner()
+        {
+            var to = Observable.Return<IObservable<int>>(
+                    Observable.Throw<int>(new InvalidOperationException()))
+                .MergeMany(maxConcurrency: 1)
+                .Test()
+                .AssertFailure(typeof(InvalidOperationException));
+        }
+
+        [Test]
+        public void Limited_Error_Inner_Delayed()
+        {
+            var to = Observable.Return<IObservable<int>>(
+                    Observable.Throw<int>(new InvalidOperationException()))
+                .MergeMany(true, 1)
+                .Test()
+                .AssertFailure(typeof(InvalidOperationException));
         }
     }
 }

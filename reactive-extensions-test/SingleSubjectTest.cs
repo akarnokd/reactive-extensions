@@ -12,7 +12,7 @@ namespace akarnokd.reactive_extensions_test
         {
             var ms = new SingleSubject<int>();
 
-            Assert.False(ms.HasObserver());
+            Assert.False(ms.HasObservers);
             Assert.False(ms.HasCompleted());
             Assert.False(ms.HasException());
             Assert.IsNull(ms.GetException());
@@ -21,7 +21,7 @@ namespace akarnokd.reactive_extensions_test
 
             var to = ms.Test();
 
-            Assert.True(ms.HasObserver());
+            Assert.True(ms.HasObservers);
             Assert.False(ms.HasCompleted());
             Assert.False(ms.HasException());
             Assert.IsNull(ms.GetException());
@@ -32,7 +32,7 @@ namespace akarnokd.reactive_extensions_test
 
             ms.OnSuccess(1);
 
-            Assert.False(ms.HasObserver());
+            Assert.False(ms.HasObservers);
             Assert.True(ms.HasCompleted());
             Assert.False(ms.HasException());
             Assert.IsNull(ms.GetException());

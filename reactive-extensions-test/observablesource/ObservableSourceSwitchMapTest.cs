@@ -14,7 +14,7 @@ namespace akarnokd.reactive_extensions_test.observablesource
         {
             var us = new PublishSubject<int>();
 
-            var to = us.SwitchMap(v => ObservableSource.Range(v * 100, 5)).Test();
+            var to = us.SwitchMap(v => ObservableSource.Range(v * 100, 5).Hide()).Test();
 
             to.AssertEmpty();
 
@@ -29,6 +29,25 @@ namespace akarnokd.reactive_extensions_test.observablesource
             );
         }
 
+        [Test]
+        public void Basic_Fused()
+        {
+            var us = new PublishSubject<int>();
+
+            var to = us.SwitchMap(v => ObservableSource.Range(v * 100, 5)).Test();
+
+            to.AssertEmpty();
+
+            us.EmitAll(1, 2, 3, 4, 5);
+
+            to.AssertResult(
+                100, 101, 102, 103, 104,
+                200, 201, 202, 203, 204,
+                300, 301, 302, 303, 304,
+                400, 401, 402, 403, 404,
+                500, 501, 502, 503, 504
+            );
+        }
         [Test]
         public void Basic_DelayError()
         {
@@ -47,6 +66,24 @@ namespace akarnokd.reactive_extensions_test.observablesource
                 400, 401, 402, 403, 404,
                 500, 501, 502, 503, 504
             );
+        }
+
+        [Test]
+        public void Mapper_Crash()
+        {
+            var us = new PublishSubject<int>();
+
+            var to = us.SwitchMap<int, int>(v => throw new InvalidOperationException()).Test();
+
+            Assert.True(us.HasObservers);
+
+            to.AssertEmpty();
+
+            us.OnNext(1);
+
+            Assert.False(us.HasObservers);
+
+            to.AssertFailure(typeof(InvalidOperationException));
         }
 
         [Test]
