@@ -79,5 +79,20 @@ namespace akarnokd.reactive_extensions_test.observablesource
                 .Test()
                 .AssertResult(1, 2, 3, 4, 5);
         }
+
+        [Test]
+        public void Dispose()
+        {
+            TestHelper.VerifyDisposeObservableSource<int, int>(o => o.RetryWhen(v => v));
+        }
+
+        [Test]
+        public void Handler_Crash()
+        {
+            ObservableSource.Range(1, 5)
+                .RetryWhen<int, int>(v => throw new InvalidOperationException())
+                .Test()
+                .AssertFailure(typeof(InvalidOperationException));
+        }
     }
 }

@@ -11,7 +11,7 @@
     <RepositoryType>GitHub</RepositoryType>
     <Copyright>Copyright 2018, David Karnok</Copyright>
     <PackageReleaseNotes>- Code coverage improvements
-- BugFixes discovered via code coverage
+- BugFixes &amp; improvements discovered via code coverage
 - IObservableSource.OnTerminateDetach</PackageReleaseNotes>
     <PackageTags>reactive extensions</PackageTags>
   </PropertyGroup>

@@ -19,6 +19,7 @@ namespace akarnokd.reactive_extensions_test.observablesource
                 .AssertFailure(typeof(InvalidOperationException), 1, 2, 3, 4, 5);
         }
 
+        [Test]
         public void Repeat()
         {
             ObservableSource.Just(1)
@@ -84,6 +85,22 @@ namespace akarnokd.reactive_extensions_test.observablesource
                 .AssertFailure(typeof(InvalidOperationException), 1, 2, 3, 4, 5);
 
             Assert.False(us.HasObserver());
+        }
+
+
+        [Test]
+        public void Dispose()
+        {
+            TestHelper.VerifyDisposeObservableSource<int, int>(o => o.RepeatWhen(v => v));
+        }
+
+        [Test]
+        public void Handler_Crash()
+        {
+            ObservableSource.Range(1, 5)
+                .RetryWhen<int, int>(v => throw new InvalidOperationException())
+                .Test()
+                .AssertFailure(typeof(InvalidOperationException));
         }
     }
 }

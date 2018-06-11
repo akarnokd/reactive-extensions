@@ -240,6 +240,29 @@ namespace akarnokd.reactive_extensions_test.single
         }
 
         [Test]
+        public void Enumerable_Many()
+        {
+            var list = new List<ISingleSource<int>>();
+
+            for (int i = 0; i < 100; i++)
+            {
+                if (i != 99)
+                {
+                    list.Add(SingleSource.Never<int>());
+                }
+                else
+                {
+                    list.Add(SingleSource.Just(1));
+                }
+            }
+
+            list
+                .Amb()
+                .Test()
+                .AssertResult(1);
+        }
+
+        [Test]
         public void Enumerable_Basic_Single()
         {
             new List<ISingleSource<int>>()

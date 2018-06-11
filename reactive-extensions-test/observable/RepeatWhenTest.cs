@@ -19,6 +19,7 @@ namespace akarnokd.reactive_extensions_test.observable
                 .AssertFailure(typeof(InvalidOperationException), 1, 2, 3, 4, 5);
         }
 
+        [Test]
         public void Repeat()
         {
             Observable.Return(1)
@@ -80,6 +81,14 @@ namespace akarnokd.reactive_extensions_test.observable
                 .Test()
                 .AssertFailure(typeof(InvalidOperationException));
         }
+
+
+        [Test]
+        public void Dispose()
+        {
+            TestHelper.VerifyDisposeObservable<int, int>(o => o.RepeatWhen(v => v));
+        }
+
 
     }
 }

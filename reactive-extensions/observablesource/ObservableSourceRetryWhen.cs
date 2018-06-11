@@ -29,10 +29,7 @@ namespace akarnokd.reactive_extensions
 
         public void Subscribe(ISignalObserver<T> observer)
         {
-            if (observer == null)
-            {
-                throw new ArgumentNullException(nameof(observer));
-            }
+            ValidationHelper.RequireNonNull(observer, nameof(observer));
 
             var errorSignals = new PublishSubject<Exception>();
             var redo = default(IObservableSource<U>);

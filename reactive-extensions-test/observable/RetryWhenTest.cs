@@ -87,5 +87,11 @@ namespace akarnokd.reactive_extensions_test.observable
                 .Test()
                 .AssertFailure(typeof(InvalidOperationException));
         }
+
+        [Test]
+        public void Dispose()
+        {
+            TestHelper.VerifyDisposeObservable<int, int>(o => o.RetryWhen(v => v));
+        }
     }
 }

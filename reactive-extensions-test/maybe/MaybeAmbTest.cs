@@ -311,15 +311,38 @@ namespace akarnokd.reactive_extensions_test.maybe
         }
 
         [Test]
-        public void Enumerable_Basic_Single()
+        public void Enumerable_Many()
         {
-            new List<IMaybeSource<int>>()
+            var list = new List<IMaybeSource<int>>();
+
+            for (int i = 0; i < 100; i++)
             {
-                MaybeSource.Just(1)
-            }
+                if (i != 99)
+                {
+                    list.Add(MaybeSource.Never<int>());
+                }
+                else
+                {
+                    list.Add(MaybeSource.Just(1));
+                }
+            } 
+
+            list
             .Amb()
             .Test()
             .AssertResult(1);
+        }
+
+        [Test]
+        public void Enumerable_Basic_Single()
+        {
+            new List<IMaybeSource<int>>()
+                {
+                    MaybeSource.Just(1)
+                }
+                .Amb()
+                .Test()
+                .AssertResult(1);
         }
 
         [Test]

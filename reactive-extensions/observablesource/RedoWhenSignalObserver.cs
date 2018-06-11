@@ -29,13 +29,7 @@ namespace akarnokd.reactive_extensions
         internal void HandlerError(Exception error)
         {
             DisposableHelper.Dispose(ref upstream);
-            if (Interlocked.CompareExchange(ref this.error, error, null) == null)
-            {
-                if (Interlocked.Increment(ref halfSerializer) == 1)
-                {
-                    downstream.OnError(error);
-                }
-            }
+            HalfSerializer.OnError(downstream, error, ref halfSerializer, ref this.error);
         }
 
         internal void HandleSignal(X signal)
@@ -43,11 +37,7 @@ namespace akarnokd.reactive_extensions
             for (; ; )
             {
                 var d = Volatile.Read(ref upstream);
-                if (d == DisposableHelper.DISPOSED)
-                {
-                    break;
-                }
-                if (Interlocked.CompareExchange(ref upstream, null, d) == d)
+                if (d != DisposableHelper.DISPOSED && Interlocked.CompareExchange(ref upstream, null, d) == d)
                 {
                     d.Dispose();
                     terminalSignal.OnNext(signal);
@@ -59,47 +49,19 @@ namespace akarnokd.reactive_extensions
         internal void MainError(Exception error)
         {
             handlerObserver.Dispose();
-            if (Interlocked.CompareExchange(ref this.error, error, null) == null)
-            {
-                if (Interlocked.Increment(ref halfSerializer) == 1)
-                {
-                    downstream.OnError(error);
-                }
-            }
+            HalfSerializer.OnError(downstream, error, ref halfSerializer, ref this.error);
         }
 
         internal void MainComplete()
         {
             handlerObserver.Dispose();
-            if (Interlocked.Increment(ref halfSerializer) == 1)
-            {
-                var ex = ExceptionHelper.Terminate(ref error);
-                if (ex == null)
-                {
-                    downstream.OnCompleted();
-                }
-                else
-                {
-                    downstream.OnError(ex);
-                }
-            }
+            HalfSerializer.OnCompleted(downstream, ref halfSerializer, ref this.error);
         }
 
         internal void HandlerComplete()
         {
             DisposableHelper.Dispose(ref upstream);
-            if (Interlocked.Increment(ref halfSerializer) == 1)
-            {
-                var ex = ExceptionHelper.Terminate(ref error);
-                if (ex == null)
-                {
-                    downstream.OnCompleted();
-                }
-                else
-                {
-                    downstream.OnError(ex);
-                }
-            }
+            HalfSerializer.OnCompleted(downstream, ref halfSerializer, ref this.error);
         }
 
         internal void HandlerNext()
@@ -130,23 +92,7 @@ namespace akarnokd.reactive_extensions
 
         public override void OnNext(T value)
         {
-            if (Interlocked.CompareExchange(ref halfSerializer, 1, 0) == 0)
-            {
-                downstream.OnNext(value);
-                if (Interlocked.Decrement(ref halfSerializer) != 0)
-                {
-                    var ex = error;
-                    if (ex == null)
-                    {
-                        downstream.OnCompleted();
-                    }
-                    else
-                    {
-                        downstream.OnError(ex);
-                    }
-                    handlerObserver.Dispose();
-                }
-            }
+            HalfSerializer.OnNext(downstream, value, ref halfSerializer, ref error);
         }
 
 
