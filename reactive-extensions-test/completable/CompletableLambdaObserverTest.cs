@@ -70,5 +70,23 @@ namespace akarnokd.reactive_extensions_test.completable
             Assert.AreEqual(0, complete);
             Assert.IsNull(error);
         }
+
+        [Test]
+        public void OnError_Crash()
+        {
+            CompletableSource.Error(new IndexOutOfRangeException())
+                .Subscribe(() => { }, v => throw new InvalidOperationException());
+        }
+
+        [Test]
+        public void OnCompleted_Crash()
+        {
+            var error = default(Exception);
+
+            CompletableSource.Empty()
+                .Subscribe(() => throw new InvalidOperationException(), e => error = e);
+
+            Assert.Null(error);
+        }
     }
 }

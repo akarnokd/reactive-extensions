@@ -5,6 +5,7 @@ using System.Reactive.Disposables;
 using System.Reactive.Subjects;
 using System.Text;
 using System.Threading;
+using static akarnokd.reactive_extensions.ValidationHelper;
 
 namespace akarnokd.reactive_extensions
 {
@@ -29,21 +30,14 @@ namespace akarnokd.reactive_extensions
 
         public IDisposable Subscribe(IObserver<T> observer)
         {
-            if (observer == null)
-            {
-                throw new ArgumentNullException(nameof(observer));
-            }
+            RequireNonNull(observer, nameof(observer));
 
             var errorSignals = new UnicastSubject<Exception>();
             var redo = default(IObservable<U>);
 
             try
             {
-                redo = handler(errorSignals);
-                if (redo == null)
-                {
-                    throw new NullReferenceException("The handler returned a null IObservable");
-                }
+                redo = RequireNonNullRef(handler(errorSignals), "The handler returned a null IObservable");
             }
             catch (Exception ex)
             {

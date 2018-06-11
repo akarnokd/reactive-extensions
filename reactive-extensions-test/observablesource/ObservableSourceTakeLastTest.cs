@@ -77,5 +77,44 @@ namespace akarnokd.reactive_extensions_test.observablesource
                 .AssertFusionMode(FusionSupport.Async)
                 .AssertResult(6, 7, 8, 9, 10);
         }
+
+        [Test]
+        public void Fused_Rejected()
+        {
+            ObservableSource.Range(1, 10)
+                .TakeLast(5)
+                .Test(fusionMode: FusionSupport.Sync)
+                .AssertFuseable()
+                .AssertFusionMode(FusionSupport.None)
+                .AssertResult(6, 7, 8, 9, 10);
+        }
+
+        [Test]
+        public void Fused_Api()
+        {
+            TestHelper.AssertFuseableApi(ObservableSource.Range(1, 10)
+                .TakeLast(5));
+        }
+
+        [Test]
+        public void Take()
+        {
+            ObservableSource.Range(1, 5)
+                .TakeLast(5)
+                .Take(3)
+                .Test()
+                .AssertResult(1, 2, 3);
+        }
+
+        [Test]
+        public void Take_Exact()
+        {
+            ObservableSource.Range(1, 5)
+                .TakeLast(5)
+                .Take(5)
+                .Test()
+                .AssertResult(1, 2, 3, 4, 5);
+        }
+
     }
 }

@@ -630,13 +630,13 @@ namespace akarnokd.reactive_extensions
         /// <summary>
         /// Returns the number of items received by the TestObserver.
         /// </summary>
-        public int ItemCount { get { return Volatile.Read(ref itemCount); } }
+        public int ItemCount => Volatile.Read(ref itemCount);
 
         /// <summary>
         /// Returns the number of errors received by the TestObserver.
         /// </summary>
         /// <remarks>Since 0.0.3</remarks>
-        public int ErrorCount { get { return Volatile.Read(ref errorCount); } }
+        public int ErrorCount => Volatile.Read(ref errorCount);
 
         /// <summary>
         /// Assert that the TestObserver is not terminated and contains only the
@@ -662,7 +662,7 @@ namespace akarnokd.reactive_extensions
         /// items to be read safely.
         /// </summary>
         /// <remarks>Since 0.0.3</remarks>
-        public List<T> Items { get { return items; } }
+        public List<T> Items => items;
 
         /// <summary>
         /// The list of received errors so far. Use
@@ -670,7 +670,7 @@ namespace akarnokd.reactive_extensions
         /// items to be read safely.
         /// </summary>
         /// <remarks>Since 0.0.3</remarks>
-        public List<Exception> Errors { get { return errors; } }
+        public List<Exception> Errors => errors;
 
         /// <summary>
         /// Assert that there is exactly one <see cref="AggregateException"/>
@@ -691,7 +691,7 @@ namespace akarnokd.reactive_extensions
             {
                 throw Fail("The AggregateException index out of bounds. Expected: " + index + ", Actual: " + exs.Count);
             }
-            if (!errorType.GetTypeInfo().IsAssignableFrom(exs[index].GetType().GetTypeInfo()))
+            if (errorType.GetTypeInfo().IsAssignableFrom(exs[index].GetType().GetTypeInfo()))
             {
                 if (message != null)
                 {
@@ -710,9 +710,9 @@ namespace akarnokd.reactive_extensions
                         }
                     }
                 }
-                throw Fail("Wrong error type @ " + index + ". Expected: " + errorType + ", Actual: " + exs[index].GetType());
+                return this;
             }
-            return this;
+            throw Fail("Wrong error type @ " + index + ". Expected: " + errorType + ", Actual: " + exs[index].GetType());
         }
 
         /// <summary>

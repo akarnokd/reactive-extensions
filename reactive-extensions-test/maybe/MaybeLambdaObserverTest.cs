@@ -57,5 +57,35 @@ namespace akarnokd.reactive_extensions_test.maybe
             Assert.False(ss.HasObserver());
             Assert.AreEqual(0, count);
         }
+
+        [Test]
+        public void OnSuccess_Crash()
+        {
+            var error = default(Exception);
+
+            MaybeSource.Just(1)
+                .Subscribe(v => throw new InvalidOperationException(), e => error = e);
+
+            Assert.Null(error);
+        }
+
+        [Test]
+        public void OnError_Crash()
+        {
+            MaybeSource.Error<int>(new IndexOutOfRangeException())
+                .Subscribe(v => { }, v => throw new InvalidOperationException());
+        }
+
+        [Test]
+        public void OnCompleted_Crash()
+        {
+            var error = default(Exception);
+
+            MaybeSource.Empty<int>()
+                .Subscribe(v => { }, e => error = e, () => throw new InvalidOperationException());
+
+            Assert.Null(error);
+        }
+
     }
 }

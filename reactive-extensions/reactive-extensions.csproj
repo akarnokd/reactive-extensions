@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.0.23-alpha</Version>
+    <Version>0.0.24-alpha</Version>
     <Description>Extension methods and classes for the dotnet/reactive library.</Description>
     <Authors>David Karnok</Authors>
     <PackageId>akarnokd.reactive_extensions</PackageId>
@@ -10,22 +10,9 @@
     <RepositoryUrl>https://github.com/akarnokd/reactive-extensions</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <Copyright>Copyright 2018, David Karnok</Copyright>
-    <PackageReleaseNotes>New operators:
-- IObservableSource operators:
-  - BlockingFirst
-  - BlockingLast
-  - BlockingSingle
-  - BlockingTryFirst
-  - BlockingTryLast
-  - BlockingTrySingle
-  - FlatMap
-  - Join
-  - Merge (array, IEnumerable)
-  - SkipLast (time)
-  - TakeLast (time)
-  - Window
-- IConnectableObservableSource
-  - RefCount</PackageReleaseNotes>
+    <PackageReleaseNotes>- Code coverage improvements
+- BugFixes discovered via code coverage
+- IObservableSource.OnTerminateDetach</PackageReleaseNotes>
     <PackageTags>reactive extensions</PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

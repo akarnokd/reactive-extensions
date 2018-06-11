@@ -62,11 +62,7 @@ namespace akarnokd.reactive_extensions
 
             public bool IsEmpty()
             {
-                if (Volatile.Read(ref state) == StateReady)
-                {
-                    return queue.Count == 0;
-                }
-                return true;
+                return Volatile.Read(ref state) != StateReady || queue.Count == 0;
             }
 
             public void OnCompleted()

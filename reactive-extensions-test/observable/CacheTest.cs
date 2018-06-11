@@ -139,5 +139,63 @@ namespace akarnokd.reactive_extensions_test.observable
 
             }
         }
+
+        [Test]
+        public void Dispose_Upfront()
+        {
+            var subj = new Subject<int>();
+
+            var src = subj.Cache();
+
+            Assert.False(subj.HasObservers);
+
+            src.Test().Cancel().AssertEmpty();
+
+            Assert.True(subj.HasObservers);
+        }
+
+        [Test]
+        public void Dispose_Upfront_NonEmpty()
+        {
+            var subj = new Subject<int>();
+
+            var src = subj.Cache();
+
+            var to1 = src.Test();
+
+            Assert.True(subj.HasObservers);
+
+            var to2 = src.Test().Cancel().AssertEmpty();
+
+            var to3 = src.Test().Cancel();
+
+            subj.OnCompleted();
+
+            to1.AssertResult();
+
+            to2.AssertEmpty();
+
+            to3.AssertEmpty();
+        }
+
+        [Test]
+        public void Take()
+        {
+            var subj = new Subject<int>();
+
+            var src = subj.Cache();
+
+            var to1 = src.Take(1).Test();
+
+            subj.OnNext(1);
+
+            to1.AssertResult(1);
+
+            subj.OnNext(2);
+
+            var to2 = src.Take(1).Test();
+
+            to2.AssertResult(1);
+        }
     }
 }

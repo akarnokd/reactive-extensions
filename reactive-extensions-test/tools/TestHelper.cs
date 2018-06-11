@@ -203,7 +203,7 @@ namespace akarnokd.reactive_extensions_test
                     try
                     {
                         var m = upstream.RequestFusion(boundary ? FusionSupport.AnyBoundary : FusionSupport.Any);
-                        if (m == FusionSupport.Sync)
+                        if (m != FusionSupport.None)
                         {
                             upstream.IsEmpty();
 

@@ -2747,6 +2747,22 @@ namespace akarnokd.reactive_extensions
             return new ObservableSourceJoin<T, U, V, W, R>(left, right, leftSelector, rightSelector, resultSelector);
         }
 
+        /// <summary>
+        /// When the upstream terminates or the downstream disposes,
+        /// it detaches the references between the two, avoiding
+        /// leaks of one or the other.
+        /// </summary>
+        /// <typeparam name="T">The success value type.</typeparam>
+        /// <param name="source">The observable source to detach from upon termination or cancellation.</param>
+        /// <returns>The new observable source instance.</returns>
+        /// <remarks>Since 0.0.24</remarks>
+        public static IObservableSource<T> OnTerminateDetach<T>(this IObservableSource<T> source)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return new ObservableSourceOnTerminateDetach<T>(source);
+        }
+
         // --------------------------------------------------------------
         // Consumer methods
         // --------------------------------------------------------------

@@ -62,6 +62,17 @@ namespace akarnokd.reactive_extensions_test.observablesource
         }
 
         [Test]
+        public void Fused_Rejected()
+        {
+            ObservableSource.Range(1, 5)
+                .IgnoreElements()
+                .Test(fusionMode: FusionSupport.Sync)
+                .AssertFuseable()
+                .AssertFusionMode(FusionSupport.None)
+                .AssertResult();
+        }
+
+        [Test]
         public void Fused_Empty()
         {
             ObservableSource.Empty<int>()
@@ -101,5 +112,14 @@ namespace akarnokd.reactive_extensions_test.observablesource
 
             Assert.False(subj.HasObservers);
         }
+
+        [Test]
+        public void Fused_Api()
+        {
+            var subj = new PublishSubject<int>();
+
+            TestHelper.AssertFuseableApi(subj.IgnoreElements());
+        }
+
     }
 }

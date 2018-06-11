@@ -18,31 +18,67 @@ namespace akarnokd.reactive_extensions
             source.Subscribe(new IgnoreElementsObserver(observer));
         }
 
-        sealed class IgnoreElementsObserver : BasicFuseableObserver<T, T>
+        sealed class IgnoreElementsObserver : IFuseableDisposable<T>, ISignalObserver<T>
         {
-            public IgnoreElementsObserver(ISignalObserver<T> downstream) : base(downstream)
+            readonly ISignalObserver<T> downstream;
+
+            IDisposable upstream;
+
+            public IgnoreElementsObserver(ISignalObserver<T> downstream)
             {
+                this.downstream = downstream;
             }
 
-            public override void OnNext(T item)
+            public void OnSubscribe(IDisposable d)
+            {
+                upstream = d;
+                downstream.OnSubscribe(this);
+            }
+
+            public void OnNext(T item)
             {
                 // deliberately ignored
             }
 
-            public override int RequestFusion(int mode)
+            public void OnError(Exception ex)
             {
-                if ((mode & FusionSupport.Async) != 0)
-                {
-                    fusionMode = FusionSupport.Async;
-                    return FusionSupport.Async;
-                }
-                return FusionSupport.None;
+                downstream.OnError(ex);
             }
 
-            public override T TryPoll(out bool success)
+            public void OnCompleted()
+            {
+                downstream.OnCompleted();
+            }
+
+            public int RequestFusion(int mode)
+            {
+                return mode & FusionSupport.Async;
+            }
+
+            public bool TryOffer(T item)
+            {
+                throw new InvalidOperationException("Should not be called");
+            }
+
+            public T TryPoll(out bool success)
             {
                 success = false;
                 return default(T);
+            }
+
+            public bool IsEmpty()
+            {
+                return true;
+            }
+
+            public void Clear()
+            {
+                // nothing to clear
+            }
+
+            public void Dispose()
+            {
+                upstream.Dispose();
             }
         }
     }

@@ -72,5 +72,14 @@ namespace akarnokd.reactive_extensions_test.observable
 
             Assert.False(us.HasObserver());
         }
+
+        [Test]
+        public void Handler_Crash()
+        {
+            Observable.Range(1, 5).RepeatWhen<int, int>(v => throw new InvalidOperationException())
+                .Test()
+                .AssertFailure(typeof(InvalidOperationException));
+        }
+
     }
 }

@@ -137,5 +137,47 @@ namespace akarnokd.reactive_extensions_test.observablesource
 
             to.AssertResult(100, 101, 102, 103, 104, 200, 201);
         }
+
+        [Test]
+        public void Dispose_On_MoveNext()
+        {
+            var to = new TestObserver<int>();
+
+            ObservableSource.Just(1).Hide()
+                .ConcatMap(v => moveNextDispose(to))
+                .Subscribe(to);
+
+            to.AssertValuesOnly(1)
+                .AssertNoError()
+                .AssertNotCompleted();
+        }
+
+        [Test]
+        public void GetEnumerator_Crash()
+        {
+            ObservableSource.Just(1).Hide()
+                .ConcatMap(v => new FailingEnumerable<int>(true, false, false))
+                .Test()
+                .AssertFailure(typeof(InvalidOperationException));
+        }
+
+        [Test]
+        public void MoveNext_Crash()
+        {
+            ObservableSource.Just(1).Hide()
+                .ConcatMap(v => new FailingEnumerable<int>(false, true, false))
+                .Test()
+                .AssertFailure(typeof(InvalidOperationException));
+        }
+
+
+        IEnumerable<int> moveNextDispose(TestObserver<int> to)
+        {
+            yield return 1;
+
+            to.Dispose();
+
+            yield return 2;
+        }
     }
 }

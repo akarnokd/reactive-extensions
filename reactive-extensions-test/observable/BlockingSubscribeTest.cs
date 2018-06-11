@@ -77,6 +77,17 @@ namespace akarnokd.reactive_extensions_test.observable
         }
 
         [Test]
+        public void Basic_Action_Defaults()
+        {
+            var to = new TestObserver<int>();
+
+            Observable.Range(1, 5)
+                .BlockingSubscribe(to.OnNext);
+
+            to.AssertValuesOnly(1, 2, 3, 4, 5);
+        }
+
+        [Test]
         public void Basic_Action_Error()
         {
             var to = new TestObserver<int>();

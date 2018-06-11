@@ -418,7 +418,7 @@ namespace akarnokd.reactive_extensions_test.observablesource
                 })
                 .Test()
                 .AssertCompositeError(0, typeof(InvalidOperationException), "main")
-                .AssertCompositeError(0, typeof(InvalidOperationException), "inner")
+                .AssertCompositeError(1, typeof(InvalidOperationException), "inner")
                 ;
             ;
 
