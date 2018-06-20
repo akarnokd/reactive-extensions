@@ -1003,15 +1003,29 @@ The factory and extension methods are located in `akarnokd.reactive_extensions.A
 
 ### Factory methods
 
-- Empty
-- Error
-- Just
-- Never
-- Range
+- `Concat`
+- `Defer`
+- `Empty`
+- `Error`
+- `FromEnumerable`
+- `Just`
+- `Never`
+- `Range`
 
 ### Instance methods
 
+- `Filter`
+- `Map`
+- `Take`
+- `Skip`
+
 ### Consumers
+
+- `BlockingFirst`
+- `TestAsync`
+- `TestAsyncFused`
+- `ToAsyncEnumerable` (on `IEnumerable`)
+
 
 ### Interoperation
 

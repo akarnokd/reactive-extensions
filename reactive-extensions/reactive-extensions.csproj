@@ -10,13 +10,22 @@
     <RepositoryUrl>https://github.com/akarnokd/reactive-extensions</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <Copyright>Copyright 2018, David Karnok</Copyright>
-    <PackageReleaseNotes>- Support for the C# 8 proposed IAsyncEnumerable/IAsyncEnumerator
+    <PackageReleaseNotes>- Prototype for the C# 8 proposed IAsyncEnumerable/IAsyncEnumerator interface-based async-streams
 - AsyncEnumerable factory &amp; extension method host:
+  - BlockingFirst
+  - Defer
   - Empty
   - Error
+  - Filter
   - Just
+  - Map
   - Never
-  - Range</PackageReleaseNotes>
+  - Range
+  - Skip
+  - Take
+  - TestAsync
+  - TestAsyncFused
+</PackageReleaseNotes>
     <PackageTags>reactive extensions</PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
