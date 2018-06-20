@@ -9,7 +9,7 @@ Extensions to the [dotnet/reactive](https://github.com/dotnet/reactive) library.
 ### Setup
 
 ```
-Install-Package akarnokd.reactive_extensions -Version 0.0.24-alpha
+Install-Package akarnokd.reactive_extensions -Version 0.0.25-alpha
 ```
 
 ### Dependencies
