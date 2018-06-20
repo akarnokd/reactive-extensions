@@ -1014,10 +1014,12 @@ The factory and extension methods are located in `akarnokd.reactive_extensions.A
 
 ### Instance methods
 
+- `Collect`
 - `Filter`
 - `Map`
-- `Take`
+- `Reduce`
 - `Skip`
+- `Take`
 
 ### Consumers
 

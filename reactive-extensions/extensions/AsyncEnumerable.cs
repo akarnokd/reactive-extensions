@@ -189,6 +189,92 @@ namespace akarnokd.reactive_extensions
             return new AsyncEnumerableSkip<T>(source, n);
         }
 
+        /// <summary>
+        /// Creates a collection for each async enumerator requested
+        /// and collects items from the source into it via a collector function,
+        /// then signals the collection as a single result.
+        /// </summary>
+        /// <typeparam name="T">The element type of the source.</typeparam>
+        /// <typeparam name="C">The type of the collection.</typeparam>
+        /// <param name="source">The upstream async enumerable source.</param>
+        /// <param name="collectionSupplier">The function called for each requested async
+        /// enumerator and should return a collection to be passed to <paramref name="collector"/> and
+        /// as a result.</param>
+        /// <param name="collector">The action receiving the collection instance and the current
+        /// upstream item.</param>
+        /// <returns>The new async enumerable instance.</returns>
+        public static IAsyncEnumerable<C> Collect<T, C>(this IAsyncEnumerable<T> source, Func<C> collectionSupplier, Action<C, T> collector)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(collectionSupplier, nameof(collectionSupplier));
+            RequireNonNull(collector, nameof(collector));
+
+            return new AsyncEnumerableCollect<T, C>(source, collectionSupplier, collector);
+        }
+
+        /// <summary>
+        /// Reduces the source async enumerable into a single value by
+        /// applying a function to the previous accumulator value and
+        /// the current upstream value to produce the next accumulator value.
+        /// This accumulator value is then signaled to the downstream.
+        /// If the source is empty, this async enumerable will be empty too.
+        /// </summary>
+        /// <typeparam name="T">The element type of the source and the result.</typeparam>
+        /// <param name="source">The sequence to reduce via a function to a single value.</param>
+        /// <param name="reducer">The function that receives the previous accumulator
+        /// value (or the very first upstream item) and the current upstream item and
+        /// should return the new accumulated value.</param>
+        /// <returns>The new async enumerable instance.</returns>
+        public static IAsyncEnumerable<T> Reduce<T>(this IAsyncEnumerable<T> source, Func<T, T, T> reducer)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(reducer, nameof(reducer));
+
+            return new AsyncEnumerableReducePlain<T>(source, reducer);
+        }
+
+        /// <summary>
+        /// Reduces the source async enumerable into a single value by
+        /// applying a function to the previous accumulator value and
+        /// the current upstream value to produce the next accumulator value.
+        /// This accumulator value is then signaled to the downstream.
+        /// </summary>
+        /// <typeparam name="T">The element type of the source and the result.</typeparam>
+        /// <typeparam name="R">The type of the accumulator and result.</typeparam>
+        /// <param name="source">The sequence to reduce via a function to a single value.</param>
+        /// <param name="initialSupplier">Function that provides the initial accumulator value.</param>
+        /// <param name="reducer">The function that receives the previous accumulator
+        /// value (or the very first upstream item) and the current upstream item and
+        /// should return the new accumulated value.</param>
+        /// <returns>The new async enumerable instance.</returns>
+        public static IAsyncEnumerable<R> Reduce<T, R>(this IAsyncEnumerable<T> source, Func<R> initialSupplier, Func<R, T, R> reducer)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(initialSupplier, nameof(initialSupplier));
+            RequireNonNull(reducer, nameof(reducer));
+
+            return new AsyncEnumerableReduce<T, R>(source, initialSupplier, reducer);
+        }
+
+        /// <summary>
+        /// Maps each upstream async item into an IEnumerable and relays their items to the downstream
+        /// in order..
+        /// </summary>
+        /// <typeparam name="T">The element type of the upstream source.</typeparam>
+        /// <typeparam name="R">The element type of the resulting async sequence and the
+        /// inner IEnumerables.</typeparam>
+        /// <param name="source">The source to map to IEnumerables and relay their items.</param>
+        /// <param name="mapper">The mapper that receives an upstream item and should
+        /// return an IEnumerable to be emitted.</param>
+        /// <returns>The new async enumerable instance.</returns>
+        public static IAsyncEnumerable<R> ConcatMap<T, R>(this IAsyncEnumerable<T> source, Func<T, IEnumerable<R>> mapper)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(source, nameof(source));
+
+            return new AsyncEnumerableConcatMapEnumerable<T, R>(source, mapper);
+        }
+
         // -------------------------------------------------------------------------------------
         // Consumer methods
         // -------------------------------------------------------------------------------------

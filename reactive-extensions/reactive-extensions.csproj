@@ -13,6 +13,7 @@
     <PackageReleaseNotes>- Prototype for the C# 8 proposed IAsyncEnumerable/IAsyncEnumerator interface-based async-streams
 - AsyncEnumerable factory &amp; extension method host:
   - BlockingFirst
+  - Collect
   - Defer
   - Empty
   - Error
@@ -21,6 +22,7 @@
   - Map
   - Never
   - Range
+  - Reduce
   - Skip
   - Take
   - TestAsync
