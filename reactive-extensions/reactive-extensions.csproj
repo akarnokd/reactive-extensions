@@ -10,24 +10,11 @@
     <RepositoryUrl>https://github.com/akarnokd/reactive-extensions</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <Copyright>Copyright 2018, David Karnok</Copyright>
-    <PackageReleaseNotes>- Prototype for the C# 8 proposed IAsyncEnumerable/IAsyncEnumerator interface-based async-streams
-- AsyncEnumerable factory &amp; extension method host:
-  - BlockingFirst
-  - Collect
-  - Defer
-  - Empty
-  - Error
-  - Filter
-  - Just
-  - Map
-  - Never
-  - Range
-  - Reduce
-  - Skip
-  - Take
-  - TestAsync
-  - TestAsyncFused
-</PackageReleaseNotes>
+    <PackageReleaseNotes>- AsyncEnumerable factory &amp; extension method host:
+  - FromTask
+  - SkipUntil
+  - TakeUntil
+  - ToAsyncEnumerable (on Task)</PackageReleaseNotes>
     <PackageTags>reactive extensions</PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

@@ -20,5 +20,27 @@ namespace akarnokd.reactive_extensions
         /// A completed task with false value.
         /// </summary>
         internal static readonly Task<bool> FalseTask = Task.FromResult(false);
+
+        /// <summary>
+        /// A task completion source indicating a terminated task.
+        /// Do not leak this.
+        /// </summary>
+        /// <remarks>Since 0.0.26</remarks>
+        internal static readonly TaskCompletionSource<bool> CompletedSource = new TaskCompletionSource<bool>();
+
+        /// <summary>
+        /// Unwrap an aggregate exception if it contains only a single inner exception.
+        /// </summary>
+        /// <param name="ex">The aggregate exception to unwrap.</param>
+        /// <returns>The unwrapped exception.</returns>
+        /// <remarks>Since 0.0.26</remarks>
+        internal static Exception Unwrap(AggregateException ex)
+        {
+            if (ex.InnerExceptions.Count == 1)
+            {
+                return ex.InnerExceptions[0];
+            }
+            return ex;
+        }
     }
 }

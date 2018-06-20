@@ -119,6 +119,36 @@ namespace akarnokd.reactive_extensions
             return new AsyncEnumerableFromEnumerable<T>(source);
         }
 
+        /// <summary>
+        /// Wraps a valueless task into an async enumerable sequence
+        /// which completes when the task completes.
+        /// </summary>
+        /// <typeparam name="T">The target element type.</typeparam>
+        /// <param name="source">The source task to wrap.</param>
+        /// <returns>The new async enumerable instance.</returns>
+        /// <remarks>Since 0.0.26</remarks>
+        public static IAsyncEnumerable<T> FromTask<T>(Task source)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return new AsyncEnumerableFromTaskPlain<T>(source);
+        }
+
+        /// <summary>
+        /// Wraps a generic task into an async enumerable sequence
+        /// which completes when the task completes.
+        /// </summary>
+        /// <typeparam name="T">The target element type.</typeparam>
+        /// <param name="source">The source task to wrap.</param>
+        /// <returns>The new async enumerable instance.</returns>
+        /// <remarks>Since 0.0.26</remarks>
+        public static IAsyncEnumerable<T> FromTask<T>(Task<T> source)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return new AsyncEnumerableFromTask<T>(source);
+        }
+
         // -------------------------------------------------------------------------------------
         // Instance/In-sequence methods
         // -------------------------------------------------------------------------------------
@@ -270,9 +300,45 @@ namespace akarnokd.reactive_extensions
         public static IAsyncEnumerable<R> ConcatMap<T, R>(this IAsyncEnumerable<T> source, Func<T, IEnumerable<R>> mapper)
         {
             RequireNonNull(source, nameof(source));
-            RequireNonNull(source, nameof(source));
+            RequireNonNull(mapper, nameof(mapper));
 
             return new AsyncEnumerableConcatMapEnumerable<T, R>(source, mapper);
+        }
+
+        /// <summary>
+        /// Relays items from the source async enumerable until the other 
+        /// async enumerable signals an item or completes.
+        /// </summary>
+        /// <typeparam name="T">The element type of the main and result async sequences.</typeparam>
+        /// <typeparam name="U">The element type of the termination-providing async sequence.</typeparam>
+        /// <param name="source">The source async sequence to relay elements of.</param>
+        /// <param name="other">The async sequence to signal the termination of the main sequence.</param>
+        /// <returns>The new async enumerable instance.</returns>
+        /// <remarks>Since 0.0.26</remarks>
+        public static IAsyncEnumerable<T> TakeUntil<T, U>(this IAsyncEnumerable<T> source, IAsyncEnumerable<U> other)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(other, nameof(other));
+
+            return new AsyncEnumerableTakeUntil<T, U>(source, other);
+        }
+
+        /// <summary>
+        /// Skips items from the source async enumerable until the other 
+        /// async enumerable signals an item or completes.
+        /// </summary>
+        /// <typeparam name="T">The element type of the main and result async sequences.</typeparam>
+        /// <typeparam name="U">The element type of the termination-providing async sequence.</typeparam>
+        /// <param name="source">The source async sequence to relay elements of.</param>
+        /// <param name="other">The async sequence to open the gate on the main sequence.</param>
+        /// <returns>The new async enumerable instance.</returns>
+        /// <remarks>Since 0.0.26</remarks>
+        public static IAsyncEnumerable<T> SkipUntil<T, U>(this IAsyncEnumerable<T> source, IAsyncEnumerable<U> other)
+        {
+            RequireNonNull(source, nameof(source));
+            RequireNonNull(other, nameof(other));
+
+            return new AsyncEnumerableSkipUntil<T, U>(source, other);
         }
 
         // -------------------------------------------------------------------------------------
@@ -286,7 +352,7 @@ namespace akarnokd.reactive_extensions
         /// <typeparam name="T">The element type of the sequence and return item.</typeparam>
         /// <param name="source">The source async sequence to take the first element of.</param>
         /// <returns>The first element of the async sequence.</returns>
-        /// <exception cref="OperationCanceledException">If the underlying operation is cancelled.</exception>
+        /// <exception cref="OperationCanceledException">If the underlying operation is canceled.</exception>
         /// <exception cref="IndexOutOfRangeException">If the source is empty</exception>
         public static T BlockingFirst<T>(this IAsyncEnumerable<T> source)
         {
@@ -421,6 +487,36 @@ namespace akarnokd.reactive_extensions
             RequireNonNull(source, nameof(source));
 
             return new AsyncEnumerableFromEnumerable<T>(source);
+        }
+
+        /// <summary>
+        /// Wraps a valueless task into an async enumerable sequence
+        /// which completes when the task completes.
+        /// </summary>
+        /// <typeparam name="T">The target element type.</typeparam>
+        /// <param name="source">The source task to wrap.</param>
+        /// <returns>The new async enumerable instance.</returns>
+        /// <remarks>Since 0.0.26</remarks>
+        public static IAsyncEnumerable<T> ToAsyncEnumerable<T>(this Task source)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return new AsyncEnumerableFromTaskPlain<T>(source);
+        }
+
+        /// <summary>
+        /// Wraps a generic task into an async enumerable sequence
+        /// which completes when the task completes.
+        /// </summary>
+        /// <typeparam name="T">The target element type.</typeparam>
+        /// <param name="source">The source task to wrap.</param>
+        /// <returns>The new async enumerable instance.</returns>
+        /// <remarks>Since 0.0.26</remarks>
+        public static IAsyncEnumerable<T> ToAsyncEnumerable<T>(this Task<T> source)
+        {
+            RequireNonNull(source, nameof(source));
+
+            return new AsyncEnumerableFromTask<T>(source);
         }
     }
 }

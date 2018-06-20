@@ -9,7 +9,7 @@ Extensions to the [dotnet/reactive](https://github.com/dotnet/reactive) library.
 ### Setup
 
 ```
-Install-Package akarnokd.reactive_extensions -Version 0.0.25-alpha
+Install-Package akarnokd.reactive_extensions -Version 0.0.26-alpha
 ```
 
 ### Dependencies
@@ -1008,6 +1008,7 @@ The factory and extension methods are located in `akarnokd.reactive_extensions.A
 - `Empty`
 - `Error`
 - `FromEnumerable`
+- `FromTask`
 - `Just`
 - `Never`
 - `Range`
@@ -1019,15 +1020,17 @@ The factory and extension methods are located in `akarnokd.reactive_extensions.A
 - `Map`
 - `Reduce`
 - `Skip`
+- `SkipUntil`
 - `Take`
+- `TakeUntil`
 
 ### Consumers
 
 - `BlockingFirst`
 - `TestAsync`
 - `TestAsyncFused`
-- `ToAsyncEnumerable` (on `IEnumerable`)
 
 
 ### Interoperation
 
+- `ToAsyncEnumerable` (on `IEnumerable`, `Task`)
