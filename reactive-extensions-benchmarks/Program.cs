@@ -18,7 +18,8 @@ namespace akarnokd.reactive_extensions_benchmarks
             //BenchmarkRunner.Run<FlatMapXPerf>();
             //BenchmarkRunner.Run<ConcatMapEagerXPerf>();
             //BenchmarkRunner.Run<XMapYPerf>();
-            BenchmarkRunner.Run<MergeMapXPerf>();
+            //BenchmarkRunner.Run<MergeMapXPerf>();
+            BenchmarkRunner.Run<AsyncEnumJustPerf>();
             // --------------------------------------------------
             Console.ReadLine();
         }
