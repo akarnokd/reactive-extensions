@@ -15,7 +15,7 @@ Install-Package akarnokd.reactive_extensions -Version 0.0.26-alpha
 ### Dependencies
 
 - `NETStandard2.0`
-- [`System.Reactive` 4.0.0 or newer](https://www.nuget.org/packages/System.Reactive/).
+- [`System.Reactive` 4.1.0 or newer](https://www.nuget.org/packages/System.Reactive/).
 
 
 ### Table of contents
@@ -77,27 +77,16 @@ using akarnokd.reactive_extensions;
   - [Compose](#compose)
 - Termination handling
   - [Repeat](#repeat)
-  - [RepeatWhen](#repeatwhen)
   - [Retry](#retry)
-  - [RetryWhen](#retrywhen)
   - [SwitchIfEmpty](#switchifempty)
   - [TakeUntil](#takeuntil)
   - [UnsubscribeOn](#unsubscribeon)
-- Hot <-> Cold conversion
-  - [AutoConnect](#autoconnect)
 - Blocking
   - [BlockingEnumerable](#blockingenumerable)
   - [BlockingSubscribe](#blockingsubscribe)
   - [BlockingSubscribeWhile](#blockingsubscribewhile)
 - Test support
   - [Test](#test)
-
-### AutoConnect
-
-Automatically connect the upstream `IConnectableObservable` at most once when the
-specified number of `IObserver`s have subscribed to this `IObservable`.
-
-*Since 0.0.4*
 
 ### BlockingEnumerable
 
@@ -358,13 +347,6 @@ subscription.
 
 *Since: 0.0.3*
 
-### RepeatWhen
-
-Repeats (resubscribes to) the source observable after a normal completion and when the observable
-returned by a handler produces an arbitrary item.
-
-*Since: 0.0.4*
-
 ### Retry
 
 Repeatedly re-subscribes to the source observable if the predicate
@@ -372,13 +354,6 @@ function returns true upon the failure of the previous
 subscription.
 
 *Since: 0.0.3*
-
-### RetryWhen
-
-Retries (resubscribes to) the source observable after a failure and when the observable
-returned by a handler produces an arbitrary item.
-
-*Since: 0.0.4*
 
 ### SwitchIfEmpty
 
@@ -417,20 +392,6 @@ terminated.
 
 *Since: 0.0.4*<br/>
 See also: [SwitchMany](#switchmany)
-
-### TakeUntil
-
-Checks a predicate after an item has been emitted and completes
-the sequence if it returns false.
-
-```cs
-Observable.Range(1, 5)
-.TakeUntil(v => v == 3)
-.Test()
-.AssertResult(1, 2, 3);
-```
-
-*Since: 0.0.3*
 
 ### Test
 

@@ -347,24 +347,6 @@ namespace akarnokd.reactive_extensions
         }
 
         /// <summary>
-        /// Checks a predicate after an item has been emitted and completes
-        /// the sequence if it returns true.
-        /// </summary>
-        /// <param name="source">The upstream observable limit conditionally.</param>
-        /// <param name="stopPredicate">The function called with the current item after it
-        /// has been emitted to the downstream and should return true to stop and dispose
-        /// the upstream and complete the downstream.</param>
-        /// <typeparam name="T">The element type of the sequence</typeparam>
-        /// <remarks>Since 0.0.3</remarks>
-        public static IObservable<T> TakeUntil<T>(this IObservable<T> source, Func<T, bool> stopPredicate)
-        {
-            RequireNonNull(source, nameof(source));
-            RequireNonNull(stopPredicate, nameof(stopPredicate));
-
-            return new TakeUntilPredicate<T>(source, stopPredicate);
-        }
-
-        /// <summary>
         /// Switches to the fallback observables if the main source
         /// or a previous fallback is empty.
         /// </summary>
@@ -515,74 +497,6 @@ namespace akarnokd.reactive_extensions
             RequirePositive(others.Length, nameof(others) + ".Length");
 
             return new WithLatestFrom<T, U, R>(source, others, mapper, delayErrors, sourceFirst);
-        }
-
-        /// <summary>
-        /// Retries (resubscribes to) the source observable after a failure and when the observable
-        /// returned by a handler produces an arbitrary item.
-        /// </summary>
-        /// <typeparam name="T">The type of the elements in the source sequence.</typeparam>
-        /// <typeparam name="U">The arbitrary element type signaled by the handler observable.</typeparam>
-        /// <param name="source">Observable sequence to repeat until it successfully terminates.</param>
-        /// <param name="handler">The function that is called for each observer and takes an observable sequence of
-        /// errors. It should return an observable of arbitrary items that should signal that arbitrary item in
-        /// response to receiving the failure Exception from the source observable. If this observable signals
-        /// a terminal event, the sequence is terminated with that signal instead.</param>
-        /// <returns>An observable sequence producing the elements of the given sequence repeatedly until it terminates successfully.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="handler"/> is null.</exception>
-        /// <remarks>Since 0.0.4</remarks>
-        public static IObservable<T> RetryWhen<T, U>(this IObservable<T> source, Func<IObservable<Exception>, IObservable<U>> handler)
-        {
-            RequireNonNull(source, nameof(source));
-            RequireNonNull(handler, nameof(handler));
-
-            return new RetryWhen<T, U>(source, handler);
-        }
-
-        /// <summary>
-        /// Repeats (resubscribes to) the source observable after a completion and when the observable
-        /// returned by a handler produces an arbitrary item.
-        /// </summary>
-        /// <typeparam name="T">The type of the elements in the source sequence.</typeparam>
-        /// <typeparam name="U">The arbitrary element type signaled by the handler observable.</typeparam>
-        /// <param name="source">Observable sequence to repeat while it successfully terminates.</param>
-        /// <param name="handler">The function that is called for each observer and takes an observable sequence of
-        /// errors. It should return an observable of arbitrary items that should signal that arbitrary item in
-        /// response to receiving the completion signal from the source observable. If this observable signals
-        /// a terminal event, the sequence is terminated with that signal instead.</param>
-        /// <returns>An observable sequence producing the elements of the given sequence repeatedly while it terminates successfully.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="handler"/> is null.</exception>
-        /// <remarks>Since 0.0.4</remarks>
-        public static IObservable<T> RepeatWhen<T, U>(this IObservable<T> source, Func<IObservable<object>, IObservable<U>> handler)
-        {
-            RequireNonNull(source, nameof(source));
-            RequireNonNull(handler, nameof(handler));
-
-            return new RepeatWhen<T, U>(source, handler);
-        }
-
-        /// <summary>
-        /// Automatically connect the upstream IConnectableObservable at most once when the
-        /// specified number of IObservers have subscribed to this IObservable.
-        /// </summary>
-        /// <typeparam name="T">The type of the elements in the source sequence.</typeparam>
-        /// <param name="source">The connectable observable sequence.</param>
-        /// <param name="minObservers">The number of observers required to subscribe before the connection to source happens, non-positive value will trigger an immediate subscription.</param>
-        /// <param name="onConnect">If not null, the connection's IDisposable is provided to it.</param>
-        /// <returns>An observable sequence that connects to the source at most once when the given number of observers have subscribed to it.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
-        public static IObservable<T> AutoConnect<T>(this IConnectableObservable<T> source, int minObservers = 1, Action<IDisposable> onConnect = null)
-        {
-            RequireNonNull(source, nameof(source));
-            if (minObservers <= 0)
-            {
-                var d = source.Connect();
-                onConnect?.Invoke(d);
-                return source;
-            }
-            return new AutoConnect<T>(source, minObservers, onConnect);
         }
 
         /// <summary>
