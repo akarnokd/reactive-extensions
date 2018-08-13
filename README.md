@@ -79,7 +79,6 @@ using akarnokd.reactive_extensions;
   - [Repeat](#repeat)
   - [Retry](#retry)
   - [SwitchIfEmpty](#switchifempty)
-  - [TakeUntil](#takeuntil)
   - [UnsubscribeOn](#unsubscribeon)
 - Blocking
   - [BlockingEnumerable](#blockingenumerable)
