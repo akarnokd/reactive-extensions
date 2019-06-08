@@ -1,4 +1,4 @@
-queue:  ubuntu-16.04
+queue:  Hosted Ubuntu 1604
 
 variables: 
   BuildConfiguration: Release
