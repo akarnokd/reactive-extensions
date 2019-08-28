@@ -3,7 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net462</TargetFramework>
     <RootNamespace>reactive_extensions_benchmarks</RootNamespace>    
-    <OutputType>Exe</OutputType>    
+    <OutputType>Exe</OutputType>
+    <SignAssembly Condition="'$(OS)'=='Windows_NT' And '$(Configuration)'=='Release'">true</SignAssembly>
+    <AssemblyOriginatorKeyFile Condition="'$(OS)'=='Windows_NT' And '$(Configuration)'=='Release'">c:\users\akarnokd\.gradle\akarnokd.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>

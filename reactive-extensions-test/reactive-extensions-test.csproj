@@ -5,6 +5,8 @@
     <TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netcoreapp2.0</TargetFrameworks>
 
     <IsPackable>false</IsPackable>
+    <SignAssembly Condition="'$(OS)'=='Windows_NT' And '$(Configuration)'=='Release'">true</SignAssembly>
+    <AssemblyOriginatorKeyFile Condition="'$(OS)'=='Windows_NT' And '$(Configuration)'=='Release'">c:\users\akarnokd\.gradle\akarnokd.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
 
