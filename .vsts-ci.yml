@@ -1,7 +1,7 @@
 queue:  Hosted Ubuntu 1604
 
 variables: 
-  BuildConfiguration: Release
+  BuildConfiguration: Debug
   
 steps:
 
