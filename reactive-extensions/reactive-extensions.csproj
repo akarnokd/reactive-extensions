@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.0.26-alpha</Version>
+    <Version>0.0.27-alpha</Version>
     <Description>Extension methods and classes for the dotnet/reactive library.</Description>
     <Authors>David Karnok</Authors>
     <PackageId>akarnokd.reactive_extensions</PackageId>
@@ -10,13 +10,10 @@
     <RepositoryUrl>https://github.com/akarnokd/reactive-extensions</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <Copyright>Copyright 2018, David Karnok</Copyright>
-    <PackageReleaseNotes>Removals:
-- ReactiveExtensions
-  - AutoConnect (part of Rx.NET 4.1 now)
-  - RetryWhen (part of Rx.NET 4.1 now)
-  - RepeatWhen (part of Rx.NET 4.1 now)
-  - TakeUntil(predicate) (part of Rx.NET 4.1 now)</PackageReleaseNotes>
+    <PackageReleaseNotes>Added strong name.</PackageReleaseNotes>
     <PackageTags>reactive extensions</PackageTags>
+    <SignAssembly Condition="'$(OS)'=='Windows_NT' And '$(Configuration)'=='Release'">true</SignAssembly>
+    <AssemblyOriginatorKeyFile Condition="'$(OS)'=='Windows_NT' And '$(Configuration)'=='Release'">c:\users\akarnokd\.gradle\akarnokd.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>bin\Debug\netstandard2.0\reactive-extensions.xml</DocumentationFile>
