@@ -1,9 +1,5 @@
 ﻿using BenchmarkDotNet.Running;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace akarnokd.reactive_extensions_benchmarks
 {
@@ -18,9 +14,9 @@ namespace akarnokd.reactive_extensions_benchmarks
             //BenchmarkRunner.Run<FlatMapXPerf>();
             //BenchmarkRunner.Run<ConcatMapEagerXPerf>();
             //BenchmarkRunner.Run<XMapYPerf>();
-            //BenchmarkRunner.Run<MergeMapXPerf>();
+            BenchmarkRunner.Run<MergeMapXPerf>();
             //BenchmarkRunner.Run<AsyncEnumJustPerf>();
-            BenchmarkRunner.Run<AsyncEnumRangePerf>();
+            //BenchmarkRunner.Run<AsyncEnumRangePerf>();
             // --------------------------------------------------
             Console.ReadLine();
         }

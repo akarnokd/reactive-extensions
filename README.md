@@ -36,7 +36,6 @@ Install-Package akarnokd.reactive_extensions -Version 0.0.27-alpha
     - [PublishSubject](#publishsubject)
 	- [CacheSubject](#cachesubject)
 	- [MonocastSubject](#monocastsubject)
-  - [IAsyncEnumerable](#iasyncenumerable)
 
 ## Operators
 
@@ -940,57 +939,4 @@ Caches some or all items and relays/replays it to current or future observers.
 
 ## IAsyncEnumerable
 
-*Since: 0.0.25*
-
-Implementation of sources and operators for the async-streams from the [C# 8 proposal](https://github.com/dotnet/csharplang/blob/master/proposals/async-streams.md).
-Since there are no external package/assembly available with the interface definitions, the proposed
-structure is implemented in the `akarnokd.reactive_extensions` namespace:
-
-- `IAsyncEnumerable<T>`: the parent type for lazy-deferred enumerator creation
-- `IAsyncEnumerator<T>`: the interface that can be consumed asynchronously
-- `IAsyncDisposable`: cancellation management with the option to wait for the cancellation to finish
-
-In the proposal, the concern of the cost of 2 interface calls on `IAsyncEnumerator` resulted in an
-alternative structure with a direct-poll like feature. This resembles the operator fusion
-that the modern reactive libraries (including `IObservableSource`) uses so instead of changing
-the `IAsyncEnumerator`, this library proposes a marker interface with the single `TryPoll` method
-so that not all `IAsyncEnumerable`s have to support it
-
-- `IAsyncFusedEnumerator<T>`: try polling for the next upstream item in a synchronous fashion.
-- `AsyncFusedState`: the outcome of the poll, including the ability to indicate no further items will arrive.
-
-The factory and extension methods are located in `akarnokd.reactive_extensions.AsyncEnumerable`.
-
-### Factory methods
-
-- `Concat`
-- `Defer`
-- `Empty`
-- `Error`
-- `FromEnumerable`
-- `FromTask`
-- `Just`
-- `Never`
-- `Range`
-
-### Instance methods
-
-- `Collect`
-- `Filter`
-- `Map`
-- `Reduce`
-- `Skip`
-- `SkipUntil`
-- `Take`
-- `TakeUntil`
-
-### Consumers
-
-- `BlockingFirst`
-- `TestAsync`
-- `TestAsyncFused`
-
-
-### Interoperation
-
-- `ToAsyncEnumerable` (on `IEnumerable`, `Task`)
+Removed in 0.0.28
