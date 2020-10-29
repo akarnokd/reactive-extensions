@@ -1,6 +1,6 @@
 # reactive-extensions
 
-Travis-CI: <a href='https://travis-ci.org/akarnokd/reactive-extensions/builds'><img src='https://travis-ci.org/akarnokd/reactive-extensions.svg?branch=master'></a>
+Travis-CI: <a href='https://travis-ci.com/akarnokd/reactive-extensions/builds'><img src='https://travis-ci.com/akarnokd/reactive-extensions.svg?branch=master'></a>
 VSTS: [![Build Status](https://dev.azure.com/akarnokd/MyFirstProject/_apis/build/status/7?api-version=5.0-preview.1)](https://akarnokd.visualstudio.com/MyFirstProject/_build/index?definitionId=7)
 NuGet: <a href='https://www.nuget.org/packages/akarnokd.reactive_extensions'><img src='https://img.shields.io/nuget/v/akarnokd.reactive_extensions.svg' alt="reactive-extensions NuGet version"/></a>
 
